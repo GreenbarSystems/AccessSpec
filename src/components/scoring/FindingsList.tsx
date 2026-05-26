@@ -30,7 +30,7 @@ export function FindingsList({ findings, limit = 10 }: Props) {
   if (visible.length === 0) {
     return (
       <div className="card p-4 text-sm text-emerald-700">
-        ✅ No findings — every detected component passed the active rules.
+        ✓ No findings — every detected component passed the active rules.
       </div>
     );
   }

@@ -215,7 +215,7 @@ export function RuntimeAuditPanel() {
 
               {visible.length === 0 ? (
                 <div className="card p-6 text-sm text-emerald-700" data-testid="runtime-empty">
-                  ✅ Nothing flagged under the active filter.
+                  ✓ Nothing flagged under the active filter.
                 </div>
               ) : (
                 <ul

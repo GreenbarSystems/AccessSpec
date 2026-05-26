@@ -139,7 +139,7 @@ export function ContrastPanel({ onJump }: Props) {
       <div className="card overflow-hidden">
         {visible.length === 0 ? (
           <div className="p-6 text-sm text-emerald-700" data-testid="contrast-empty">
-            ✅ No contrast issues under the active filter.
+            ✓ No contrast issues under the active filter.
           </div>
         ) : (
           <div className="overflow-x-auto">

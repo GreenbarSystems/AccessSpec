@@ -118,7 +118,7 @@ export function TouchTargetsPanel({ onJump }: Props) {
       <div className="card overflow-hidden">
         {visible.length === 0 ? (
           <div className="p-6 text-sm text-emerald-700" data-testid="empty-state">
-            ✅ No touch-target violations under the active filter.
+            ✓ No touch-target violations under the active filter.
           </div>
         ) : (
           <div className="overflow-x-auto">

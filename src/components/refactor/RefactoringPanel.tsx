@@ -62,7 +62,7 @@ export function RefactoringPanel() {
   if (!refactor || refactor.suggestions.length === 0) {
     return (
       <div className="card p-6 text-sm text-emerald-700">
-        ✅ Nothing to refactor — every detected component passes the active rules.
+        ✓ Nothing to refactor — every detected component passes the active rules.
       </div>
     );
   }

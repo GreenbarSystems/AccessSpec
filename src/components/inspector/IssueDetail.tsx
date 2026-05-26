@@ -92,7 +92,7 @@ export function IssueDetail({ rule, findings }: Props) {
       >
         {findings.length === 0 ? (
           <p className="text-sm text-emerald-700">
-            ✅ No elements currently fail this rule.
+            ✓ No elements currently fail this rule.
           </p>
         ) : (
           <ul className="divide-y divide-slate-100" data-testid="affected-list">

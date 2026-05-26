@@ -66,7 +66,7 @@ export function RemediationPlaybook() {
   if (items.length === 0) {
     return (
       <div className="card p-6 text-sm text-emerald-700">
-        ✅ Nothing to remediate — every detected component passes the active
+        ✓ Nothing to remediate — every detected component passes the active
         rules.
       </div>
     );

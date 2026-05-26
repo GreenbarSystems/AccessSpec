@@ -143,7 +143,7 @@ export function ViolationInspector() {
         <div className="card overflow-hidden">
           {visible.length === 0 ? (
             <p className="p-4 text-sm text-emerald-700">
-              ✅ Nothing to inspect under the current filter.
+              ✓ Nothing to inspect under the current filter.
             </p>
           ) : (
             <ul role="listbox" aria-label="Rules" data-testid="rule-list">

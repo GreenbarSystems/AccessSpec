@@ -174,7 +174,7 @@ export function ReflowPanel({ onJump }: Props) {
       <div className="card overflow-hidden">
         {visible.length === 0 ? (
           <div className="p-6 text-sm text-emerald-700" data-testid="reflow-empty">
-            ✅ No reflow issues under the current filter.
+            ✓ No reflow issues under the current filter.
           </div>
         ) : (
           <div className="overflow-x-auto">

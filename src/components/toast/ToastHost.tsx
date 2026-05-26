@@ -58,7 +58,7 @@ const TONE_STYLE: Record<ToastTone, { ring: string; icon: string; iconClass: str
   },
   info: {
     ring: 'border-sky-200 bg-sky-50 text-sky-900',
-    icon: 'i',
+    icon: 'ⓘ',
     iconClass: 'bg-sky-500 text-white',
   },
 };
