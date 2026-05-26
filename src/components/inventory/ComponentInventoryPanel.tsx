@@ -207,7 +207,7 @@ function ElementRow({
         </button>
       </div>
       {hasStyleDetails && (
-        <details className="border-t border-slate-100 bg-slate-50/60 px-3 py-1">
+        <details className="border-t border-slate-100 bg-slate-50/50 px-3 py-1">
           <summary className="cursor-pointer text-xs text-slate-600 hover:text-slate-900">
             Styles{' '}
             <span className="text-slate-400">

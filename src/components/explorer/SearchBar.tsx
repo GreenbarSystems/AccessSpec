@@ -33,6 +33,8 @@ export function SearchBar({
           placeholder="Search across all loaded files…"
           className="flex-1 min-w-[200px] rounded-md border border-slate-300 px-3 py-1.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
           data-testid="search-input"
+          // useKeyboardShortcuts hooks `/` to focus this input.
+          data-search="explorer"
           spellCheck={false}
         />
         <ToggleChip

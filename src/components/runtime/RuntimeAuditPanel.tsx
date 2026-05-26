@@ -180,7 +180,13 @@ export function RuntimeAuditPanel() {
           {report ? (
             <>
               <div className="card p-3" data-testid="runtime-summary">
-                <div className="flex flex-wrap items-center gap-1.5">
+                <div
+                  className="flex flex-wrap items-center gap-1.5"
+                  aria-label="Filter by severity"
+                >
+                  <span className="mr-1 text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+                    Severity
+                  </span>
                   <Chip
                     id="all-sev"
                     label="All findings"
@@ -199,7 +205,14 @@ export function RuntimeAuditPanel() {
                       onClick={() => setSeverityFilter(s)}
                     />
                   ))}
-                  <span className="mx-1 h-5 w-px bg-slate-200" aria-hidden />
+                </div>
+                <div
+                  className="mt-2 flex flex-wrap items-center gap-1.5 border-t border-slate-100 pt-2"
+                  aria-label="Filter by category"
+                >
+                  <span className="mr-1 text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+                    Category
+                  </span>
                   <Chip
                     id="all-cat"
                     label="All cats"

@@ -67,9 +67,16 @@ export function PlatformParityPanel() {
 
   return (
     <div className="space-y-4" data-testid="platform-parity-panel">
-      {/* Summary chips */}
+      {/* Summary chips — split into two rows so verdict chips and kind chips
+          don't collide when the row wraps past ~8 items. */}
       <div className="card p-3">
-        <div className="flex flex-wrap items-center gap-1.5">
+        <div
+          className="flex flex-wrap items-center gap-1.5"
+          aria-label="Filter by verdict"
+        >
+          <span className="mr-1 text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+            Verdict
+          </span>
           <Chip
             id="all"
             label="All"
@@ -101,7 +108,14 @@ export function PlatformParityPanel() {
             active={filter === 'generic'}
             onClick={() => setFilter('generic')}
           />
-          <span className="mx-1 h-5 w-px bg-slate-200" aria-hidden />
+        </div>
+        <div
+          className="mt-2 flex flex-wrap items-center gap-1.5 border-t border-slate-100 pt-2"
+          aria-label="Filter by pattern kind"
+        >
+          <span className="mr-1 text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+            Kind
+          </span>
           {(Object.keys(report.countsByKind) as PatternKind[])
             .filter((k) => report.countsByKind[k] > 0)
             .map((k) => (

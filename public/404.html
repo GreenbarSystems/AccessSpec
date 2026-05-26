@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>AccessSpec · routing…</title>
+    <meta name="robots" content="noindex" />
+    <!--
+      GitHub Pages SPA fallback.
+
+      When a user reloads /AccessSpec/analyzer (or any deep link), GitHub's
+      static server doesn't find a matching file and serves this 404 page
+      instead. We stash the requested path in sessionStorage, then bounce
+      the browser to the SPA's root index.html. The boot script in
+      index.html reads the stash and replaces the URL back to the original
+      path before React Router mounts — so deep links and hard refreshes
+      land on the right route without the `#` HashRouter relied on.
+
+      Keep this file in lock-step with the BASE_URL configured in
+      vite.config.ts (`/AccessSpec/`). If the repo name ever changes,
+      both this file and vite.config.ts must update together.
+    -->
+    <script>
+      (function () {
+        var base = '/AccessSpec/';
+        var here = location.pathname + location.search + location.hash;
+        // Only stash a redirect if the user was inside our base path —
+        // never trap requests for unrelated paths on the same domain.
+        if (here.indexOf(base) === 0 && here !== base) {
+          sessionStorage.setItem('accessspec:redirect', here);
+        }
+        location.replace(base);
+      })();
+    </script>
+  </head>
+  <body>
+    <noscript>
+      <p>
+        This is the AccessSpec single-page app. JavaScript is required to
+        route deep links. Visit
+        <a href="/AccessSpec/">/AccessSpec/</a>
+        to start.
+      </p>
+    </noscript>
+  </body>
+</html>

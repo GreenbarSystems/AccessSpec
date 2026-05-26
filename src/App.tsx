@@ -1,4 +1,4 @@
-import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AppLayout } from './components/AppLayout';
 import { ToastHost } from './components/toast/ToastHost';
 import Dashboard from './pages/Dashboard';
@@ -8,10 +8,16 @@ import Reports from './pages/Reports';
 import Settings from './pages/Settings';
 import NotFound from './pages/NotFound';
 
+// React Router's basename must match Vite's `base` (set in vite.config.ts).
+// `import.meta.env.BASE_URL` resolves to "/" in dev and "/AccessSpec/" in
+// production GH Pages builds — strip the trailing slash because Router
+// expects `/AccessSpec`, not `/AccessSpec/`.
+const ROUTER_BASENAME = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
+
 export default function App() {
   return (
     <ToastHost>
-      <HashRouter>
+      <BrowserRouter basename={ROUTER_BASENAME}>
         <Routes>
           <Route element={<AppLayout />}>
             <Route index element={<Dashboard />} />
@@ -23,7 +29,7 @@ export default function App() {
             <Route path="*" element={<Navigate to="/404" replace />} />
           </Route>
         </Routes>
-      </HashRouter>
+      </BrowserRouter>
     </ToastHost>
   );
 }

@@ -1,38 +1,20 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { navItems } from '../lib/nav';
-import { sourceRepository } from '../services/SourceRepository';
+import { startNewAudit } from '../lib/newAudit';
 
 type TopBarProps = {
   onMenuClick: () => void;
+  onShowShortcuts: () => void;
 };
 
-export function TopBar({ onMenuClick }: TopBarProps) {
+export function TopBar({ onMenuClick, onShowShortcuts }: TopBarProps) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const current =
     navItems.find((n) => (n.to === '/' ? pathname === '/' : pathname.startsWith(n.to))) ??
     navItems[0];
 
-  // "New audit" wipes the current project and lands the user on the Dashboard
-  // with the upload panel already scrolled into view. From the Dashboard with
-  // no project loaded it still scrolls — useful if the page got long.
-  const handleNewAudit = () => {
-    sourceRepository.clear();
-    if (pathname !== '/') navigate('/');
-    // Let the route + state changes commit before measuring.
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        const target =
-          document.querySelector<HTMLElement>('[data-upload-panel]') ??
-          document.querySelector<HTMLElement>('[data-tab="paste"]');
-        target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        // Move keyboard focus too so the action is accessible.
-        document
-          .querySelector<HTMLButtonElement>('[data-tab="paste"]')
-          ?.focus();
-      });
-    });
-  };
+  const handleNewAudit = () => startNewAudit(navigate, pathname);
 
   return (
     <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-slate-200 bg-white/80 px-4 backdrop-blur lg:px-6">
@@ -57,6 +39,16 @@ export function TopBar({ onMenuClick }: TopBarProps) {
       </div>
 
       <div className="hidden items-center gap-2 sm:flex">
+        <button
+          type="button"
+          onClick={onShowShortcuts}
+          aria-label="Show keyboard shortcuts (press ?)"
+          title="Keyboard shortcuts (?)"
+          className="btn-ghost h-10 w-10 p-0 font-mono text-base"
+          data-testid="shortcuts-button"
+        >
+          <span aria-hidden>?</span>
+        </button>
         <button
           type="button"
           onClick={handleNewAudit}

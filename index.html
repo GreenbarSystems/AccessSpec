@@ -5,6 +5,25 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AccessSpec · WCAG 2.2 Dashboard</title>
+    <!--
+      SPA fallback restore. When a user opens a deep link like
+      /AccessSpec/analyzer directly, GitHub Pages serves public/404.html
+      which stashes the requested path in sessionStorage and bounces them
+      to /AccessSpec/. This script (running before React boots) reads that
+      stash and rewrites the URL bar back to the original path, so React
+      Router sees the right route on mount.
+    -->
+    <script>
+      (function () {
+        var redirect = sessionStorage.getItem('accessspec:redirect');
+        if (redirect) {
+          sessionStorage.removeItem('accessspec:redirect');
+          if (redirect !== location.pathname + location.search + location.hash) {
+            history.replaceState(null, '', redirect);
+          }
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

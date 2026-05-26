@@ -17,7 +17,7 @@ type Tone = ScoreBand;
 
 const TONE: Record<Tone, { card: string; bar: string; number: string }> = {
   good: {
-    card: 'border-emerald-200 bg-emerald-50/40',
+    card: 'border-emerald-200 bg-emerald-50/50',
     bar: 'bg-emerald-500',
     number: 'text-emerald-700',
   },
