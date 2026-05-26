@@ -16,7 +16,7 @@
  */
 
 import type { AuditReport } from './AuditService';
-import type { Finding, Severity } from './RuleEngine';
+import type { Severity } from './RuleEngine';
 import { ALL_RULE_DEFS } from './AuditService';
 
 export type ReportFormat = 'json' | 'csv' | 'html' | 'pdf';

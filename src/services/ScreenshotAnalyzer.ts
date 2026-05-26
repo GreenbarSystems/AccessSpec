@@ -77,7 +77,7 @@ export type ScreenshotAnalysis = {
 
 const MAX_DIM = 480; // Cap the analysis canvas so a 4K screenshot stays snappy.
 const BLOCK_SIZE = 32;
-const PALETTE_BUCKETS = 9; // bits per RGB triple → 512 buckets
+// 3 bits per RGB triple → 512 quantization buckets (see computeDominantColors)
 const PALETTE_RESULTS = 6;
 const PIXEL_STRIDE = 4; // sample every 4th pixel for the palette pass
 

@@ -249,7 +249,7 @@ export function RuntimeAuditPanel() {
   );
 }
 
-function FindingCard({ f, onJump }: { f: RuntimeFinding; onJump: () => void }) {
+function FindingCard({ f, onJump: _onJump }: { f: RuntimeFinding; onJump: () => void }) {
   return (
     <li
       className="card overflow-hidden"

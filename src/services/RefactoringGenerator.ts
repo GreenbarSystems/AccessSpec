@@ -167,7 +167,7 @@ const RULE_GENERATORS: Record<string, Generator> = {
     };
   },
 
-  'A11Y-FORM-NAME': ({ finding, lineText }) => {
+  'A11Y-FORM-NAME': ({ lineText }) => {
     const before = lineText.trim() || `<form>…</form>`;
     const after =
       addAttr(before, 'form', 'aria-label', '__FORM_PURPOSE__') ??
@@ -196,7 +196,7 @@ const RULE_GENERATORS: Record<string, Generator> = {
     };
   },
 
-  'A11Y-LINK-PURPOSE': ({ finding, lineText }) => {
+  'A11Y-LINK-PURPOSE': ({ lineText }) => {
     const before = lineText.trim() || `<a href="...">click here</a>`;
     const after = before.replace(
       />\s*(click here|here|read more|learn more|more|link)\s*</i,
@@ -344,7 +344,7 @@ const RULE_GENERATORS: Record<string, Generator> = {
     };
   },
 
-  'PAR-INPUT-AUTOCOMPLETE': ({ finding, lineText }) => {
+  'PAR-INPUT-AUTOCOMPLETE': ({ lineText }) => {
     const before = lineText.trim() || `<input name="email" />`;
     const after =
       addAttr(before, 'input', 'autocomplete', '__TOKEN__') ??
