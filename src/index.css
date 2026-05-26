@@ -17,6 +17,23 @@
   :root {
     color-scheme: light;
   }
+
+  /*
+   * Global keyboard-focus indicator.
+   * Every focusable element gets a brand-colored 2px ring + 2px offset when
+   * focused via keyboard. Components that style focus explicitly (e.g. .btn,
+   * chip buttons) win via specificity. This means mouse clicks never show
+   * the ring; tab navigation always does.
+   */
+  :focus-visible {
+    @apply outline-none ring-2 ring-brand-500 ring-offset-2 ring-offset-white;
+    border-radius: 4px;
+  }
+
+  /* The screen slot inside the device frame would clip its own ring — drop the offset there. */
+  iframe:focus-visible {
+    @apply ring-offset-0;
+  }
 }
 
 @layer components {
@@ -41,7 +58,9 @@
 
   .nav-link {
     @apply flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium
-           text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition;
+           text-slate-600 transition hover:bg-slate-100 hover:text-slate-900
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500
+           focus-visible:ring-offset-2;
   }
 
   .nav-link-active {
