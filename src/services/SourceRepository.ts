@@ -122,7 +122,12 @@ function defaultProjectName(files: SourceFile[]): string {
 /** Process-wide singleton used by the React hook. */
 export const sourceRepository = new SourceRepository();
 
-// Dev-only: expose on window so the preview harness can inspect/seed state.
-if (import.meta.env.DEV && typeof window !== 'undefined') {
-  (window as unknown as { __repo?: SourceRepository }).__repo = sourceRepository;
-}
+// NOTE: we used to expose this singleton on `window.__repo` in DEV builds for
+// the in-page preview harness. That escape hatch was removed because:
+//   (a) it leaked the writable singleton into the global namespace where any
+//       script — including iframed user code — could clear/replace project
+//       state, and
+//   (b) React DevTools + the existing `useSourceRepository` hook already give
+//       us read access during development without the global handle.
+// If you genuinely need to inspect the store from the DevTools console, set a
+// breakpoint inside `useSourceRepository` and grab the reference there.

@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useSourceRepository } from '../../services/useSourceRepository';
 import { buildPreviewDocument } from '../../services/DevicePreview';
 import {
-  scanRuntime,
   RUNTIME_CATEGORIES,
   RUNTIME_SEVERITIES,
   type RuntimeFinding,
@@ -11,6 +10,11 @@ import {
   type RuntimeSeverity,
   type RuntimeCategory,
 } from '../../services/DomRuntimeScanner';
+// `?raw` returns the file contents as a string at build time. We inject it
+// into the preview iframe's srcDoc so the iframe can stay sandboxed to
+// `allow-scripts` only — no `allow-same-origin`, so the parent never hands
+// out a DOM handle to user-uploaded code.
+import runtimeScannerInline from '../../services/runtimeScannerInline.js?raw';
 
 const SEVERITY_TONE: Record<RuntimeSeverity, string> = {
   critical: 'bg-rose-50 text-rose-700 ring-1 ring-rose-200',
@@ -35,45 +39,54 @@ export function RuntimeAuditPanel() {
     if (!project) return [];
     return [...project.filesByPath.values()];
   }, [project]);
-  const preview = useMemo(() => buildPreviewDocument(files), [files]);
+  // Inject the sandbox-side scanner directly into the iframe's srcDoc. The
+  // scanner walks the iframe's own DOM, builds the report, and posts it
+  // back to us — so we never need a same-origin window handle into the
+  // user-uploaded page.
+  const preview = useMemo(
+    () => buildPreviewDocument(files, { injectScript: runtimeScannerInline }),
+    [files],
+  );
 
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [report, setReport] = useState<RuntimeReport | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [scanning, setScanning] = useState(false);
 
-  const runScan = useCallback(() => {
-    const iframe = iframeRef.current;
-    if (!iframe) return;
-    setScanning(true);
-    setError(null);
-    try {
-      const doc = iframe.contentDocument;
-      if (!doc || doc.readyState !== 'complete') {
-        // Document not ready yet — the load handler will retry.
+  // Listen for scan results posted by the iframe. We accept any source so
+  // long as the message shape matches — origin checks aren't useful for a
+  // sandboxed iframe with an opaque (null) origin.
+  useEffect(() => {
+    const handler = (ev: MessageEvent) => {
+      const iframe = iframeRef.current;
+      if (!iframe || ev.source !== iframe.contentWindow) return;
+      const data = ev.data as unknown;
+      if (!data || typeof data !== 'object' || !('type' in data)) return;
+      const msg = data as {
+        type: string;
+        report?: RuntimeReport;
+        message?: string;
+      };
+      if (msg.type === 'accessspec:scan-result' && msg.report) {
+        setReport(msg.report);
+        setError(null);
         setScanning(false);
-        return;
+      } else if (msg.type === 'accessspec:scan-error') {
+        setError(msg.message ?? 'Scan failed inside iframe.');
+        setScanning(false);
       }
-      setReport(scanRuntime(doc));
-    } catch (e) {
-      setError(
-        e instanceof Error
-          ? e.message
-          : 'Cannot read iframe DOM — sandbox blocked access',
-      );
-    } finally {
-      setScanning(false);
-    }
+    };
+    window.addEventListener('message', handler);
+    return () => window.removeEventListener('message', handler);
   }, []);
 
-  // Run on iframe load + whenever the preview changes.
-  useEffect(() => {
+  const runScan = useCallback(() => {
     const iframe = iframeRef.current;
-    if (!iframe) return;
-    const handler = () => runScan();
-    iframe.addEventListener('load', handler);
-    return () => iframe.removeEventListener('load', handler);
-  }, [runScan, preview.html]);
+    if (!iframe || !iframe.contentWindow) return;
+    setScanning(true);
+    setError(null);
+    iframe.contentWindow.postMessage({ type: 'accessspec:scan' }, '*');
+  }, []);
 
   const [severityFilter, setSeverityFilter] = useState<RuntimeSeverity | 'all'>('all');
   const [categoryFilter, setCategoryFilter] = useState<RuntimeCategory | 'all'>('all');
@@ -115,7 +128,7 @@ export function RuntimeAuditPanel() {
               ref={iframeRef}
               title="Runtime audit preview"
               srcDoc={preview.html}
-              sandbox="allow-scripts allow-same-origin"
+              sandbox="allow-scripts"
               style={{
                 width: SCAN_VIEWPORT.width,
                 height: SCAN_VIEWPORT.height,

@@ -102,10 +102,31 @@ async function getWorker(): Promise<TesseractWorker> {
       createWorker: (
         lang: string,
         oem?: number,
-        opts?: { logger?: (m: { status: string; progress: number }) => void },
+        opts?: {
+          logger?: (m: { status: string; progress: number }) => void;
+          workerPath?: string;
+          corePath?: string;
+          langPath?: string;
+          gzip?: boolean;
+        },
       ) => Promise<TesseractWorker>;
     };
+    // Self-hosted asset paths — populated by scripts/vendor-tesseract.mjs
+    // into public/tesseract/ before every `npm run dev`/`build`. Vite's
+    // BASE_URL is "/" in dev and "/AccessSpec/" in production (GH Pages
+    // subpath), so we prefix it to stay valid in both modes.
+    //
+    // If we ever pass empty strings for these, Tesseract silently falls
+    // back to the jsdelivr CDN — which would re-introduce the privacy
+    // leak this file exists to prevent. Don't change without updating
+    // the privacy note in the README.
+    const base = import.meta.env.BASE_URL || '/';
+    const tess = `${base}tesseract/`.replace(/\/{2,}/g, '/');
     const worker = await mod.createWorker('eng', 1, {
+      workerPath: `${tess}worker.min.js`,
+      corePath: tess,
+      langPath: tess,
+      gzip: true,
       logger: (m) =>
         emitProgress({ status: m.status, progress: m.progress }),
     });

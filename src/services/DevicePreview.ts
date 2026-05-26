@@ -192,7 +192,20 @@ export type PreviewBuild = {
   reason?: string;
 };
 
-export function buildPreviewDocument(files: SourceFile[]): PreviewBuild {
+export type PreviewOptions = {
+  /**
+   * Optional `<script>` body to inject just before `</body>`. Used by the
+   * RuntimeAuditPanel to embed its sandbox-side scanner so the iframe can
+   * stay locked to sandbox="allow-scripts" (no allow-same-origin handle
+   * back to the parent).
+   */
+  injectScript?: string;
+};
+
+export function buildPreviewDocument(
+  files: SourceFile[],
+  options: PreviewOptions = {},
+): PreviewBuild {
   if (files.length === 0) {
     return { html: null, inlinedCss: [], reason: 'No project loaded.' };
   }
@@ -238,8 +251,17 @@ export function buildPreviewDocument(files: SourceFile[]): PreviewBuild {
     }
   }
   const cleaned = stripExternalScripts(withFallback);
+  let shell = ensureDocumentShell(cleaned);
+  if (options.injectScript) {
+    // Wrap in a unique script tag right before </body>. If the document has
+    // no </body> (some hand-rolled fragments don't), append at the end.
+    const tag = `<script data-accessspec-injected="true">\n${options.injectScript}\n</script>`;
+    shell = /<\/body>/i.test(shell)
+      ? shell.replace(/<\/body>/i, `${tag}\n</body>`)
+      : `${shell}\n${tag}`;
+  }
   return {
-    html: ensureDocumentShell(cleaned),
+    html: shell,
     entryPath: entry.path,
     inlinedCss,
   };

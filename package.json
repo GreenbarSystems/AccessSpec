@@ -4,6 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "vendor:tesseract": "node scripts/vendor-tesseract.mjs",
+    "predev": "npm run vendor:tesseract",
+    "prebuild": "npm run vendor:tesseract",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",

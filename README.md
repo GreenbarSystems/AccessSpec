@@ -27,7 +27,10 @@ Vite 8 · React 19 · TypeScript · Tailwind 3 · React Router 7 · JSZip ·
 Tesseract.js (lazy-loaded for OCR).
 
 No backend — everything runs in the browser, including the contrast and CSS
-resolvers, OCR, and repository fetchers.
+resolvers, OCR, and repository fetchers. Uploaded code and screenshots are
+never transmitted anywhere; even the Tesseract.js WASM core, worker, and
+English language model are self-hosted (see `scripts/vendor-tesseract.mjs`)
+so the OCR feature doesn't ping a third-party CDN on first use.
 
 ## Getting started
 
@@ -36,10 +39,16 @@ npm install
 npm run dev      # http://localhost:5173
 ```
 
+`npm run dev` and `npm run build` automatically stage Tesseract.js assets
+into `public/tesseract/` via the `predev` / `prebuild` hooks — that
+directory is gitignored and rebuilt on demand. The first run downloads the
+~3 MB English language file from jsdelivr; subsequent runs reuse the cache.
+
 ```bash
-npm run build    # production bundle to dist/
-npm run preview  # serve dist/
-npm run lint     # eslint
+npm run build           # production bundle to dist/
+npm run preview         # serve dist/
+npm run lint            # eslint
+npm run vendor:tesseract  # manually re-stage public/tesseract/
 ```
 
 Requires Node 20+.
