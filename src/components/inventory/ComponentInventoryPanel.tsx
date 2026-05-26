@@ -1,12 +1,10 @@
 import { useMemo, useState } from 'react';
-import { useSourceRepository } from '../../services/useSourceRepository';
+import { useAuditReport } from '../../services/AuditCache';
 import {
-  detectComponents,
   UI_TYPES,
   type UIElement,
   type UIElementType,
 } from '../../services/ComponentDetector';
-import { enrichElements } from '../../services/CssResolver';
 import { buildInventory } from '../../services/ComponentInventory';
 import { TYPE_STYLES } from './typeStyles';
 
@@ -16,16 +14,9 @@ type Props = {
 };
 
 export function ComponentInventoryPanel({ onJump }: Props) {
-  const { project } = useSourceRepository();
-  const files = useMemo(() => {
-    if (!project) return [];
-    return [...project.filesByPath.values()];
-  }, [project]);
-
-  const inventory = useMemo(
-    () => buildInventory(enrichElements(detectComponents(files), files)),
-    [files],
-  );
+  const report = useAuditReport();
+  const elements = report?.elements ?? [];
+  const inventory = useMemo(() => buildInventory(elements), [elements]);
 
   // Count how many elements have computed CSS — surfaced in the summary line
   // so users can tell at a glance whether stylesheet resolution kicked in.
@@ -51,7 +42,7 @@ export function ComponentInventoryPanel({ onJump }: Props) {
     );
   }, [activeType, inventory, query]);
 
-  if (!project) {
+  if (!report) {
     return (
       <div className="card p-6 text-sm text-slate-600">
         Upload a project on the Dashboard to generate a component inventory.
@@ -62,9 +53,7 @@ export function ComponentInventoryPanel({ onJump }: Props) {
   if (inventory.totals.all === 0) {
     return (
       <div className="card p-6 text-sm text-slate-600">
-        No UI components detected across {files.length} file
-        {files.length === 1 ? '' : 's'}. Try uploading HTML, JSX/TSX, or Vue
-        files.
+        No UI components detected. Try uploading HTML, JSX/TSX, or Vue files.
       </div>
     );
   }

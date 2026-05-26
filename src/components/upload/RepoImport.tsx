@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { importRepo, parseRepoUrl, type RepoProvider } from '../../services/RepoFetcher';
 import { sourceRepository } from '../../services/SourceRepository';
+import { useToast } from '../toast/ToastHost';
 import type { StatusMessage } from './UploadPanel';
 
 type Props = {
@@ -22,6 +23,7 @@ const PROVIDER_TONE: Record<RepoProvider, string> = {
 export function RepoImport({ onStatus }: Props) {
   const [url, setUrl] = useState('');
   const [busy, setBusy] = useState(false);
+  const toast = useToast();
 
   // Live preview of what provider we'd dispatch to.
   const detected = useMemo(() => parseRepoUrl(url), [url]);
@@ -56,6 +58,7 @@ export function RepoImport({ onStatus }: Props) {
               ? ` Skipped ${result.skipped.length} entries.`
               : ''),
         });
+        toast.success(`Imported ${result.files.length} files from ${result.label}`);
       }
     } catch (err) {
       onStatus({

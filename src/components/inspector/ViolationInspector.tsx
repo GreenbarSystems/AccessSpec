@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useSourceRepository } from '../../services/useSourceRepository';
-import { audit, ALL_RULE_DEFS } from '../../services/AuditService';
+import { useAuditReport } from '../../services/AuditCache';
+import { ALL_RULE_DEFS } from '../../services/AuditService';
 import type { Finding, Rule, Severity } from '../../services/RuleEngine';
 import { IssueDetail } from './IssueDetail';
 
@@ -24,13 +24,7 @@ type RuleSummary = {
 };
 
 export function ViolationInspector() {
-  const { project } = useSourceRepository();
-  const files = useMemo(() => {
-    if (!project) return [];
-    return [...project.filesByPath.values()];
-  }, [project]);
-
-  const report = useMemo(() => (files.length ? audit(files) : null), [files]);
+  const report = useAuditReport();
 
   const ruleSummaries: RuleSummary[] = useMemo(() => {
     const countByRule = new Map<string, number>();
@@ -90,7 +84,7 @@ export function ViolationInspector() {
     return report.findings.filter((f) => f.ruleId === selected.rule.id);
   }, [report, selected]);
 
-  if (!project) {
+  if (!report) {
     return (
       <div className="card p-6 text-sm text-slate-600">
         Upload a project on the Dashboard to inspect violations.

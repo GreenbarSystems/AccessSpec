@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSourceRepository } from '../../services/useSourceRepository';
-import { audit } from '../../services/AuditService';
+import { useAuditReport } from '../../services/AuditCache';
 import {
   CAT_LABEL,
   generateRefactors,
@@ -37,11 +37,13 @@ type Filter = 'all' | RefactorCategory;
 export function RefactoringPanel() {
   const navigate = useNavigate();
   const { project } = useSourceRepository();
-  const files = useMemo(() => {
-    if (!project) return [];
-    return [...project.filesByPath.values()];
-  }, [project]);
-  const report = useMemo(() => (files.length ? audit(files) : null), [files]);
+  const report = useAuditReport();
+  // `generateRefactors` reads source lines for the "before" snippet, so it
+  // still needs the file list. Reading from `project.filesByPath` is cheap.
+  const files = useMemo(
+    () => (project ? [...project.filesByPath.values()] : []),
+    [project],
+  );
   const refactor = useMemo(
     () => (report ? generateRefactors(report.findings, files) : null),
     [report, files],

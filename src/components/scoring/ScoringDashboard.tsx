@@ -1,18 +1,10 @@
-import { useMemo } from 'react';
-import { useSourceRepository } from '../../services/useSourceRepository';
-import { audit } from '../../services/AuditService';
+import { useAuditReport } from '../../services/AuditCache';
 import { ScoreRing } from './ScoreRing';
 import { ScoreCard } from './ScoreCard';
 import { FindingsList } from './FindingsList';
 
 export function ScoringDashboard() {
-  const { project } = useSourceRepository();
-  const files = useMemo(() => {
-    if (!project) return [];
-    return [...project.filesByPath.values()];
-  }, [project]);
-
-  const report = useMemo(() => (files.length ? audit(files) : null), [files]);
+  const report = useAuditReport();
 
   return (
     <section aria-label="Accessibility scoring" data-testid="scoring-dashboard">

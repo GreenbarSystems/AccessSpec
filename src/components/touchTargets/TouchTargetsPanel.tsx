@@ -1,7 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useSourceRepository } from '../../services/useSourceRepository';
-import { detectComponents } from '../../services/ComponentDetector';
-import { enrichElements } from '../../services/CssResolver';
+import { useAuditReport } from '../../services/AuditCache';
 import {
   analyzeTouchTargets,
   STANDARDS,
@@ -28,16 +26,11 @@ const STATUS_GLYPH: Record<VerdictStatus, string> = {
 };
 
 export function TouchTargetsPanel({ onJump }: Props) {
-  const { project } = useSourceRepository();
-  const files = useMemo(() => {
-    if (!project) return [];
-    return [...project.filesByPath.values()];
-  }, [project]);
-
-  const report = useMemo(() => {
-    const elements = enrichElements(detectComponents(files), files);
-    return analyzeTouchTargets(elements);
-  }, [files]);
+  const audit = useAuditReport();
+  const report = useMemo(
+    () => analyzeTouchTargets(audit?.elements ?? []),
+    [audit],
+  );
 
   const [onlyViolations, setOnlyViolations] = useState(true);
   const [activeStandard, setActiveStandard] = useState<StandardId | 'any'>('any');
@@ -52,7 +45,7 @@ export function TouchTargetsPanel({ onJump }: Props) {
     });
   }, [report, onlyViolations, activeStandard]);
 
-  if (!project) {
+  if (!audit) {
     return (
       <div className="card p-6 text-sm text-slate-600">
         Upload a project to analyze touch targets.

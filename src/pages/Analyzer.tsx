@@ -46,6 +46,17 @@ export default function Analyzer() {
     <>
       <PageHeader
         title="Analyzer"
+        section={
+          {
+            source: 'Source explorer',
+            components: 'Components',
+            targets: 'Touch targets',
+            contrast: 'Contrast',
+            dynamic: 'Dynamic type',
+            reflow: 'Reflow',
+            patterns: 'Patterns',
+          }[mode] ?? mode
+        }
         description="Browse the uploaded project, inspect any file, and review the detected component inventory before running WCAG 2.2 checks."
       />
 

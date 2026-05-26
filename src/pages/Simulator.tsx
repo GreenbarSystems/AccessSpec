@@ -13,6 +13,14 @@ export default function Simulator() {
     <>
       <PageHeader
         title="Simulator"
+        section={
+          {
+            preview: 'Device preview',
+            parity: 'Parity report',
+            runtime: 'Runtime audit',
+            screenshot: 'Screenshot analysis',
+          }[mode] ?? mode
+        }
         description="Render the uploaded app inside device frames and compare every detected pattern to its iOS and Android native equivalents."
       />
 

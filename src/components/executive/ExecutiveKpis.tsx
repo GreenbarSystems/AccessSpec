@@ -1,6 +1,4 @@
-import { useMemo } from 'react';
-import { useSourceRepository } from '../../services/useSourceRepository';
-import { audit } from '../../services/AuditService';
+import { useAuditReport } from '../../services/AuditCache';
 import { bandOf, type ScoreBand } from '../../services/Scoring';
 
 /**
@@ -36,12 +34,7 @@ const TONE: Record<Tone, { card: string; bar: string; number: string }> = {
 };
 
 export function ExecutiveKpis() {
-  const { project } = useSourceRepository();
-  const files = useMemo(() => {
-    if (!project) return [];
-    return [...project.filesByPath.values()];
-  }, [project]);
-  const report = useMemo(() => (files.length ? audit(files) : null), [files]);
+  const report = useAuditReport();
 
   const a11y = report?.scores.byCategory.accessibility.score ?? null;
   const mobile = report?.scores.byCategory.mobile.score ?? null;

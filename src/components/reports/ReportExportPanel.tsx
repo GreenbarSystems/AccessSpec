@@ -1,6 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useSourceRepository } from '../../services/useSourceRepository';
-import { audit } from '../../services/AuditService';
+import { useAuditReport } from '../../services/AuditCache';
 import {
   exportReport,
   type ExportResult,
@@ -41,11 +41,7 @@ const ORDER: ReportFormat[] = ['pdf', 'html', 'json', 'csv'];
 
 export function ReportExportPanel() {
   const { project } = useSourceRepository();
-  const files = useMemo(() => {
-    if (!project) return [];
-    return [...project.filesByPath.values()];
-  }, [project]);
-  const report = useMemo(() => (files.length ? audit(files) : null), [files]);
+  const report = useAuditReport();
 
   const [status, setStatus] = useState<{
     kind: 'idle' | 'ok' | 'error';

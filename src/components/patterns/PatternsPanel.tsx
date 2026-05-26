@@ -1,7 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useSourceRepository } from '../../services/useSourceRepository';
-import { detectComponents } from '../../services/ComponentDetector';
-import { enrichElements } from '../../services/CssResolver';
+import { useAuditReport } from '../../services/AuditCache';
 import {
   recognizePatterns,
   PATTERN_KINDS,
@@ -31,16 +29,11 @@ const CHECK_GLYPH: Record<PatternCheck['status'], string> = {
 };
 
 export function PatternsPanel({ onJump }: Props) {
-  const { project } = useSourceRepository();
-  const files = useMemo(() => {
-    if (!project) return [];
-    return [...project.filesByPath.values()];
-  }, [project]);
-
-  const report = useMemo(() => {
-    const elements = enrichElements(detectComponents(files), files);
-    return recognizePatterns(elements);
-  }, [files]);
+  const audit = useAuditReport();
+  const report = useMemo(
+    () => recognizePatterns(audit?.elements ?? []),
+    [audit],
+  );
 
   const [activeKind, setActiveKind] = useState<PatternKind | 'all'>('all');
   const visible = useMemo(() => {
@@ -48,7 +41,7 @@ export function PatternsPanel({ onJump }: Props) {
     return report.patterns.filter((p) => p.kind === activeKind);
   }, [activeKind, report]);
 
-  if (!project) {
+  if (!audit) {
     return (
       <div className="card p-6 text-sm text-slate-600">
         Upload a project to recognize functional patterns.

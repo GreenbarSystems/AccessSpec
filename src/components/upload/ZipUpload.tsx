@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { extractZip } from '../../services/ZipExtractor';
 import { sourceRepository } from '../../services/SourceRepository';
+import { useToast } from '../toast/ToastHost';
 import type { StatusMessage } from './UploadPanel';
 
 type Props = {
@@ -10,6 +11,7 @@ type Props = {
 export function ZipUpload({ onStatus }: Props) {
   const ref = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
+  const toast = useToast();
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -42,6 +44,9 @@ export function ZipUpload({ onStatus }: Props) {
             `Loaded ${files.length} file(s) from ${file.name}.` +
             (skipped.length ? ` Skipped ${skipped.length} unsupported entries.` : ''),
         });
+        toast.success(
+          `Loaded ${files.length} file${files.length === 1 ? '' : 's'} from ${file.name}`,
+        );
       }
     } catch (err) {
       onStatus({

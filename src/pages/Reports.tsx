@@ -14,6 +14,14 @@ export default function Reports() {
     <>
       <PageHeader
         title="Reports"
+        section={
+          {
+            inspector: 'Violation inspector',
+            playbook: 'Remediation playbook',
+            assistant: 'Assistant',
+            refactor: 'Refactor suggestions',
+          }[mode] ?? mode
+        }
         description="Export the audit, inspect every rule violation, and generate a copy-paste-ready remediation playbook for engineering."
       />
       <div className="space-y-6">

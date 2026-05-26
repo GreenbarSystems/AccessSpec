@@ -5,6 +5,7 @@ import {
   readBrowserFile,
 } from '../../services/FileParser';
 import { sourceRepository } from '../../services/SourceRepository';
+import { useToast } from '../toast/ToastHost';
 import type { StatusMessage } from './UploadPanel';
 
 type Props = {
@@ -17,6 +18,7 @@ const ACCEPT_ATTR = SOURCE_EXTENSIONS.map((e) => `.${e}`).join(',');
 export function FilePicker({ mode, onStatus }: Props) {
   const ref = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
+  const toast = useToast();
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const list = e.target.files;
@@ -50,12 +52,12 @@ export function FilePicker({ mode, onStatus }: Props) {
         text: `Nothing added. ${skipped.join('; ') || 'Empty selection.'}`,
       });
     } else {
+      const summary = `Added ${added.length} file${added.length === 1 ? '' : 's'}`;
       onStatus({
         tone: 'success',
-        text:
-          `Added ${added.length} file${added.length === 1 ? '' : 's'}.` +
-          (skipped.length ? ` Skipped: ${skipped.join('; ')}` : ''),
+        text: summary + (skipped.length ? `. Skipped: ${skipped.join('; ')}` : '.'),
       });
+      toast.success(summary + (skipped.length ? ` (${skipped.length} skipped)` : ''));
     }
   };
 

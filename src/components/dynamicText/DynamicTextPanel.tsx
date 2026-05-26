@@ -1,7 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useSourceRepository } from '../../services/useSourceRepository';
-import { detectComponents } from '../../services/ComponentDetector';
-import { enrichElements } from '../../services/CssResolver';
+import { useAuditReport } from '../../services/AuditCache';
 import {
   simulateDynamicText,
   TEXT_SCALES,
@@ -41,16 +39,11 @@ const VERDICT_LABEL: Record<SimulationVerdict, string> = {
 type Filter = 'all' | 'any-fail' | 'breaks-at-200' | 'breaks-at-150' | 'unmeasurable';
 
 export function DynamicTextPanel({ onJump }: Props) {
-  const { project } = useSourceRepository();
-  const files = useMemo(() => {
-    if (!project) return [];
-    return [...project.filesByPath.values()];
-  }, [project]);
-
-  const report = useMemo(() => {
-    const elements = enrichElements(detectComponents(files), files);
-    return simulateDynamicText(elements);
-  }, [files]);
+  const audit = useAuditReport();
+  const report = useMemo(
+    () => simulateDynamicText(audit?.elements ?? []),
+    [audit],
+  );
 
   const [filter, setFilter] = useState<Filter>('any-fail');
 
@@ -72,7 +65,7 @@ export function DynamicTextPanel({ onJump }: Props) {
     });
   }, [report, filter]);
 
-  if (!project) {
+  if (!audit) {
     return (
       <div className="card p-6 text-sm text-slate-600">
         Upload a project to simulate dynamic type scaling.

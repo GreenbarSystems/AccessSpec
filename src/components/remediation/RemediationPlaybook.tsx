@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSourceRepository } from '../../services/useSourceRepository';
-import { audit } from '../../services/AuditService';
+import { useAuditReport } from '../../services/AuditCache';
 import {
   generateRemediation,
   remediationToMarkdown,
@@ -20,11 +20,7 @@ type SevFilter = 'all' | Severity;
 export function RemediationPlaybook() {
   const navigate = useNavigate();
   const { project } = useSourceRepository();
-  const files = useMemo(() => {
-    if (!project) return [];
-    return [...project.filesByPath.values()];
-  }, [project]);
-  const report = useMemo(() => (files.length ? audit(files) : null), [files]);
+  const report = useAuditReport();
   const items = useMemo(
     () => (report ? generateRemediation(report.findings) : []),
     [report],

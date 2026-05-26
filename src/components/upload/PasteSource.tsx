@@ -4,6 +4,7 @@ import {
   parsePastedSource,
 } from '../../services/FileParser';
 import { sourceRepository } from '../../services/SourceRepository';
+import { useToast } from '../toast/ToastHost';
 import type { StatusMessage } from './UploadPanel';
 
 type Props = {
@@ -15,6 +16,7 @@ const SOURCE_EXTS = SUPPORTED_EXTENSIONS.filter((e) => e !== 'zip');
 export function PasteSource({ onStatus }: Props) {
   const [filename, setFilename] = useState('pasted.html');
   const [content, setContent] = useState('');
+  const toast = useToast();
 
   const handleAdd = () => {
     try {
@@ -24,6 +26,7 @@ export function PasteSource({ onStatus }: Props) {
         tone: 'success',
         text: `Added ${file.path} (${file.size} bytes) to the project.`,
       });
+      toast.success(`Added ${file.name} to the project`);
       setContent('');
     } catch (err) {
       onStatus({

@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useSourceRepository } from '../../services/useSourceRepository';
-import { detectComponents } from '../../services/ComponentDetector';
-import { enrichElements } from '../../services/CssResolver';
+import { useAuditReport } from '../../services/AuditCache';
 import {
   analyzeContrast,
   formatRgba,
@@ -28,15 +27,17 @@ const VERDICT_GLYPH: Record<Verdict, string> = {
 
 export function ContrastPanel({ onJump }: Props) {
   const { project } = useSourceRepository();
-  const files = useMemo(() => {
-    if (!project) return [];
-    return [...project.filesByPath.values()];
-  }, [project]);
-
-  const report = useMemo(() => {
-    const elements = enrichElements(detectComponents(files), files);
-    return analyzeContrast(elements, files);
-  }, [files]);
+  const audit = useAuditReport();
+  // analyzeContrast needs the raw files to find the page-level background
+  // from <body>/<html>/:root CSS rules.
+  const files = useMemo(
+    () => (project ? [...project.filesByPath.values()] : []),
+    [project],
+  );
+  const report = useMemo(
+    () => analyzeContrast(audit?.elements ?? [], files),
+    [audit, files],
+  );
 
   const [filter, setFilter] = useState<Filter>('aa-fail');
 

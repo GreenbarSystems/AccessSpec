@@ -1,7 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useSourceRepository } from '../../services/useSourceRepository';
-import { detectComponents } from '../../services/ComponentDetector';
-import { enrichElements } from '../../services/CssResolver';
+import { useAuditReport } from '../../services/AuditCache';
 import {
   analyzeReflow,
   VIEWPORTS,
@@ -49,16 +47,11 @@ const VIEWPORT_LABEL: Record<Viewport, string> = {
 type Filter = 'any-fail' | 'fail-320' | 'fail-768' | 'all';
 
 export function ReflowPanel({ onJump }: Props) {
-  const { project } = useSourceRepository();
-  const files = useMemo(() => {
-    if (!project) return [];
-    return [...project.filesByPath.values()];
-  }, [project]);
-
-  const report = useMemo(() => {
-    const elements = enrichElements(detectComponents(files), files);
-    return analyzeReflow(elements);
-  }, [files]);
+  const audit = useAuditReport();
+  const report = useMemo(
+    () => analyzeReflow(audit?.elements ?? []),
+    [audit],
+  );
 
   const [filter, setFilter] = useState<Filter>('any-fail');
 
@@ -81,7 +74,7 @@ export function ReflowPanel({ onJump }: Props) {
     });
   }, [report, filter]);
 
-  if (!project) {
+  if (!audit) {
     return (
       <div className="card p-6 text-sm text-slate-600">
         Upload a project to run the responsive reflow audit.

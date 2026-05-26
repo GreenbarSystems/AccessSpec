@@ -1,8 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSourceRepository } from '../../services/useSourceRepository';
-import { detectComponents } from '../../services/ComponentDetector';
-import { enrichElements } from '../../services/CssResolver';
+import { useAuditReport } from '../../services/AuditCache';
 import {
   analyzeParity,
   type ParityRow,
@@ -36,16 +34,11 @@ type Filter = 'all' | ParityVerdict | PatternKind;
 
 export function PlatformParityPanel() {
   const navigate = useNavigate();
-  const { project } = useSourceRepository();
-  const files = useMemo(() => {
-    if (!project) return [];
-    return [...project.filesByPath.values()];
-  }, [project]);
-
-  const report = useMemo(() => {
-    const elements = enrichElements(detectComponents(files), files);
-    return analyzeParity(elements);
-  }, [files]);
+  const audit = useAuditReport();
+  const report = useMemo(
+    () => analyzeParity(audit?.elements ?? []),
+    [audit],
+  );
 
   const [filter, setFilter] = useState<Filter>('all');
   const visible = useMemo(() => {
@@ -56,7 +49,7 @@ export function PlatformParityPanel() {
     return report.rows.filter((r) => r.kind === filter);
   }, [filter, report]);
 
-  if (!project) {
+  if (!audit) {
     return (
       <div className="card p-6 text-sm text-slate-600">
         Upload a project to generate the parity report.

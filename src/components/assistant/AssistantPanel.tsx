@@ -1,7 +1,6 @@
-import { useMemo, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSourceRepository } from '../../services/useSourceRepository';
-import { audit } from '../../services/AuditService';
+import { useAuditReport } from '../../services/AuditCache';
 import {
   ask,
   SUGGESTED_PROMPTS,
@@ -19,12 +18,7 @@ type Turn = { role: 'user' | 'assistant'; content: string; reply?: AssistantRepl
 
 export function AssistantPanel() {
   const navigate = useNavigate();
-  const { project } = useSourceRepository();
-  const files = useMemo(() => {
-    if (!project) return [];
-    return [...project.filesByPath.values()];
-  }, [project]);
-  const report = useMemo(() => (files.length ? audit(files) : null), [files]);
+  const report = useAuditReport();
   const findings = report?.findings ?? [];
 
   const [conversation, setConversation] = useState<Turn[]>([]);
