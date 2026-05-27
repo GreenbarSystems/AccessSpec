@@ -99,10 +99,10 @@ export function ReportExportPanel() {
     >
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <div>
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
             Export report
           </h2>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-500 dark:text-slate-500">
             {ready
               ? `Project · ${project!.name} · ${project!.filesByPath.size} files · ${report!.findings.length} findings`
               : 'Load a project on the Dashboard to enable exports.'}

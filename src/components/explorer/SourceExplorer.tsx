@@ -63,7 +63,7 @@ export function SourceExplorer({ externalJump }: { externalJump?: ExternalJump }
 
   if (!project) {
     return (
-      <div className="card p-6 text-sm text-slate-600">
+      <div className="card p-6 text-sm text-slate-600 dark:text-slate-400">
         No project loaded yet. Upload sources on the{' '}
         <a className="font-medium text-brand-700 underline" href="/">
           Dashboard
@@ -88,7 +88,7 @@ export function SourceExplorer({ externalJump }: { externalJump?: ExternalJump }
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
         <aside className="lg:col-span-4 space-y-4">
           <div>
-            <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
               Project tree
             </h2>
             <div className="card p-2" data-testid="explorer-tree">
@@ -98,7 +98,7 @@ export function SourceExplorer({ externalJump }: { externalJump?: ExternalJump }
 
           {query && (
             <div>
-              <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
                 Search results
               </h2>
               <SearchResults

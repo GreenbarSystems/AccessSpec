@@ -58,7 +58,7 @@ export function ContrastPanel({ onJump }: Props) {
 
   if (!project) {
     return (
-      <div className="card p-6 text-sm text-slate-600">
+      <div className="card p-6 text-sm text-slate-600 dark:text-slate-400">
         Upload a project to run the contrast checker.
       </div>
     );
@@ -66,7 +66,7 @@ export function ContrastPanel({ onJump }: Props) {
 
   if (report.checks.length === 0) {
     return (
-      <div className="card p-6 text-sm text-slate-600">
+      <div className="card p-6 text-sm text-slate-600 dark:text-slate-400">
         No text-bearing components detected. Contrast applies to elements with
         visible text content and a declared <code>color</code>.
       </div>
@@ -81,7 +81,7 @@ export function ContrastPanel({ onJump }: Props) {
           <Chip
             id="all"
             label="All"
-            tone="bg-slate-100 text-slate-700 border-slate-200"
+            tone="bg-slate-100 text-slate-700 dark:text-slate-300 border-slate-200"
             primary={report.checks.length}
             secondary={`${report.totals.checked} measured · ${report.totals.skipped} skipped`}
             active={filter === 'all'}
@@ -116,14 +116,14 @@ export function ContrastPanel({ onJump }: Props) {
           <Chip
             id="skipped"
             label="Skipped"
-            tone="bg-slate-100 text-slate-500 border-slate-200"
+            tone="bg-slate-100 text-slate-500 dark:text-slate-500 border-slate-200"
             primary={report.totals.skipped}
             secondary="no color resolved"
             active={filter === 'skipped'}
             onClick={() => setFilter('skipped')}
           />
         </div>
-        <p className="mt-3 text-xs text-slate-500">
+        <p className="mt-3 text-xs text-slate-500 dark:text-slate-500">
           Page background:{' '}
           <SwatchInline rgb={report.pageBackground} />{' '}
           <span className="font-mono">{formatRgba(report.pageBackground)}</span>
@@ -145,7 +145,7 @@ export function ContrastPanel({ onJump }: Props) {
           <div className="overflow-x-auto">
             <table className="w-full text-sm" data-testid="contrast-table">
               <thead>
-                <tr className="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+                <tr className="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500 dark:text-slate-500">
                   <th className="px-3 py-2 font-medium">Component</th>
                   <th className="px-3 py-2 font-medium">Foreground</th>
                   <th className="px-3 py-2 font-medium">Background</th>
@@ -193,10 +193,10 @@ function Row({
           className="text-left hover:text-brand-700"
         >
           <div className="flex items-baseline gap-2">
-            <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium uppercase text-slate-700">
+            <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium uppercase text-slate-700 dark:text-slate-300">
               {el.type}
             </span>
-            <span className="font-mono text-xs text-slate-700">
+            <span className="font-mono text-xs text-slate-700 dark:text-slate-300">
               &lt;{el.tagName}&gt;
             </span>
             {c.isLargeText && (
@@ -205,10 +205,10 @@ function Row({
               </span>
             )}
           </div>
-          <div className="mt-0.5 max-w-[28ch] truncate text-xs text-slate-800">
+          <div className="mt-0.5 max-w-[28ch] truncate text-xs text-slate-800 dark:text-slate-200">
             {el.text}
           </div>
-          <div className="mt-0.5 truncate font-mono text-[11px] text-slate-500">
+          <div className="mt-0.5 truncate font-mono text-[11px] text-slate-500 dark:text-slate-500">
             {el.file}:{el.line}
           </div>
         </button>
@@ -224,7 +224,7 @@ function Row({
       </td>
       <td className="px-3 py-2 align-top text-right font-mono text-sm font-semibold">
         {c.skipped ? (
-          <span className="text-slate-400" title={c.skipped}>
+          <span className="text-slate-400 dark:text-slate-500" title={c.skipped}>
             —
           </span>
         ) : (
@@ -248,7 +248,7 @@ function Row({
 function VerdictBadge({ c, level }: { c: ContrastCheck; level: 'aa' | 'aaa' }) {
   if (c.skipped) {
     return (
-      <span className="rounded px-1.5 py-0.5 text-[11px] text-slate-400" title={c.skipped}>
+      <span className="rounded px-1.5 py-0.5 text-[11px] text-slate-400 dark:text-slate-500" title={c.skipped}>
         n/a
       </span>
     );
@@ -269,7 +269,7 @@ function VerdictBadge({ c, level }: { c: ContrastCheck; level: 'aa' | 'aaa' }) {
 
 function ColorCell({ raw, preview }: { raw: string | null; preview: RGB | null }) {
   if (!raw) {
-    return <span className="text-slate-400">—</span>;
+    return <span className="text-slate-400 dark:text-slate-500">—</span>;
   }
   return (
     <div className="flex items-center gap-2 font-mono text-xs">

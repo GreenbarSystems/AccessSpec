@@ -51,7 +51,7 @@ export function AssistantPanel() {
   return (
     <div className="space-y-3" data-testid="assistant-panel">
       <div className="card p-3">
-        <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+        <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-500">
           Suggested prompts
         </div>
         <div className="mt-2 flex flex-wrap gap-1.5">
@@ -61,13 +61,13 @@ export function AssistantPanel() {
               type="button"
               onClick={() => send(p)}
               data-suggested={p}
-              className="rounded-full border border-slate-200 bg-white px-2.5 py-1 text-xs text-slate-700 transition hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700"
+              className="rounded-full border border-slate-200 bg-white px-2.5 py-1 text-xs text-slate-700 dark:text-slate-300 transition hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700"
             >
               {p}
             </button>
           ))}
         </div>
-        <p className="mt-3 text-[11px] text-slate-500">
+        <p className="mt-3 text-[11px] text-slate-500 dark:text-slate-500">
           The assistant matches your question against the {report ? findings.length : 0}{' '}
           finding{findings.length === 1 ? '' : 's'} in the current audit and
           our 17-rule database. Every answer cites the matched rule ID, so you
@@ -82,7 +82,7 @@ export function AssistantPanel() {
         data-testid="assistant-conversation"
       >
         {conversation.length === 0 ? (
-          <p className="text-center text-sm text-slate-500">
+          <p className="text-center text-sm text-slate-500 dark:text-slate-500">
             Ask a question or pick a suggested prompt above.
           </p>
         ) : (
@@ -162,15 +162,15 @@ function AssistantBubble({
             >
               {reply.matchedRule.severity}
             </span>
-            <span className="font-mono text-slate-700">
+            <span className="font-mono text-slate-700 dark:text-slate-300">
               {reply.matchedRule.id}
             </span>
-            <span className="text-slate-500">
+            <span className="text-slate-500 dark:text-slate-500">
               · confidence {Math.round(reply.confidence * 100)}%
             </span>
           </>
         ) : (
-          <span className="text-slate-500">No matching rule.</span>
+          <span className="text-slate-500 dark:text-slate-500">No matching rule.</span>
         )}
       </header>
 
@@ -194,7 +194,7 @@ function AssistantBubble({
       {/* Best practice */}
       {reply.bestPractice.length > 0 && (
         <Section title="Best practice" testId="ans-best">
-          <ul className="list-inside list-disc text-xs text-slate-700">
+          <ul className="list-inside list-disc text-xs text-slate-700 dark:text-slate-300">
             {reply.bestPractice.map((b, i) => (
               <li key={i}>{b}</li>
             ))}
@@ -204,10 +204,10 @@ function AssistantBubble({
 
       {/* References + affected */}
       {(reply.references.length > 0 || reply.affectedElements.length > 0) && (
-        <footer className="mt-3 grid grid-cols-1 gap-2 border-t border-slate-200 pt-2 text-[11px] text-slate-600 sm:grid-cols-2">
+        <footer className="mt-3 grid grid-cols-1 gap-2 border-t border-slate-200 pt-2 text-[11px] text-slate-600 dark:text-slate-400 sm:grid-cols-2">
           {reply.references.length > 0 && (
             <div>
-              <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+              <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-500">
                 References
               </div>
               <ul className="mt-0.5 font-mono">
@@ -219,7 +219,7 @@ function AssistantBubble({
           )}
           {reply.affectedElements.length > 0 && (
             <div>
-              <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+              <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-500">
                 Affected in your project
               </div>
               <ul className="mt-0.5 space-y-0.5">
@@ -255,7 +255,7 @@ function Section({
 }) {
   return (
     <section className="mb-2 last:mb-0" data-testid={testId}>
-      <h3 className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+      <h3 className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-500">
         {title}
       </h3>
       {children}
@@ -270,7 +270,7 @@ function Section({
 function Markdown({ text }: { text: string }) {
   const paragraphs = text.split(/\n{2,}/);
   return (
-    <div className="space-y-2 text-sm text-slate-800">
+    <div className="space-y-2 text-sm text-slate-800 dark:text-slate-200">
       {paragraphs.map((p, i) => (
         <p
           key={i}
@@ -309,7 +309,7 @@ function CodeBlock({
         <span>{label}</span>
         {language && <span className="opacity-60">{language}</span>}
       </div>
-      <pre className="overflow-auto p-2 font-mono text-xs leading-relaxed text-slate-800">
+      <pre className="overflow-auto p-2 font-mono text-xs leading-relaxed text-slate-800 dark:text-slate-200">
         {code}
       </pre>
     </div>

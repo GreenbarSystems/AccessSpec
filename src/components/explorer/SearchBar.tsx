@@ -81,7 +81,7 @@ function ToggleChip({
         'rounded-md border px-2 py-1 font-mono text-xs transition',
         active
           ? 'border-brand-500 bg-brand-50 text-brand-700'
-          : 'border-slate-300 bg-white text-slate-600 hover:bg-slate-50',
+          : 'border-slate-300 bg-white text-slate-600 dark:text-slate-400 hover:bg-slate-50',
       ].join(' ')}
     >
       {label}
@@ -98,7 +98,7 @@ function SummaryLine({
 }) {
   if (!query) {
     return (
-      <p className="mt-2 text-xs text-slate-500">
+      <p className="mt-2 text-xs text-slate-500 dark:text-slate-500">
         Empty query — type to filter and highlight matches.
       </p>
     );
@@ -111,16 +111,16 @@ function SummaryLine({
     );
   }
   if (summary.matches.length === 0) {
-    return <p className="mt-2 text-xs text-slate-500">No matches.</p>;
+    return <p className="mt-2 text-xs text-slate-500 dark:text-slate-500">No matches.</p>;
   }
   return (
-    <p className="mt-2 text-xs text-slate-600">
-      <span className="font-semibold text-slate-800">
+    <p className="mt-2 text-xs text-slate-600 dark:text-slate-400">
+      <span className="font-semibold text-slate-800 dark:text-slate-200">
         {summary.matches.length}
         {summary.truncated ? '+' : ''}
       </span>{' '}
       match{summary.matches.length === 1 ? '' : 'es'} in{' '}
-      <span className="font-semibold text-slate-800">
+      <span className="font-semibold text-slate-800 dark:text-slate-200">
         {summary.filesMatched}
       </span>{' '}
       file{summary.filesMatched === 1 ? '' : 's'}

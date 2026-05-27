@@ -125,7 +125,7 @@ export function ComponentInventoryPanel({ onJump }: Props) {
 
   if (!report) {
     return (
-      <div className="card p-6 text-sm text-slate-600">
+      <div className="card p-6 text-sm text-slate-600 dark:text-slate-400">
         Upload a project on the Dashboard to generate a component inventory.
       </div>
     );
@@ -133,7 +133,7 @@ export function ComponentInventoryPanel({ onJump }: Props) {
 
   if (inventory.totals.all === 0) {
     return (
-      <div className="card p-6 text-sm text-slate-600">
+      <div className="card p-6 text-sm text-slate-600 dark:text-slate-400">
         No UI components detected. Try uploading HTML, JSX/TSX, or Vue files.
       </div>
     );
@@ -194,16 +194,16 @@ export function ComponentInventoryPanel({ onJump }: Props) {
               // The native `type="search"` × is suppressed by Tailwind's
               // preflight in most browsers — render our own so the affordance
               // is consistent across Chrome / Safari / Firefox.
-              className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+              className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded p-1 text-slate-400 dark:text-slate-500 hover:bg-slate-100 hover:text-slate-700"
             >
               <span aria-hidden>✕</span>
             </button>
           )}
         </div>
-        <p className="mt-2 flex flex-wrap items-center gap-x-2 text-xs text-slate-500">
+        <p className="mt-2 flex flex-wrap items-center gap-x-2 text-xs text-slate-500 dark:text-slate-500">
           <span>
             Showing{' '}
-            <span className="font-semibold text-slate-800">{visible.length}</span>{' '}
+            <span className="font-semibold text-slate-800 dark:text-slate-200">{visible.length}</span>{' '}
             of {inventory.totals.all} detected component
             {inventory.totals.all === 1 ? '' : 's'} across{' '}
             {Object.keys(inventory.byFile).length} file
@@ -228,7 +228,7 @@ export function ComponentInventoryPanel({ onJump }: Props) {
                 'rounded-full border px-2 py-0.5 text-[11px] font-medium transition',
                 groupByFile
                   ? 'border-brand-500 bg-brand-50 text-brand-700'
-                  : 'border-slate-300 bg-white text-slate-600 hover:bg-slate-50',
+                  : 'border-slate-300 bg-white text-slate-600 dark:text-slate-400 hover:bg-slate-50',
               ].join(' ')}
               title="Group rows by source file"
             >
@@ -250,7 +250,7 @@ export function ComponentInventoryPanel({ onJump }: Props) {
 
       <div className="card overflow-hidden">
         {visible.length === 0 ? (
-          <div className="space-y-3 p-6 text-sm text-slate-600">
+          <div className="space-y-3 p-6 text-sm text-slate-600 dark:text-slate-400">
             <p>No components match the current filter.</p>
             <button
               type="button"
@@ -298,11 +298,11 @@ function FileGroup({
       {/* `open` by default so users see content immediately on first toggle —
           if they want to collapse a file they can. */}
       <details open data-testid="inventory-file-group" data-file={file}>
-        <summary className="flex cursor-pointer items-center justify-between gap-3 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-100">
+        <summary className="flex cursor-pointer items-center justify-between gap-3 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100">
           <span className="truncate font-mono" title={file}>
             {file}
           </span>
-          <span className="shrink-0 rounded-full bg-white px-2 py-0.5 text-[10px] font-semibold text-slate-600 ring-1 ring-slate-200">
+          <span className="shrink-0 rounded-full bg-white px-2 py-0.5 text-[10px] font-semibold text-slate-600 dark:text-slate-400 ring-1 ring-slate-200">
             {items.length}
           </span>
         </summary>
@@ -352,11 +352,11 @@ function ElementRow({
                 <style.Icon aria-hidden className="h-3 w-3" />
                 {el.type}
               </span>
-              <span className="font-mono text-xs text-slate-700">
+              <span className="font-mono text-xs text-slate-700 dark:text-slate-300">
                 &lt;{el.tagName}&gt;
               </span>
               {el.role && (
-                <span className="text-xs text-slate-500">
+                <span className="text-xs text-slate-500 dark:text-slate-500">
                   role: <span className="font-mono">{el.role}</span>
                 </span>
               )}
@@ -370,19 +370,19 @@ function ElementRow({
               )}
             </div>
             {el.text && (
-              <p className="mt-0.5 truncate text-sm text-slate-800">
+              <p className="mt-0.5 truncate text-sm text-slate-800 dark:text-slate-200">
                 {el.text}
               </p>
             )}
             <div
-              className="mt-0.5 truncate font-mono text-xs text-slate-500"
+              className="mt-0.5 truncate font-mono text-xs text-slate-500 dark:text-slate-500"
               // Truncation hides long paths — the title makes the full path
               // available on hover without having to jump to the Source tab.
               title={`${el.file}:${el.line}${el.styles.className ? ` · .${el.styles.className.split(/\s+/).join('.')}` : ''}`}
             >
               {el.file}:{el.line}
               {el.styles.className && (
-                <span className="ml-2 text-slate-400">
+                <span className="ml-2 text-slate-400 dark:text-slate-500">
                   .{el.styles.className.split(/\s+/).slice(0, 3).join(' .')}
                   {el.styles.className.split(/\s+/).length > 3 ? '…' : ''}
                 </span>
@@ -393,7 +393,7 @@ function ElementRow({
             aria-hidden
             // → matches the in-page jump behavior. The old ↗ glyph
             // reads as "external link" which this isn't.
-            className="shrink-0 self-center text-xs text-slate-400"
+            className="shrink-0 self-center text-xs text-slate-400 dark:text-slate-500"
           >
             →
           </span>
@@ -401,9 +401,9 @@ function ElementRow({
       </div>
       {hasStyleDetails && (
         <details className="border-t border-slate-100 bg-slate-50/50 px-3 py-1">
-          <summary className="cursor-pointer text-xs text-slate-600 hover:text-slate-900">
+          <summary className="cursor-pointer text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900">
             Styles{' '}
-            <span className="text-slate-400">
+            <span className="text-slate-400 dark:text-slate-500">
               {/* Split CSS vs inline so the count matches what the expanded
                   view actually shows (two separate tables). */}
               {[
@@ -459,8 +459,8 @@ function StyleTable({
       <dl className="grid grid-cols-1 gap-x-4 gap-y-0.5 font-mono text-xs sm:grid-cols-2">
         {Object.entries(styles).map(([k, v]) => (
           <div key={k} className="flex gap-2">
-            <dt className="text-slate-500">{k}:</dt>
-            <dd className="truncate text-slate-800" title={v}>
+            <dt className="text-slate-500 dark:text-slate-500">{k}:</dt>
+            <dd className="truncate text-slate-800 dark:text-slate-200" title={v}>
               {v}
             </dd>
           </div>
@@ -487,7 +487,7 @@ function TypeChip({
   dataAttr: string;
   chipClass?: string;
 }) {
-  const base = chipClass ?? 'bg-slate-100 text-slate-700 border-slate-200';
+  const base = chipClass ?? 'bg-slate-100 text-slate-700 dark:text-slate-300 border-slate-200';
   return (
     <button
       type="button"
@@ -502,7 +502,7 @@ function TypeChip({
     >
       {icon}
       <span>{label}</span>
-      <span className="rounded-full bg-white/70 px-1.5 text-[10px] font-semibold text-slate-700">
+      <span className="rounded-full bg-white/70 px-1.5 text-[10px] font-semibold text-slate-700 dark:text-slate-300">
         {count}
       </span>
     </button>

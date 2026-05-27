@@ -78,14 +78,14 @@ export function ScoreRing({ score, size = 80, emptyLabel = '—' }: Props) {
         aria-hidden
         className={[
           'absolute inset-0 flex flex-col items-center justify-center leading-none',
-          score === null ? 'text-slate-400' : BAND_TEXT[band],
+          score === null ? 'text-slate-400 dark:text-slate-500' : BAND_TEXT[band],
         ].join(' ')}
       >
         <span className={`${scoreFont} font-bold tabular-nums`}>
           {score === null ? emptyLabel : score}
         </span>
         {score !== null && (
-          <span className="mt-0.5 text-[10px] font-medium uppercase tracking-wider text-slate-500">
+          <span className="mt-0.5 text-[10px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-500">
             / 100
           </span>
         )}

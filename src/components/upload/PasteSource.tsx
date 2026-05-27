@@ -38,14 +38,14 @@ export function PasteSource({ onStatus }: Props) {
 
   return (
     <div className="space-y-3">
-      <p className="text-sm text-slate-600">
+      <p className="text-sm text-slate-600 dark:text-slate-400">
         Paste a single source file. Pick a filename — its extension determines
         how the analyzer treats it.
       </p>
       <div className="flex flex-wrap items-center gap-2">
         <label
           htmlFor="paste-filename"
-          className="text-xs font-medium text-slate-700"
+          className="text-xs font-medium text-slate-700 dark:text-slate-300"
         >
           Filename
         </label>
@@ -56,7 +56,7 @@ export function PasteSource({ onStatus }: Props) {
           onChange={(e) => setFilename(e.target.value)}
           className="flex-1 min-w-[180px] rounded-md border border-slate-300 px-3 py-1.5 text-sm font-mono focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
         />
-        <span className="text-xs text-slate-500">
+        <span className="text-xs text-slate-500 dark:text-slate-500">
           Supported: {SOURCE_EXTS.map((e) => `.${e}`).join(', ')}
         </span>
       </div>
@@ -66,7 +66,7 @@ export function PasteSource({ onStatus }: Props) {
         onChange={(e) => setContent(e.target.value)}
         spellCheck={false}
         placeholder="// paste source here…"
-        className="h-56 w-full resize-y rounded-md border border-slate-300 bg-slate-50 p-3 font-mono text-xs leading-relaxed text-slate-800 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
+        className="h-56 w-full resize-y rounded-md border border-slate-300 bg-slate-50 p-3 font-mono text-xs leading-relaxed text-slate-800 dark:text-slate-200 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
       />
       <div className="flex justify-end">
         <button

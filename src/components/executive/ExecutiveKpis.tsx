@@ -77,7 +77,7 @@ function ScoreTile({
       data-testid={`kpi-${dataKey}`}
       data-score={score ?? ''}
     >
-      <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+      <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-500">
         {label}
       </div>
       <div className="mt-1 flex items-baseline gap-1">
@@ -87,10 +87,10 @@ function ScoreTile({
           {score ?? '—'}
         </span>
         {score !== null && (
-          <span className="text-sm font-medium text-slate-500">/100</span>
+          <span className="text-sm font-medium text-slate-500 dark:text-slate-500">/100</span>
         )}
       </div>
-      <p className="mt-1 text-xs text-slate-500">
+      <p className="mt-1 text-xs text-slate-500 dark:text-slate-500">
         {score === null
           ? 'No project loaded'
           : score >= 90
@@ -121,7 +121,7 @@ function CriticalTile({ count }: { count: number | null }) {
       data-testid="kpi-critical"
       data-count={count ?? ''}
     >
-      <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+      <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-500">
         Critical Issues
       </div>
       <div className="mt-1 flex items-baseline gap-1">
@@ -131,12 +131,12 @@ function CriticalTile({ count }: { count: number | null }) {
           {count ?? '—'}
         </span>
         {count !== null && count > 0 && (
-          <span className="text-sm font-medium text-slate-500">
+          <span className="text-sm font-medium text-slate-500 dark:text-slate-500">
             blocking
           </span>
         )}
       </div>
-      <p className="mt-1 text-xs text-slate-500">
+      <p className="mt-1 text-xs text-slate-500 dark:text-slate-500">
         {count === null
           ? 'No project loaded'
           : count === 0

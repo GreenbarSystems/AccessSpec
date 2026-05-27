@@ -64,12 +64,12 @@ export function SearchResults({ matches, selectedPath, onJump }: Props) {
           <div
             className={[
               'sticky top-0 z-10 truncate rounded bg-slate-100 px-2 py-1 font-mono text-xs',
-              g.path === selectedPath ? 'text-brand-700' : 'text-slate-700',
+              g.path === selectedPath ? 'text-brand-700' : 'text-slate-700 dark:text-slate-300',
             ].join(' ')}
             title={g.path}
           >
             {g.path}
-            <span className="ml-1 text-slate-500">({g.matches.length})</span>
+            <span className="ml-1 text-slate-500 dark:text-slate-500">({g.matches.length})</span>
           </div>
           <ul>
             {g.matches.map((m, i) => {
@@ -82,12 +82,12 @@ export function SearchResults({ matches, selectedPath, onJump }: Props) {
                     data-jump={`${m.file.path}:${m.line}`}
                     className="flex w-full items-baseline gap-2 rounded px-2 py-0.5 text-left hover:bg-slate-100"
                   >
-                    <span className="w-10 shrink-0 text-right font-mono text-xs text-slate-400">
+                    <span className="w-10 shrink-0 text-right font-mono text-xs text-slate-400 dark:text-slate-500">
                       {m.line}
                     </span>
-                    <span className="flex-1 truncate font-mono text-xs text-slate-700">
+                    <span className="flex-1 truncate font-mono text-xs text-slate-700 dark:text-slate-300">
                       {clip.text.slice(0, clip.start)}
-                      <mark className="rounded-sm bg-amber-200/70 text-slate-900">
+                      <mark className="rounded-sm bg-amber-200/70 text-slate-900 dark:text-slate-100">
                         {clip.text.slice(clip.start, clip.end)}
                       </mark>
                       {clip.text.slice(clip.end)}

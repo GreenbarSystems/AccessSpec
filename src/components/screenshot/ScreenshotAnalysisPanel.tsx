@@ -69,11 +69,11 @@ export function ScreenshotAnalysisPanel() {
           htmlFor="screenshot-input"
           className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 px-6 py-8 text-center hover:border-brand-400 hover:bg-brand-50/40"
         >
-          <ImageIcon aria-hidden className="h-9 w-9 text-slate-400" />
-          <span className="text-sm font-semibold text-slate-800">
+          <ImageIcon aria-hidden className="h-9 w-9 text-slate-400 dark:text-slate-500" />
+          <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">
             Upload one or more screenshots
           </span>
-          <span className="text-xs text-slate-500">
+          <span className="text-xs text-slate-500 dark:text-slate-500">
             PNG or JPEG · we&apos;ll measure contrast, palette, and simulate
             color-blindness — no images leave your browser
           </span>
@@ -90,7 +90,7 @@ export function ScreenshotAnalysisPanel() {
           />
         </label>
         {busy && (
-          <p className="mt-3 text-sm text-slate-500" data-testid="screenshot-busy">
+          <p className="mt-3 text-sm text-slate-500 dark:text-slate-500" data-testid="screenshot-busy">
             Analyzing…
           </p>
         )}
@@ -104,7 +104,7 @@ export function ScreenshotAnalysisPanel() {
           </p>
         )}
         {analyses.length > 0 && (
-          <div className="mt-3 flex items-center gap-3 text-xs text-slate-600">
+          <div className="mt-3 flex items-center gap-3 text-xs text-slate-600 dark:text-slate-400">
             <label className="inline-flex cursor-pointer items-center gap-2">
               <input
                 type="checkbox"
@@ -179,8 +179,8 @@ function ScreenshotCard({
       data-file={name}
     >
       <header className="flex flex-wrap items-baseline justify-between gap-2 border-b border-slate-200 bg-slate-50 px-4 py-2">
-        <div className="font-mono text-xs text-slate-700">{name}</div>
-        <div className="text-[11px] text-slate-500">
+        <div className="font-mono text-xs text-slate-700 dark:text-slate-300">{name}</div>
+        <div className="text-[11px] text-slate-500 dark:text-slate-500">
           {report.width} × {report.height} ·{' '}
           <span className="font-mono">{report.aspectRatio.toFixed(2)}</span> ·{' '}
           {report.inferredOrientation}
@@ -316,7 +316,7 @@ function MetricsBlock({ report }: { report: ScreenshotAnalysis }) {
   const midBlocks = report.contrastBlocks.filter((b) => b.band === 'medium').length;
   return (
     <section className="rounded border border-slate-200 bg-slate-50 px-3 py-2">
-      <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+      <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
         Metrics
       </div>
       <dl className="mt-1 grid grid-cols-2 gap-x-3 gap-y-1 text-xs sm:grid-cols-4">
@@ -350,11 +350,11 @@ function Metric({
 }) {
   return (
     <div>
-      <dt className="text-[10px] uppercase tracking-wide text-slate-500">
+      <dt className="text-[10px] uppercase tracking-wide text-slate-500 dark:text-slate-500">
         {label}
       </dt>
       <dd
-        className={`font-mono text-sm font-semibold ${tone ?? 'text-slate-800'}`}
+        className={`font-mono text-sm font-semibold ${tone ?? 'text-slate-800 dark:text-slate-200'}`}
       >
         {value}
       </dd>
@@ -366,7 +366,7 @@ function PaletteBlock({ report }: { report: ScreenshotAnalysis }) {
   const total = report.dominantColors.reduce((s, c) => s + c.population, 0) || 1;
   return (
     <section className="rounded border border-slate-200 bg-white px-3 py-2">
-      <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+      <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
         Dominant palette
       </div>
       <div className="mt-1.5 flex flex-wrap gap-1.5" data-testid="palette">
@@ -384,8 +384,8 @@ function PaletteBlock({ report }: { report: ScreenshotAnalysis }) {
                 className="inline-block h-5 w-5 rounded-l"
                 style={{ backgroundColor: c.hex }}
               />
-              <span className="font-mono text-slate-700">{c.hex}</span>
-              <span className="text-slate-500">{share}%</span>
+              <span className="font-mono text-slate-700 dark:text-slate-300">{c.hex}</span>
+              <span className="text-slate-500 dark:text-slate-500">{share}%</span>
             </div>
           );
         })}
@@ -401,7 +401,7 @@ function FindingsBlock({ report }: { report: ScreenshotAnalysis }) {
       className="rounded border border-slate-200 bg-white"
       data-testid="screenshot-findings"
     >
-      <div className="border-b border-slate-100 px-3 py-1 text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+      <div className="border-b border-slate-100 px-3 py-1 text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
         Visual findings ({report.findings.length})
       </div>
       <ul className="divide-y divide-slate-100">
@@ -417,7 +417,7 @@ function FindingsBlock({ report }: { report: ScreenshotAnalysis }) {
             >
               {f.severity}
             </span>
-            <span className="flex-1 text-slate-800">{f.message}</span>
+            <span className="flex-1 text-slate-800 dark:text-slate-200">{f.message}</span>
           </li>
         ))}
       </ul>
@@ -435,10 +435,10 @@ function OcrBlock({ ocr, onRun }: { ocr: OcrState; onRun: () => void }) {
       >
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+            <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
               Text detection
             </div>
-            <p className="mt-0.5 text-xs text-slate-700">
+            <p className="mt-0.5 text-xs text-slate-700 dark:text-slate-300">
               Run Tesseract.js to find real words on the screenshot and check
               their actual rendered contrast (≈3 MB downloaded once, cached
               after).
@@ -465,10 +465,10 @@ function OcrBlock({ ocr, onRun }: { ocr: OcrState; onRun: () => void }) {
         data-testid="ocr-block"
         data-ocr-phase="running"
       >
-        <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+        <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
           Running OCR
         </div>
-        <p className="mt-0.5 text-xs text-slate-700">
+        <p className="mt-0.5 text-xs text-slate-700 dark:text-slate-300">
           {ocr.progress?.status ?? 'starting…'} · {pct}%
         </p>
         <div className="mt-2 h-1.5 w-full overflow-hidden rounded bg-slate-200">
@@ -512,19 +512,19 @@ function OcrBlock({ ocr, onRun }: { ocr: OcrState; onRun: () => void }) {
     >
       <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-slate-100 px-3 py-2">
         <div>
-          <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+          <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
             Text detection · {result.words.length} words ({result.durationMs}ms)
           </div>
           <div className="mt-0.5 flex flex-wrap gap-1.5 text-[11px]">
             <CountChip tone="rose" label="AA fail" n={failing} />
             <CountChip tone="amber" label="AAA only" n={aaaOnly} />
             <CountChip tone="emerald" label="AAA pass" n={passing} />
-            <span className="text-slate-400">of {total} measurable</span>
+            <span className="text-slate-400 dark:text-slate-500">of {total} measurable</span>
           </div>
         </div>
       </div>
       {worst.length === 0 ? (
-        <p className="px-3 py-2 text-xs text-slate-500">
+        <p className="px-3 py-2 text-xs text-slate-500 dark:text-slate-500">
           No measurable text regions to score.
         </p>
       ) : (
@@ -546,7 +546,7 @@ function OcrBlock({ ocr, onRun }: { ocr: OcrState; onRun: () => void }) {
                 aria-hidden
               />
               <span
-                className="flex-1 truncate font-mono text-slate-800"
+                className="flex-1 truncate font-mono text-slate-800 dark:text-slate-200"
                 title={c.word.text}
               >
                 {c.word.text}
@@ -598,7 +598,7 @@ function CvdRow({ report }: { report: ScreenshotAnalysis }) {
   const modes: ColorBlindnessMode[] = ['protanopia', 'deuteranopia', 'tritanopia'];
   return (
     <div className="mt-3" data-testid="cvd-row">
-      <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+      <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
         Color-blindness simulations
       </div>
       <div className="mt-1 grid grid-cols-3 gap-1.5">
@@ -613,7 +613,7 @@ function CvdRow({ report }: { report: ScreenshotAnalysis }) {
               alt={CVD_LABEL[m]}
               className="block h-auto w-full"
             />
-            <figcaption className="bg-slate-50 px-1 py-0.5 text-[10px] text-slate-600">
+            <figcaption className="bg-slate-50 px-1 py-0.5 text-[10px] text-slate-600 dark:text-slate-400">
               {CVD_LABEL[m]}
             </figcaption>
           </figure>

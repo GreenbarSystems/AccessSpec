@@ -37,7 +37,7 @@ export function FindingsList({ findings, limit = 10 }: Props) {
 
   return (
     <div className="card overflow-hidden" data-testid="findings-list">
-      <div className="border-b border-slate-200 bg-slate-50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+      <div className="border-b border-slate-200 bg-slate-50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
         Top findings ({visible.length} of {findings.length})
       </div>
       <ul className="divide-y divide-slate-100">
@@ -62,18 +62,18 @@ export function FindingsList({ findings, limit = 10 }: Props) {
               </span>
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-baseline gap-2">
-                  <span className="text-sm font-medium text-slate-900">
+                  <span className="text-sm font-medium text-slate-900 dark:text-slate-100">
                     {f.message}
                   </span>
-                  <span className="font-mono text-[11px] text-slate-400">
+                  <span className="font-mono text-[11px] text-slate-400 dark:text-slate-500">
                     {f.ruleId}
                   </span>
                 </div>
-                <div className="mt-0.5 truncate font-mono text-xs text-slate-500">
+                <div className="mt-0.5 truncate font-mono text-xs text-slate-500 dark:text-slate-500">
                   {f.element.file}:{f.element.line} · {f.element.type} &lt;{f.element.tagName}&gt;
                 </div>
               </div>
-              <span aria-hidden className="shrink-0 self-center text-xs text-slate-400">
+              <span aria-hidden className="shrink-0 self-center text-xs text-slate-400 dark:text-slate-500">
                 ↗
               </span>
             </button>

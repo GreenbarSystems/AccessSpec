@@ -17,7 +17,7 @@ const VERDICT_BADGE: Record<SimulationVerdict, string> = {
   overflow: 'bg-rose-50 text-rose-700 ring-1 ring-rose-200',
   clipped: 'bg-orange-50 text-orange-800 ring-1 ring-orange-200',
   truncated: 'bg-amber-50 text-amber-800 ring-1 ring-amber-200',
-  unmeasurable: 'bg-slate-100 text-slate-500 ring-1 ring-slate-200',
+  unmeasurable: 'bg-slate-100 text-slate-500 dark:text-slate-500 ring-1 ring-slate-200',
 };
 
 const VERDICT_GLYPH: Record<SimulationVerdict, string> = {
@@ -67,7 +67,7 @@ export function DynamicTextPanel({ onJump }: Props) {
 
   if (!audit) {
     return (
-      <div className="card p-6 text-sm text-slate-600">
+      <div className="card p-6 text-sm text-slate-600 dark:text-slate-400">
         Upload a project to simulate dynamic type scaling.
       </div>
     );
@@ -75,7 +75,7 @@ export function DynamicTextPanel({ onJump }: Props) {
 
   if (report.checks.length === 0) {
     return (
-      <div className="card p-6 text-sm text-slate-600">
+      <div className="card p-6 text-sm text-slate-600 dark:text-slate-400">
         No text-bearing components detected.
       </div>
     );
@@ -96,7 +96,7 @@ export function DynamicTextPanel({ onJump }: Props) {
             label="All"
             primary={report.checks.length}
             secondary="text-bearing components"
-            tone="bg-slate-100 text-slate-700 border-slate-200"
+            tone="bg-slate-100 text-slate-700 dark:text-slate-300 border-slate-200"
             active={filter === 'all'}
             onClick={() => setFilter('all')}
           />
@@ -136,12 +136,12 @@ export function DynamicTextPanel({ onJump }: Props) {
             label="Unmeasurable"
             primary={fullyUnmeasured}
             secondary="missing width or font-size"
-            tone="bg-slate-100 text-slate-500 border-slate-200"
+            tone="bg-slate-100 text-slate-500 dark:text-slate-500 border-slate-200"
             active={filter === 'unmeasurable'}
             onClick={() => setFilter('unmeasurable')}
           />
         </div>
-        <p className="mt-3 text-xs text-slate-500">
+        <p className="mt-3 text-xs text-slate-500 dark:text-slate-500">
           Scaling iOS Dynamic Type / Android Font Scale: 100% → 200% in 25%
           steps. Verdicts use canvas-measured text width and the element's
           declared <code>width</code> / <code>max-width</code> /{' '}
@@ -159,7 +159,7 @@ export function DynamicTextPanel({ onJump }: Props) {
           <div className="overflow-x-auto">
             <table className="w-full text-sm" data-testid="dynamic-text-table">
               <thead>
-                <tr className="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+                <tr className="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500 dark:text-slate-500">
                   <th className="px-3 py-2 font-medium">Component</th>
                   <th className="px-3 py-2 font-medium">Base</th>
                   <th className="px-3 py-2 font-medium">Container</th>
@@ -209,31 +209,31 @@ function Row({
           className="text-left hover:text-brand-700"
         >
           <div className="flex items-baseline gap-2">
-            <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium uppercase text-slate-700">
+            <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium uppercase text-slate-700 dark:text-slate-300">
               {el.type}
             </span>
-            <span className="font-mono text-xs text-slate-700">
+            <span className="font-mono text-xs text-slate-700 dark:text-slate-300">
               &lt;{el.tagName}&gt;
             </span>
           </div>
-          <div className="mt-0.5 max-w-[28ch] truncate text-xs text-slate-800">
+          <div className="mt-0.5 max-w-[28ch] truncate text-xs text-slate-800 dark:text-slate-200">
             {el.text}
           </div>
-          <div className="mt-0.5 truncate font-mono text-[11px] text-slate-500">
+          <div className="mt-0.5 truncate font-mono text-[11px] text-slate-500 dark:text-slate-500">
             {el.file}:{el.line}
           </div>
         </button>
       </td>
-      <td className="px-3 py-2 align-top font-mono text-xs text-slate-700">
+      <td className="px-3 py-2 align-top font-mono text-xs text-slate-700 dark:text-slate-300">
         {c.baseFontPx === null ? '—' : `${c.baseFontPx}px`}
       </td>
-      <td className="px-3 py-2 align-top font-mono text-xs text-slate-700">
+      <td className="px-3 py-2 align-top font-mono text-xs text-slate-700 dark:text-slate-300">
         <div>{c.containerWidth === null ? '—' : `w ${c.containerWidth}px`}</div>
-        <div className="text-slate-500">
+        <div className="text-slate-500 dark:text-slate-500">
           {c.containerHeight === null ? 'h —' : `h ${c.containerHeight}px`}
         </div>
         {(c.whiteSpace === 'nowrap' || c.textOverflow === 'ellipsis') && (
-          <div className="mt-1 text-[10px] text-slate-500">
+          <div className="mt-1 text-[10px] text-slate-500 dark:text-slate-500">
             {c.whiteSpace === 'nowrap' && 'nowrap '}
             {c.textOverflow === 'ellipsis' && 'ellipsis'}
           </div>

@@ -86,7 +86,7 @@ export function ViolationInspector() {
 
   if (!report) {
     return (
-      <div className="card p-6 text-sm text-slate-600">
+      <div className="card p-6 text-sm text-slate-600 dark:text-slate-400">
         Upload a project on the Dashboard to inspect violations.
       </div>
     );
@@ -170,10 +170,10 @@ export function ViolationInspector() {
                         className={`mt-1.5 inline-block h-2 w-2 shrink-0 rounded-full ${SEVERITY_DOT[s.rule.severity]}`}
                       />
                       <div className="min-w-0 flex-1">
-                        <div className="truncate font-medium text-slate-900">
+                        <div className="truncate font-medium text-slate-900 dark:text-slate-100">
                           {s.rule.description}
                         </div>
-                        <div className="truncate font-mono text-[11px] text-slate-500">
+                        <div className="truncate font-mono text-[11px] text-slate-500 dark:text-slate-500">
                           {s.rule.id}
                         </div>
                       </div>
@@ -201,7 +201,7 @@ export function ViolationInspector() {
         {selected ? (
           <IssueDetail rule={selected.rule} findings={findingsForSelected} />
         ) : (
-          <div className="card p-6 text-sm text-slate-500">
+          <div className="card p-6 text-sm text-slate-500 dark:text-slate-500">
             Pick a rule from the list to inspect details, WCAG reference,
             suggested fix, and affected elements.
           </div>
@@ -226,7 +226,7 @@ function FilterChip({
   active: boolean;
   onClick: () => void;
 }) {
-  const base = tone ?? 'bg-slate-100 text-slate-700';
+  const base = tone ?? 'bg-slate-100 text-slate-700 dark:text-slate-300';
   return (
     <button
       type="button"

@@ -44,7 +44,7 @@ export function PatternsPanel({ onJump }: Props) {
 
   if (!audit) {
     return (
-      <div className="card p-6 text-sm text-slate-600">
+      <div className="card p-6 text-sm text-slate-600 dark:text-slate-400">
         Upload a project to recognize functional patterns.
       </div>
     );
@@ -52,7 +52,7 @@ export function PatternsPanel({ onJump }: Props) {
 
   if (report.patterns.length === 0) {
     return (
-      <div className="card p-6 text-sm text-slate-600">
+      <div className="card p-6 text-sm text-slate-600 dark:text-slate-400">
         No recognized patterns yet. Patterns need an HTML/JSX entry with
         recognizable widgets (date pickers, modals, tabs, search inputs…).
       </div>
@@ -86,7 +86,7 @@ export function PatternsPanel({ onJump }: Props) {
             );
           })}
         </div>
-        <p className="mt-3 text-xs text-slate-500">
+        <p className="mt-3 text-xs text-slate-500 dark:text-slate-500">
           Functional patterns recognized on top of the component inventory.
           Each card shows the anchor element, the evidence that classified it,
           and pattern-specific a11y heuristics.
@@ -94,7 +94,7 @@ export function PatternsPanel({ onJump }: Props) {
       </div>
 
       {visible.length === 0 ? (
-        <div className="card p-6 text-sm text-slate-600">
+        <div className="card p-6 text-sm text-slate-600 dark:text-slate-400">
           No patterns of this kind detected.
         </div>
       ) : (
@@ -130,7 +130,7 @@ function PatternCard({
           return (
             <span
               aria-hidden
-              className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-slate-100 text-slate-700"
+              className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-slate-100 text-slate-700 dark:text-slate-300"
             >
               <Icon className="h-5 w-5" />
             </span>
@@ -138,10 +138,10 @@ function PatternCard({
         })()}
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-baseline gap-2">
-            <span className="text-sm font-semibold text-slate-900">
+            <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">
               {PATTERN_LABEL[pattern.kind]}
             </span>
-            <span className="font-mono text-[11px] text-slate-500">
+            <span className="font-mono text-[11px] text-slate-500 dark:text-slate-500">
               {pattern.evidence}
             </span>
             {pattern.members.length > 0 && (
@@ -151,7 +151,7 @@ function PatternCard({
             )}
           </div>
           {pattern.anchor.text && (
-            <p className="mt-0.5 truncate text-xs text-slate-700">
+            <p className="mt-0.5 truncate text-xs text-slate-700 dark:text-slate-300">
               {pattern.anchor.text}
             </p>
           )}
@@ -162,7 +162,7 @@ function PatternCard({
         type="button"
         onClick={() => onJump(pattern.anchor.file, pattern.anchor.line)}
         data-jump={`${pattern.anchor.file}:${pattern.anchor.line}`}
-        className="self-start rounded border border-slate-200 px-2 py-1 text-left font-mono text-[11px] text-slate-700 hover:border-brand-300 hover:bg-brand-50"
+        className="self-start rounded border border-slate-200 px-2 py-1 text-left font-mono text-[11px] text-slate-700 dark:text-slate-300 hover:border-brand-300 hover:bg-brand-50"
         title="Open in Analyzer · Source"
       >
         {'<'}
@@ -185,8 +185,8 @@ function PatternCard({
                 {CHECK_GLYPH[c.status]}
               </span>
               <div className="min-w-0">
-                <div className="font-medium text-slate-800">{c.label}</div>
-                <div className="truncate text-slate-500">{c.detail}</div>
+                <div className="font-medium text-slate-800 dark:text-slate-200">{c.label}</div>
+                <div className="truncate text-slate-500 dark:text-slate-500">{c.detail}</div>
               </div>
             </li>
           ))}
@@ -207,7 +207,7 @@ function IOSRecommendation({ kind }: { kind: PatternKind }) {
       data-testid="ios-recommendation"
       data-kind={kind}
     >
-      <div className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+      <div className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
         <span aria-hidden></span>
         iOS recommendation
       </div>
@@ -225,12 +225,12 @@ function IOSRecommendation({ kind }: { kind: PatternKind }) {
           SwiftUI · {m.swiftui}
         </span>
       </div>
-      <p className="mt-2 text-[11px] text-slate-700">{m.rationale}</p>
+      <p className="mt-2 text-[11px] text-slate-700 dark:text-slate-300">{m.rationale}</p>
       <details className="mt-2">
-        <summary className="cursor-pointer text-[11px] font-medium text-slate-600 hover:text-slate-900">
+        <summary className="cursor-pointer text-[11px] font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900">
           A11y benefits ({m.accessibility.length}) · SwiftUI sample
         </summary>
-        <ul className="mt-1 list-inside list-disc space-y-0.5 text-[11px] text-slate-700">
+        <ul className="mt-1 list-inside list-disc space-y-0.5 text-[11px] text-slate-700 dark:text-slate-300">
           {m.accessibility.map((a, i) => (
             <li key={i}>{a}</li>
           ))}
@@ -238,7 +238,7 @@ function IOSRecommendation({ kind }: { kind: PatternKind }) {
         <pre className="mt-2 overflow-auto rounded bg-slate-900 p-2 font-mono text-[11px] leading-relaxed text-slate-100">
           {m.swiftSample}
         </pre>
-        <p className="mt-1 text-[10px] text-slate-500">{m.hig}</p>
+        <p className="mt-1 text-[10px] text-slate-500 dark:text-slate-500">{m.hig}</p>
       </details>
     </section>
   );
@@ -270,12 +270,12 @@ function AndroidRecommendation({ kind }: { kind: PatternKind }) {
           Compose · {m.compose}
         </span>
       </div>
-      <p className="mt-2 text-[11px] text-slate-700">{m.rationale}</p>
+      <p className="mt-2 text-[11px] text-slate-700 dark:text-slate-300">{m.rationale}</p>
       <details className="mt-2">
-        <summary className="cursor-pointer text-[11px] font-medium text-slate-600 hover:text-slate-900">
+        <summary className="cursor-pointer text-[11px] font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900">
           A11y benefits ({m.accessibility.length}) · Compose sample
         </summary>
-        <ul className="mt-1 list-inside list-disc space-y-0.5 text-[11px] text-slate-700">
+        <ul className="mt-1 list-inside list-disc space-y-0.5 text-[11px] text-slate-700 dark:text-slate-300">
           {m.accessibility.map((a, i) => (
             <li key={i}>{a}</li>
           ))}
@@ -283,7 +283,7 @@ function AndroidRecommendation({ kind }: { kind: PatternKind }) {
         <pre className="mt-2 overflow-auto rounded bg-slate-900 p-2 font-mono text-[11px] leading-relaxed text-slate-100">
           {m.kotlinSample}
         </pre>
-        <p className="mt-1 text-[10px] text-slate-500">{m.material}</p>
+        <p className="mt-1 text-[10px] text-slate-500 dark:text-slate-500">{m.material}</p>
       </details>
     </section>
   );
@@ -314,7 +314,7 @@ function Chip({
         'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium transition',
         active
           ? 'border-brand-500 bg-brand-50 text-brand-800 ring-2 ring-brand-500 ring-offset-1'
-          : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300',
+          : 'border-slate-200 bg-white text-slate-700 dark:text-slate-300 hover:border-slate-300',
       ].join(' ')}
     >
       {icon}
@@ -322,7 +322,7 @@ function Chip({
       <span
         className={[
           'rounded-full px-1.5 text-[10px] font-semibold tabular-nums',
-          n === 0 ? 'bg-slate-100 text-slate-500' : 'bg-white text-slate-700',
+          n === 0 ? 'bg-slate-100 text-slate-500 dark:text-slate-500' : 'bg-white text-slate-700 dark:text-slate-300',
         ].join(' ')}
       >
         {n}

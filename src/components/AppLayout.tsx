@@ -29,7 +29,7 @@ export function AppLayout() {
   useKeyboardShortcuts({ onToggleHelp, onCloseHelp, onNewAudit });
 
   return (
-    <div className="flex min-h-full bg-slate-50">
+    <div className="flex min-h-full bg-slate-50 dark:bg-slate-950">
       <Sidebar open={navOpen} onClose={() => setNavOpen(false)} />
 
       <div className="flex min-w-0 flex-1 flex-col">

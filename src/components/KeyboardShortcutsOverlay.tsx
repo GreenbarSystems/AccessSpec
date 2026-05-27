@@ -97,7 +97,7 @@ export function KeyboardShortcutsOverlay({ open, onClose }: Props) {
         <header className="flex items-center justify-between border-b border-slate-200 bg-slate-50 px-4 py-3">
           <h2
             id="shortcuts-title"
-            className="text-sm font-semibold text-slate-900"
+            className="text-sm font-semibold text-slate-900 dark:text-slate-100"
           >
             Keyboard shortcuts
           </h2>
@@ -106,7 +106,7 @@ export function KeyboardShortcutsOverlay({ open, onClose }: Props) {
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="rounded p-1 text-slate-500 hover:bg-slate-200 hover:text-slate-900"
+            className="rounded p-1 text-slate-500 dark:text-slate-500 hover:bg-slate-200 hover:text-slate-900"
           >
             <span aria-hidden>✕</span>
           </button>
@@ -114,14 +114,14 @@ export function KeyboardShortcutsOverlay({ open, onClose }: Props) {
         <div className="space-y-4 p-4">
           {GROUPS.map((group) => (
             <section key={group.title}>
-              <h3 className="mb-2 text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+              <h3 className="mb-2 text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
                 {group.title}
               </h3>
               <ul className="space-y-1.5">
                 {group.bindings.map((b) => (
                   <li
                     key={b.label}
-                    className="flex items-center justify-between gap-3 text-sm text-slate-800"
+                    className="flex items-center justify-between gap-3 text-sm text-slate-800 dark:text-slate-200"
                   >
                     <span>{b.label}</span>
                     <span className="flex shrink-0 items-center gap-1">
@@ -134,7 +134,7 @@ export function KeyboardShortcutsOverlay({ open, onClose }: Props) {
               </ul>
             </section>
           ))}
-          <p className="border-t border-slate-100 pt-3 text-[11px] text-slate-500">
+          <p className="border-t border-slate-100 pt-3 text-[11px] text-slate-500 dark:text-slate-500">
             Shortcuts are ignored while typing into a text input. Press{' '}
             <Kbd>Esc</Kbd> to dismiss.
           </p>
@@ -146,7 +146,7 @@ export function KeyboardShortcutsOverlay({ open, onClose }: Props) {
 
 function Kbd({ children }: { children: React.ReactNode }) {
   return (
-    <kbd className="rounded border border-slate-300 bg-slate-100 px-1.5 py-0.5 font-mono text-[11px] font-medium text-slate-700 shadow-[inset_0_-1px_0_rgba(0,0,0,0.05)]">
+    <kbd className="rounded border border-slate-300 bg-slate-100 px-1.5 py-0.5 font-mono text-[11px] font-medium text-slate-700 dark:text-slate-300 shadow-[inset_0_-1px_0_rgba(0,0,0,0.05)]">
       {children}
     </kbd>
   );

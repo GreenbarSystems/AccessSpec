@@ -62,17 +62,17 @@ export function ZipUpload({ onStatus }: Props) {
 
   return (
     <div className="space-y-3">
-      <p className="text-sm text-slate-600">
+      <p className="text-sm text-slate-600 dark:text-slate-400">
         Upload a ZIP archive of a project. Supported source files are extracted
         and added to the in-memory repository; binaries and metadata are
         skipped.
       </p>
       <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 px-6 py-10 text-center hover:border-brand-400 hover:bg-brand-50/30">
-        <Archive aria-hidden className="h-7 w-7 text-slate-400" />
-        <span className="text-sm font-medium text-slate-700">
+        <Archive aria-hidden className="h-7 w-7 text-slate-400 dark:text-slate-500" />
+        <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
           Click to choose a .zip
         </span>
-        <span className="text-xs text-slate-500">
+        <span className="text-xs text-slate-500 dark:text-slate-500">
           Sources inside the archive are filtered to supported extensions.
         </span>
         <input
@@ -85,7 +85,7 @@ export function ZipUpload({ onStatus }: Props) {
           className="sr-only"
         />
       </label>
-      {busy && <p className="text-sm text-slate-500">Extracting…</p>}
+      {busy && <p className="text-sm text-slate-500 dark:text-slate-500">Extracting…</p>}
     </div>
   );
 }

@@ -58,17 +58,17 @@ export default function Settings() {
               className="card flex flex-wrap items-start justify-between gap-2 p-4"
             >
               <div className="min-w-0 flex-1">
-                <div className="text-sm font-semibold text-slate-900">
+                <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">
                   {item.title}
                 </div>
-                <p className="mt-0.5 text-xs text-slate-600">{item.body}</p>
+                <p className="mt-0.5 text-xs text-slate-600 dark:text-slate-400">{item.body}</p>
               </div>
               <span
                 className={[
                   'rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ring-1',
                   item.eta === 'Next'
                     ? 'bg-emerald-50 text-emerald-700 ring-emerald-200'
-                    : 'bg-slate-100 text-slate-600 ring-slate-200',
+                    : 'bg-slate-100 text-slate-600 dark:text-slate-400 ring-slate-200',
                 ].join(' ')}
               >
                 {item.eta}

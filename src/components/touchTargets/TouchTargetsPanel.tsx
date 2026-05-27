@@ -16,7 +16,7 @@ type Props = {
 const STATUS_BADGE: Record<VerdictStatus, string> = {
   pass: 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200',
   fail: 'bg-rose-50 text-rose-700 ring-1 ring-rose-200',
-  unmeasurable: 'bg-slate-100 text-slate-500 ring-1 ring-slate-200',
+  unmeasurable: 'bg-slate-100 text-slate-500 dark:text-slate-500 ring-1 ring-slate-200',
 };
 
 const STATUS_GLYPH: Record<VerdictStatus, string> = {
@@ -47,7 +47,7 @@ export function TouchTargetsPanel({ onJump }: Props) {
 
   if (!audit) {
     return (
-      <div className="card p-6 text-sm text-slate-600">
+      <div className="card p-6 text-sm text-slate-600 dark:text-slate-400">
         Upload a project to analyze touch targets.
       </div>
     );
@@ -55,7 +55,7 @@ export function TouchTargetsPanel({ onJump }: Props) {
 
   if (report.totalInteractive === 0) {
     return (
-      <div className="card p-6 text-sm text-slate-600">
+      <div className="card p-6 text-sm text-slate-600 dark:text-slate-400">
         No interactive components detected. Touch targets apply to buttons,
         links, inputs, tabs, and menu items.
       </div>
@@ -93,15 +93,15 @@ export function TouchTargetsPanel({ onJump }: Props) {
           })}
         </div>
         <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-          <p className="text-xs text-slate-500">
-            <span className="font-semibold text-slate-800">
+          <p className="text-xs text-slate-500 dark:text-slate-500">
+            <span className="font-semibold text-slate-800 dark:text-slate-200">
               {report.totalInteractive}
             </span>{' '}
             interactive component{report.totalInteractive === 1 ? '' : 's'} ·
             showing{' '}
-            <span className="font-semibold text-slate-800">{visible.length}</span>
+            <span className="font-semibold text-slate-800 dark:text-slate-200">{visible.length}</span>
           </p>
-          <label className="inline-flex cursor-pointer items-center gap-2 text-xs text-slate-600">
+          <label className="inline-flex cursor-pointer items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
             <input
               type="checkbox"
               checked={onlyViolations}
@@ -124,7 +124,7 @@ export function TouchTargetsPanel({ onJump }: Props) {
           <div className="overflow-x-auto">
             <table className="w-full text-sm" data-testid="touch-target-table">
               <thead>
-                <tr className="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+                <tr className="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500 dark:text-slate-500">
                   <th className="px-3 py-2 font-medium">Component</th>
                   <th className="px-3 py-2 font-medium">Size</th>
                   <th className="px-3 py-2 font-medium">Spacing</th>
@@ -174,27 +174,27 @@ function Row({
           className="text-left hover:text-brand-700"
         >
           <div className="flex items-baseline gap-2">
-            <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium uppercase text-slate-700">
+            <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium uppercase text-slate-700 dark:text-slate-300">
               {el.type}
             </span>
-            <span className="font-mono text-xs text-slate-700">
+            <span className="font-mono text-xs text-slate-700 dark:text-slate-300">
               &lt;{el.tagName}&gt;
             </span>
           </div>
           {el.text && (
-            <div className="mt-0.5 max-w-[28ch] truncate text-xs text-slate-800">
+            <div className="mt-0.5 max-w-[28ch] truncate text-xs text-slate-800 dark:text-slate-200">
               {el.text}
             </div>
           )}
-          <div className="mt-0.5 truncate font-mono text-[11px] text-slate-500">
+          <div className="mt-0.5 truncate font-mono text-[11px] text-slate-500 dark:text-slate-500">
             {el.file}:{el.line}
           </div>
         </button>
       </td>
-      <td className="px-3 py-2 align-top font-mono text-xs text-slate-700">
+      <td className="px-3 py-2 align-top font-mono text-xs text-slate-700 dark:text-slate-300">
         {fmtPx(m.width)} × {fmtPx(m.height)}
       </td>
-      <td className="px-3 py-2 align-top font-mono text-xs text-slate-700">
+      <td className="px-3 py-2 align-top font-mono text-xs text-slate-700 dark:text-slate-300">
         {fmtSpacing(m)}
       </td>
       {STANDARDS.map((s) => {

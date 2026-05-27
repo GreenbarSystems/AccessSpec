@@ -24,12 +24,13 @@ export function Sidebar({ open, onClose }: SidebarProps) {
         className={[
           'fixed inset-y-0 left-0 z-40 w-72 transform border-r border-slate-200',
           'bg-white transition-transform duration-200 ease-out',
+          'dark:border-slate-800 dark:bg-slate-900',
           open ? 'translate-x-0' : '-translate-x-full',
           'lg:static lg:translate-x-0 lg:w-64 lg:shrink-0',
         ].join(' ')}
         aria-label="Primary"
       >
-        <div className="flex h-16 items-center gap-2 border-b border-slate-200 px-5">
+        <div className="flex h-16 items-center gap-2 border-b border-slate-200 px-5 dark:border-slate-800">
           <span
             aria-hidden
             className="grid h-9 w-9 place-items-center rounded-lg bg-brand-600 text-white"
@@ -37,10 +38,10 @@ export function Sidebar({ open, onClose }: SidebarProps) {
             <Accessibility className="h-5 w-5" />
           </span>
           <div className="leading-tight">
-            <div className="text-sm font-semibold text-slate-900">
+            <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">
               AccessSpec
             </div>
-            <div className="text-xs text-slate-500">WCAG 2.2 dashboard</div>
+            <div className="text-xs text-slate-500 dark:text-slate-500">WCAG 2.2 dashboard</div>
           </div>
         </div>
 
@@ -60,8 +61,8 @@ export function Sidebar({ open, onClose }: SidebarProps) {
           ))}
         </nav>
 
-        <div className="absolute bottom-0 left-0 right-0 border-t border-slate-200 p-4 text-xs text-slate-500">
-          <div className="font-medium text-slate-700">Active ruleset</div>
+        <div className="absolute bottom-0 left-0 right-0 border-t border-slate-200 p-4 text-xs text-slate-500 dark:text-slate-500 dark:border-slate-800">
+          <div className="font-medium text-slate-700 dark:text-slate-300">Active ruleset</div>
           <div>WCAG 2.2 AA · Mobile</div>
         </div>
       </aside>

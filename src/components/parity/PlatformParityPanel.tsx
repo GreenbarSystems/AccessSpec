@@ -52,14 +52,14 @@ export function PlatformParityPanel() {
 
   if (!audit) {
     return (
-      <div className="card p-6 text-sm text-slate-600">
+      <div className="card p-6 text-sm text-slate-600 dark:text-slate-400">
         Upload a project to generate the parity report.
       </div>
     );
   }
   if (report.rows.length === 0) {
     return (
-      <div className="card p-6 text-sm text-slate-600">
+      <div className="card p-6 text-sm text-slate-600 dark:text-slate-400">
         No recognizable patterns to compare. Patterns like modals, tabs, date
         pickers, and toggles produce parity rows.
       </div>
@@ -75,7 +75,7 @@ export function PlatformParityPanel() {
           className="flex flex-wrap items-center gap-1.5"
           aria-label="Filter by verdict"
         >
-          <span className="mr-1 text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+          <span className="mr-1 text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
             Verdict
           </span>
           <Chip
@@ -114,7 +114,7 @@ export function PlatformParityPanel() {
           className="mt-2 flex flex-wrap items-center gap-1.5 border-t border-slate-100 pt-2"
           aria-label="Filter by pattern kind"
         >
-          <span className="mr-1 text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+          <span className="mr-1 text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
             Kind
           </span>
           {(Object.keys(report.countsByKind) as PatternKind[])
@@ -134,7 +134,7 @@ export function PlatformParityPanel() {
               );
             })}
         </div>
-        <p className="mt-3 text-xs text-slate-500">
+        <p className="mt-3 text-xs text-slate-500 dark:text-slate-500">
           Each row compares the current implementation against the native iOS
           and Android primitives it should map to. Use the verdict chip to
           spot generic markup that needs upgrading.
@@ -142,7 +142,7 @@ export function PlatformParityPanel() {
       </div>
 
       {visible.length === 0 ? (
-        <div className="card p-6 text-sm text-slate-600">
+        <div className="card p-6 text-sm text-slate-600 dark:text-slate-400">
           No rows match the current filter.
         </div>
       ) : (
@@ -180,12 +180,12 @@ function ParityCard({
         <div className="flex items-center gap-2">
           {(() => {
             const Icon = PATTERN_ICON[row.kind];
-            return <Icon aria-hidden className="h-5 w-5 text-slate-700" />;
+            return <Icon aria-hidden className="h-5 w-5 text-slate-700 dark:text-slate-300" />;
           })()}
-          <span className="text-sm font-semibold text-slate-900">
+          <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">
             {PATTERN_LABEL[row.kind]}
           </span>
-          <span className="font-mono text-[11px] text-slate-500">
+          <span className="font-mono text-[11px] text-slate-500 dark:text-slate-500">
             {row.pattern.evidence}
           </span>
         </div>
@@ -201,14 +201,14 @@ function ParityCard({
       <div className="grid grid-cols-1 gap-px bg-slate-200 md:grid-cols-3">
         {/* Current */}
         <section className="bg-white p-3" data-col="current">
-          <h3 className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+          <h3 className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
             Current component
           </h3>
-          <div className="mt-1 font-mono text-xs text-slate-700">
+          <div className="mt-1 font-mono text-xs text-slate-700 dark:text-slate-300">
             &lt;{row.current.tagName}&gt;
           </div>
           {row.current.text && (
-            <p className="mt-1 truncate text-xs text-slate-800">
+            <p className="mt-1 truncate text-xs text-slate-800 dark:text-slate-200">
               {row.current.text}
             </p>
           )}
@@ -220,7 +220,7 @@ function ParityCard({
           >
             {row.current.file}:{row.current.line}
           </button>
-          <p className="mt-2 text-[11px] text-slate-600">{row.current.note}</p>
+          <p className="mt-2 text-[11px] text-slate-600 dark:text-slate-400">{row.current.note}</p>
         </section>
 
         {/* iOS */}
@@ -240,7 +240,7 @@ function ParityCard({
           >
             SwiftUI · {row.ios.swiftui}
           </div>
-          <p className="mt-2 text-[11px] text-slate-600">{row.ios.rationale}</p>
+          <p className="mt-2 text-[11px] text-slate-600 dark:text-slate-400">{row.ios.rationale}</p>
         </section>
 
         {/* Android */}
@@ -260,7 +260,7 @@ function ParityCard({
           >
             Compose · {row.android.compose}
           </div>
-          <p className="mt-2 text-[11px] text-slate-600">
+          <p className="mt-2 text-[11px] text-slate-600 dark:text-slate-400">
             {row.android.rationale}
           </p>
         </section>
@@ -268,11 +268,11 @@ function ParityCard({
 
       {/* Gaps */}
       <footer className="border-t border-slate-200 bg-slate-50 px-4 py-2">
-        <h3 className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+        <h3 className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
           Parity actions ({row.gaps.length})
         </h3>
         <ul
-          className="mt-1 list-inside list-disc space-y-0.5 text-xs text-slate-700"
+          className="mt-1 list-inside list-disc space-y-0.5 text-xs text-slate-700 dark:text-slate-300"
           data-testid="parity-gaps"
         >
           {row.gaps.map((g, i) => (
@@ -301,7 +301,7 @@ function Chip({
   active: boolean;
   onClick: () => void;
 }) {
-  const base = tone ?? 'bg-slate-100 text-slate-700 border-slate-200';
+  const base = tone ?? 'bg-slate-100 text-slate-700 dark:text-slate-300 border-slate-200';
   return (
     <button
       type="button"

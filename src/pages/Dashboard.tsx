@@ -47,10 +47,10 @@ function EmptyState() {
           data-upload-panel
         >
           <div className="mb-3">
-            <h2 className="text-base font-semibold text-slate-900">
+            <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">
               Start an audit
             </h2>
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-slate-600 dark:text-slate-400">
               Everything runs locally in your browser. No code leaves the page.
             </p>
           </div>
@@ -58,7 +58,7 @@ function EmptyState() {
         </section>
 
         <section aria-label="What you'll get">
-          <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
             What you'll get after uploading
           </h2>
           <ul className="grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -105,8 +105,8 @@ function PreviewCard({
         className="card flex h-full flex-col gap-2 p-4 transition hover:border-brand-300 hover:shadow-md"
       >
         <Icon aria-hidden className="h-6 w-6 text-brand-700" />
-        <span className="text-sm font-semibold text-slate-900">{title}</span>
-        <span className="text-xs text-slate-600">{body}</span>
+        <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">{title}</span>
+        <span className="text-xs text-slate-600 dark:text-slate-400">{body}</span>
         <span className="mt-auto text-xs font-medium text-brand-700">
           Preview →
         </span>
@@ -187,14 +187,14 @@ function PopulatedState({
       </section>
 
       <div className="mt-8">
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
           Executive summary
         </h2>
         <ExecutiveKpis />
       </div>
 
       <div className="mt-8">
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
           Compliance scores
         </h2>
         <ScoringDashboard />
@@ -208,13 +208,13 @@ function PopulatedState({
         data-upload-panel
       >
         <div className="lg:col-span-3">
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
             Add or replace source
           </h2>
           <UploadPanel />
         </div>
         <div className="lg:col-span-2">
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
             Project tree
           </h2>
           <div className="card p-3" data-testid="project-tree">
@@ -239,12 +239,12 @@ function SummaryCard({
 }) {
   return (
     <div className="card p-4">
-      <div className="text-xs font-medium uppercase tracking-wide text-slate-500">
+      <div className="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-500">
         {label}
       </div>
       <div
         className={[
-          'mt-1 truncate text-xl font-semibold text-slate-900',
+          'mt-1 truncate text-xl font-semibold text-slate-900 dark:text-slate-100',
           mono && 'font-mono text-base',
         ]
           .filter(Boolean)
@@ -253,7 +253,7 @@ function SummaryCard({
       >
         {value}
       </div>
-      <div className="mt-1 text-xs text-slate-500">{hint}</div>
+      <div className="mt-1 text-xs text-slate-500 dark:text-slate-500">{hint}</div>
     </div>
   );
 }

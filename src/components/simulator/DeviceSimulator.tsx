@@ -149,10 +149,10 @@ function HeatmapBar({
           />
         </button>
         <div>
-          <div className="text-sm font-semibold text-slate-900">
+          <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">
             Accessibility heatmap
           </div>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-500 dark:text-slate-500">
             Highlights buttons, links, inputs, and controls inside the live
             preview.
           </p>
@@ -240,7 +240,7 @@ function DevicePicker({
               'flex flex-col items-start rounded-lg border px-3 py-2 text-left transition',
               isActive
                 ? 'border-brand-500 bg-brand-50 text-brand-800 ring-2 ring-brand-500 ring-offset-1'
-                : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300',
+                : 'border-slate-200 bg-white text-slate-700 dark:text-slate-300 hover:border-slate-300',
             ].join(' ')}
           >
             <span className="flex items-center gap-1.5 text-xs font-semibold">
@@ -255,7 +255,7 @@ function DevicePicker({
               })()}
               {d.name}
             </span>
-            <span className="font-mono text-[10px] text-slate-500">
+            <span className="font-mono text-[10px] text-slate-500 dark:text-slate-500">
               {d.width} × {d.height} · {d.dpr}×
             </span>
           </button>
@@ -277,38 +277,38 @@ function DeviceInfo({
   return (
     <aside className="card flex h-fit flex-col gap-3 p-4 text-sm">
       <div>
-        <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+        <div className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
           Device
         </div>
-        <div className="mt-0.5 font-semibold text-slate-900">{device.name}</div>
-        <p className="text-xs text-slate-500">{device.blurb}</p>
+        <div className="mt-0.5 font-semibold text-slate-900 dark:text-slate-100">{device.name}</div>
+        <p className="text-xs text-slate-500 dark:text-slate-500">{device.blurb}</p>
       </div>
       <dl className="grid grid-cols-2 gap-x-3 gap-y-1 text-xs">
-        <dt className="text-slate-500">Viewport</dt>
-        <dd className="font-mono text-slate-800">
+        <dt className="text-slate-500 dark:text-slate-500">Viewport</dt>
+        <dd className="font-mono text-slate-800 dark:text-slate-200">
           {device.width} × {device.height}
         </dd>
-        <dt className="text-slate-500">Pixel ratio</dt>
-        <dd className="font-mono text-slate-800">{device.dpr}×</dd>
-        <dt className="text-slate-500">Category</dt>
-        <dd className="text-slate-800">{device.category}</dd>
-        <dt className="text-slate-500">Frame scale</dt>
-        <dd className="font-mono text-slate-800">{Math.round(scale * 100)}%</dd>
+        <dt className="text-slate-500 dark:text-slate-500">Pixel ratio</dt>
+        <dd className="font-mono text-slate-800 dark:text-slate-200">{device.dpr}×</dd>
+        <dt className="text-slate-500 dark:text-slate-500">Category</dt>
+        <dd className="text-slate-800 dark:text-slate-200">{device.category}</dd>
+        <dt className="text-slate-500 dark:text-slate-500">Frame scale</dt>
+        <dd className="font-mono text-slate-800 dark:text-slate-200">{Math.round(scale * 100)}%</dd>
       </dl>
       <div className="border-t border-slate-100 pt-3">
-        <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+        <div className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
           Preview
         </div>
         {preview.html ? (
           <>
-            <div className="mt-1 truncate font-mono text-xs text-slate-700">
+            <div className="mt-1 truncate font-mono text-xs text-slate-700 dark:text-slate-300">
               {preview.entryPath}
             </div>
             {preview.inlinedCss.length > 0 && (
-              <div className="mt-1 text-xs text-slate-500">
+              <div className="mt-1 text-xs text-slate-500 dark:text-slate-500">
                 Inlined {preview.inlinedCss.length} stylesheet
                 {preview.inlinedCss.length === 1 ? '' : 's'}:
-                <ul className="mt-0.5 list-inside list-disc font-mono text-[11px] text-slate-600">
+                <ul className="mt-0.5 list-inside list-disc font-mono text-[11px] text-slate-600 dark:text-slate-400">
                   {preview.inlinedCss.slice(0, 4).map((p) => (
                     <li key={p} className="truncate">
                       {p}
@@ -332,10 +332,10 @@ function DeviceInfo({
 function EmptyStage({ device, reason }: { device: Device; reason?: string }) {
   return (
     <DeviceFrame device={device}>
-      <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-white p-6 text-center text-sm text-slate-500">
-        <Smartphone aria-hidden className="h-10 w-10 text-slate-400" />
+      <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-white p-6 text-center text-sm text-slate-500 dark:text-slate-500">
+        <Smartphone aria-hidden className="h-10 w-10 text-slate-400 dark:text-slate-500" />
         <p>{reason ?? 'No preview available for this project.'}</p>
-        <p className="text-xs text-slate-400">
+        <p className="text-xs text-slate-400 dark:text-slate-500">
           Upload an HTML file (with optional CSS) on the Dashboard to see it
           render here at {device.width} × {device.height}.
         </p>

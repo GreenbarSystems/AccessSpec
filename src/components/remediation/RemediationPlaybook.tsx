@@ -58,7 +58,7 @@ export function RemediationPlaybook() {
 
   if (!project) {
     return (
-      <div className="card p-6 text-sm text-slate-600">
+      <div className="card p-6 text-sm text-slate-600 dark:text-slate-400">
         Upload a project to generate a remediation playbook.
       </div>
     );
@@ -161,7 +161,7 @@ function RemediationCard({
     >
       <header className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 bg-slate-50 px-4 py-2">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="font-mono text-[11px] text-slate-500">
+          <span className="font-mono text-[11px] text-slate-500 dark:text-slate-500">
             #{index + 1}
           </span>
           <span
@@ -170,7 +170,7 @@ function RemediationCard({
           >
             {item.severity}
           </span>
-          <span className="font-mono text-[11px] text-slate-500">{item.ruleId}</span>
+          <span className="font-mono text-[11px] text-slate-500 dark:text-slate-500">{item.ruleId}</span>
         </div>
         <button
           type="button"
@@ -184,18 +184,18 @@ function RemediationCard({
 
       <div className="p-4">
         <Section label="Problem" testId="field-problem">
-          <p className="text-sm text-slate-800">{item.problem}</p>
-          <p className="mt-1 text-xs text-slate-500">{item.affected.message}</p>
+          <p className="text-sm text-slate-800 dark:text-slate-200">{item.problem}</p>
+          <p className="mt-1 text-xs text-slate-500 dark:text-slate-500">{item.affected.message}</p>
         </Section>
 
         <Section label="WCAG reference" testId="field-wcag">
-          <p className="font-mono text-xs text-slate-700">
+          <p className="font-mono text-xs text-slate-700 dark:text-slate-300">
             {item.wcagReference}
           </p>
         </Section>
 
         <Section label="Affected element" testId="field-affected">
-          <p className="text-xs text-slate-700">
+          <p className="text-xs text-slate-700 dark:text-slate-300">
             <span className="rounded bg-slate-100 px-1.5 py-0.5 font-medium uppercase">
               {item.affected.type}
             </span>{' '}
@@ -207,11 +207,11 @@ function RemediationCard({
         </Section>
 
         <Section label="Fix recommendation" testId="field-fix">
-          <p className="text-sm text-slate-800">
+          <p className="text-sm text-slate-800 dark:text-slate-200">
             {item.fixRecommendation.summary}
           </p>
           {item.fixRecommendation.notes && item.fixRecommendation.notes.length > 0 && (
-            <ul className="mt-1 list-inside list-disc text-xs text-slate-600">
+            <ul className="mt-1 list-inside list-disc text-xs text-slate-600 dark:text-slate-400">
               {item.fixRecommendation.notes.map((n, i) => (
                 <li key={i}>{n}</li>
               ))}
@@ -245,7 +245,7 @@ function Section({
 }) {
   return (
     <section className="mb-3 last:mb-0" data-testid={testId}>
-      <h3 className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+      <h3 className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-500">
         {label}
       </h3>
       {children}
@@ -275,7 +275,7 @@ function CodeBlock({
         <span>{label}</span>
         {language && <span className="opacity-60">{language}</span>}
       </div>
-      <pre className="overflow-auto p-2 font-mono text-xs leading-relaxed text-slate-800">
+      <pre className="overflow-auto p-2 font-mono text-xs leading-relaxed text-slate-800 dark:text-slate-200">
         {code}
       </pre>
     </div>
@@ -297,7 +297,7 @@ function Chip({
   active: boolean;
   onClick: () => void;
 }) {
-  const base = tone ?? 'bg-slate-100 text-slate-700 border-slate-200';
+  const base = tone ?? 'bg-slate-100 text-slate-700 dark:text-slate-300 border-slate-200';
   return (
     <button
       type="button"

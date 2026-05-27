@@ -19,20 +19,20 @@ export function PageHeader({ title, description, actions, section }: PageHeaderP
         {section && (
           <nav
             aria-label="Breadcrumb"
-            className="mb-1 text-xs text-slate-500"
+            className="mb-1 text-xs text-slate-500 dark:text-slate-500"
           >
             <span className="font-medium">{title}</span>
             <span aria-hidden className="mx-1.5">
               ›
             </span>
-            <span className="text-slate-700">{section}</span>
+            <span className="text-slate-700 dark:text-slate-300">{section}</span>
           </nav>
         )}
-        <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
+        <h1 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
           {title}
         </h1>
         {description && (
-          <p className="mt-1 text-sm text-slate-600">{description}</p>
+          <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">{description}</p>
         )}
       </div>
       {actions && <div className="flex flex-wrap gap-2">{actions}</div>}

@@ -64,7 +64,7 @@ export function FilePicker({ mode, onStatus }: Props) {
 
   return (
     <div className="space-y-3">
-      <p className="text-sm text-slate-600">
+      <p className="text-sm text-slate-600 dark:text-slate-400">
         {mode === 'single'
           ? 'Upload a single source file from your machine.'
           : 'Select multiple source files. Folder structure is preserved when you drag a folder in.'}
@@ -74,14 +74,14 @@ export function FilePicker({ mode, onStatus }: Props) {
         data-mode={mode}
       >
         {mode === 'single' ? (
-          <FileText aria-hidden className="h-7 w-7 text-slate-400" />
+          <FileText aria-hidden className="h-7 w-7 text-slate-400 dark:text-slate-500" />
         ) : (
-          <Layers aria-hidden className="h-7 w-7 text-slate-400" />
+          <Layers aria-hidden className="h-7 w-7 text-slate-400 dark:text-slate-500" />
         )}
-        <span className="text-sm font-medium text-slate-700">
+        <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
           Click to choose {mode === 'single' ? 'a file' : 'files'}
         </span>
-        <span className="text-xs text-slate-500">
+        <span className="text-xs text-slate-500 dark:text-slate-500">
           Accepts {SOURCE_EXTENSIONS.map((e) => `.${e}`).join(', ')}
         </span>
         <input
@@ -95,7 +95,7 @@ export function FilePicker({ mode, onStatus }: Props) {
           className="sr-only"
         />
       </label>
-      {busy && <p className="text-sm text-slate-500">Reading…</p>}
+      {busy && <p className="text-sm text-slate-500 dark:text-slate-500">Reading…</p>}
     </div>
   );
 }

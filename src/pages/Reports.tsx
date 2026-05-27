@@ -80,7 +80,7 @@ function TabButton({
         'inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition',
         active
           ? 'bg-white text-brand-700 shadow-sm'
-          : 'text-slate-600 hover:text-slate-900',
+          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900',
       ].join(' ')}
     >
       <Icon aria-hidden className="h-4 w-4" />

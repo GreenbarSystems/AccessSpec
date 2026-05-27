@@ -62,7 +62,7 @@ export function RefactoringPanel() {
 
   if (!project) {
     return (
-      <div className="card p-6 text-sm text-slate-600">
+      <div className="card p-6 text-sm text-slate-600 dark:text-slate-400">
         Upload a project to generate refactoring suggestions.
       </div>
     );
@@ -128,7 +128,7 @@ export function RefactoringPanel() {
       </div>
 
       {visibleCategories.length === 0 ? (
-        <div className="card p-6 text-sm text-slate-500">
+        <div className="card p-6 text-sm text-slate-500 dark:text-slate-500">
           No suggestions in that category.
         </div>
       ) : (
@@ -140,14 +140,14 @@ export function RefactoringPanel() {
             aria-label={CAT_LABEL[cat]}
           >
             <header className="flex items-baseline justify-between">
-              <h2 className="inline-flex items-center gap-2 text-sm font-semibold text-slate-900">
+              <h2 className="inline-flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-slate-100">
                 {(() => {
                   const Icon = CATEGORY_ICON[cat];
                   return <Icon aria-hidden className="h-4 w-4" />;
                 })()}
                 {CAT_LABEL[cat]}
               </h2>
-              <span className="text-xs text-slate-500">
+              <span className="text-xs text-slate-500 dark:text-slate-500">
                 {refactor.byCategory[cat].length} suggestion
                 {refactor.byCategory[cat].length === 1 ? '' : 's'}
               </span>
@@ -197,7 +197,7 @@ function SuggestionCard({
           >
             {s.severity}
           </span>
-          <span className="font-mono text-[11px] text-slate-700">{s.ruleId}</span>
+          <span className="font-mono text-[11px] text-slate-700 dark:text-slate-300">{s.ruleId}</span>
           {s.autoApplicable && (
             <span className="rounded bg-emerald-100 px-1.5 py-0.5 text-[10px] font-medium uppercase text-emerald-700">
               auto-applicable
@@ -214,7 +214,7 @@ function SuggestionCard({
         </button>
       </header>
       <div className="p-3">
-        <p className="mb-2 text-xs text-slate-700">{s.rationale}</p>
+        <p className="mb-2 text-xs text-slate-700 dark:text-slate-300">{s.rationale}</p>
         <div className="grid grid-cols-1 gap-2 lg:grid-cols-2">
           <DiffBlock tone="rose" label="Before" code={s.before} language={s.language} />
           <DiffBlock tone="emerald" label="After" code={s.after} language={s.language} />
@@ -258,7 +258,7 @@ function DiffBlock({
         <span>{label}</span>
         {language && <span className="opacity-60">{language}</span>}
       </div>
-      <pre className="overflow-auto p-2 font-mono text-xs leading-relaxed text-slate-800">
+      <pre className="overflow-auto p-2 font-mono text-xs leading-relaxed text-slate-800 dark:text-slate-200">
         {code}
       </pre>
     </div>
@@ -290,7 +290,7 @@ function Chip({
         'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium transition',
         active
           ? 'border-brand-500 bg-brand-50 text-brand-800 ring-2 ring-brand-500 ring-offset-1'
-          : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300',
+          : 'border-slate-200 bg-white text-slate-700 dark:text-slate-300 hover:border-slate-300',
       ].join(' ')}
     >
       {icon}

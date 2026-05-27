@@ -18,7 +18,7 @@ const PROVIDER_LABEL: Record<RepoProvider, string> = {
 };
 
 const PROVIDER_TONE: Record<RepoProvider, string> = {
-  github: 'bg-slate-100 text-slate-800 ring-slate-200',
+  github: 'bg-slate-100 text-slate-800 dark:text-slate-200 ring-slate-200',
   gitlab: 'bg-orange-50 text-orange-800 ring-orange-200',
   bitbucket: 'bg-blue-50 text-blue-800 ring-blue-200',
 };
@@ -75,7 +75,7 @@ export function RepoImport({ onStatus }: Props) {
 
   return (
     <div className="space-y-3">
-      <p className="text-sm text-slate-600">
+      <p className="text-sm text-slate-600 dark:text-slate-400">
         Public repos only. We auto-detect the provider from the URL and pull
         the entire tree into the in-memory project. Anonymous API rate limits
         apply — for very large repos, fall back to a ZIP upload.
@@ -118,7 +118,7 @@ export function RepoImport({ onStatus }: Props) {
         </div>
       )}
 
-      <p className="text-xs text-slate-500">
+      <p className="text-xs text-slate-500 dark:text-slate-500">
         Examples:{' '}
         <code className="rounded bg-slate-100 px-1 py-0.5">facebook/react</code>{' '}
         ·{' '}

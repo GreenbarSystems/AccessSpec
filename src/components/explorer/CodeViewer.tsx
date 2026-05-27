@@ -33,7 +33,7 @@ function renderLineHtml(
   let out = '';
   for (const h of hits) {
     if (h.start > cursor) out += escapeHtml(line.slice(cursor, h.start));
-    out += `<mark class="rounded-sm bg-amber-200/70 text-slate-900">${escapeHtml(
+    out += `<mark class="rounded-sm bg-amber-200/70 text-slate-900 dark:text-slate-100">${escapeHtml(
       line.slice(h.start, h.end),
     )}</mark>`;
     cursor = h.end;
@@ -84,7 +84,7 @@ export function CodeViewer({
 
   if (!file) {
     return (
-      <div className="card flex h-96 items-center justify-center text-sm text-slate-500">
+      <div className="card flex h-96 items-center justify-center text-sm text-slate-500 dark:text-slate-500">
         Select a file to view its source.
       </div>
     );
@@ -99,7 +99,7 @@ export function CodeViewer({
         className="max-h-[60vh] overflow-auto bg-slate-50"
         data-file-path={file.path}
       >
-        <pre className="m-0 font-mono text-xs leading-5 text-slate-800">
+        <pre className="m-0 font-mono text-xs leading-5 text-slate-800 dark:text-slate-200">
           {renderedLines.map((html, idx) => {
             const lineNo = idx + 1;
             const isMatchLine =
@@ -117,7 +117,7 @@ export function CodeViewer({
               >
                 <span
                   aria-hidden
-                  className="sticky left-0 select-none border-r border-slate-200 bg-slate-100 px-2 text-right text-slate-400"
+                  className="sticky left-0 select-none border-r border-slate-200 bg-slate-100 px-2 text-right text-slate-400 dark:text-slate-500"
                   style={{ minWidth: `calc(${gutterWidth} + 1rem)` }}
                 >
                   {lineNo}

@@ -86,7 +86,7 @@ export function UploadPanel() {
                 'inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition',
                 isActive
                   ? 'bg-white text-brand-700 shadow-sm ring-1 ring-slate-200'
-                  : 'text-slate-600 hover:bg-white hover:text-slate-900',
+                  : 'text-slate-600 dark:text-slate-400 hover:bg-white hover:text-slate-900',
               ].join(' ')}
             >
               <t.Icon aria-hidden className="h-4 w-4" />

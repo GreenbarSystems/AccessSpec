@@ -22,8 +22,8 @@ const LANG_BADGE: Record<Language, string> = {
   tsx: 'bg-indigo-100 text-indigo-800',
   jsx: 'bg-amber-100 text-amber-800',
   vue: 'bg-emerald-100 text-emerald-800',
-  json: 'bg-slate-100 text-slate-700',
-  archive: 'bg-slate-100 text-slate-700',
+  json: 'bg-slate-100 text-slate-700 dark:text-slate-300',
+  archive: 'bg-slate-100 text-slate-700 dark:text-slate-300',
 };
 
 function buildTree(files: SourceFile[]): TreeNode {
@@ -83,13 +83,13 @@ function NodeRow({
           <ChevronRight
             aria-hidden
             className={[
-              'h-3 w-3 shrink-0 text-slate-500 transition-transform',
+              'h-3 w-3 shrink-0 text-slate-500 dark:text-slate-500 transition-transform',
               open ? 'rotate-90' : '',
             ].join(' ')}
           />
-          <Folder aria-hidden className="h-3.5 w-3.5 shrink-0 text-slate-500" />
-          <span className="font-medium text-slate-800">{node.name}</span>
-          <span className="ml-auto pr-2 text-xs text-slate-400">
+          <Folder aria-hidden className="h-3.5 w-3.5 shrink-0 text-slate-500 dark:text-slate-500" />
+          <span className="font-medium text-slate-800 dark:text-slate-200">{node.name}</span>
+          <span className="ml-auto pr-2 text-xs text-slate-400 dark:text-slate-500">
             {node.children.size}
           </span>
         </button>
@@ -120,8 +120,8 @@ function NodeRow({
         data-file-path={file.path}
       >
         <span aria-hidden className="w-3" />
-        <File aria-hidden className="h-3.5 w-3.5 shrink-0 text-slate-400" />
-        <span className="truncate text-slate-700">{file.name}</span>
+        <File aria-hidden className="h-3.5 w-3.5 shrink-0 text-slate-400 dark:text-slate-500" />
+        <span className="truncate text-slate-700 dark:text-slate-300">{file.name}</span>
         <span
           className={[
             'ml-auto rounded px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide',
@@ -139,7 +139,7 @@ export function ProjectTree({ files, onSelect }: Props) {
   const root = useMemo(() => buildTree(files), [files]);
   if (files.length === 0) {
     return (
-      <p className="text-sm text-slate-500">No files loaded yet.</p>
+      <p className="text-sm text-slate-500 dark:text-slate-500">No files loaded yet.</p>
     );
   }
   return (

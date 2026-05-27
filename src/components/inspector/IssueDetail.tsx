@@ -31,34 +31,34 @@ export function IssueDetail({ rule, findings }: Props) {
           >
             {rule.severity}
           </span>
-          <span className="rounded bg-slate-100 px-2 py-0.5 text-[11px] font-medium uppercase text-slate-700">
+          <span className="rounded bg-slate-100 px-2 py-0.5 text-[11px] font-medium uppercase text-slate-700 dark:text-slate-300">
             {CATEGORY_LABEL[rule.category]}
           </span>
-          <span className="font-mono text-[11px] text-slate-500">{rule.id}</span>
+          <span className="font-mono text-[11px] text-slate-500 dark:text-slate-500">{rule.id}</span>
         </div>
-        <h2 className="mt-2 text-lg font-semibold text-slate-900">
+        <h2 className="mt-2 text-lg font-semibold text-slate-900 dark:text-slate-100">
           {rule.description}
         </h2>
-        <p className="mt-1 text-sm text-slate-600">
+        <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
           {findings.length} affected component{findings.length === 1 ? '' : 's'} in the loaded project.
         </p>
       </header>
 
       {/* Sections */}
       <Section title="Issue details" testId="section-details">
-        <p className="text-sm text-slate-700">{rule.description}</p>
+        <p className="text-sm text-slate-700 dark:text-slate-300">{rule.description}</p>
       </Section>
 
       <Section title="WCAG reference" testId="section-wcag">
         {rule.spec ? (
-          <p className="font-mono text-sm text-slate-800">{rule.spec}</p>
+          <p className="font-mono text-sm text-slate-800 dark:text-slate-200">{rule.spec}</p>
         ) : (
-          <p className="text-sm text-slate-500">No spec citation on this rule.</p>
+          <p className="text-sm text-slate-500 dark:text-slate-500">No spec citation on this rule.</p>
         )}
       </Section>
 
       <Section title="Suggested fix" testId="section-fix">
-        <p className="text-sm text-slate-700">{rule.suggestedFix.summary}</p>
+        <p className="text-sm text-slate-700 dark:text-slate-300">{rule.suggestedFix.summary}</p>
         {rule.suggestedFix.example && (
           <div className="mt-3 grid grid-cols-1 gap-2 lg:grid-cols-2">
             {rule.suggestedFix.example.bad && (
@@ -78,7 +78,7 @@ export function IssueDetail({ rule, findings }: Props) {
           </div>
         )}
         {rule.suggestedFix.notes && rule.suggestedFix.notes.length > 0 && (
-          <ul className="mt-3 list-inside list-disc text-xs text-slate-600">
+          <ul className="mt-3 list-inside list-disc text-xs text-slate-600 dark:text-slate-400">
             {rule.suggestedFix.notes.map((n, i) => (
               <li key={i}>{n}</li>
             ))}
@@ -112,25 +112,25 @@ export function IssueDetail({ rule, findings }: Props) {
                 >
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-baseline gap-2">
-                      <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium uppercase text-slate-700">
+                      <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium uppercase text-slate-700 dark:text-slate-300">
                         {f.element.type}
                       </span>
-                      <span className="font-mono text-xs text-slate-700">
+                      <span className="font-mono text-xs text-slate-700 dark:text-slate-300">
                         &lt;{f.element.tagName}&gt;
                       </span>
                       {f.element.text && (
-                        <span className="truncate text-sm text-slate-800">
+                        <span className="truncate text-sm text-slate-800 dark:text-slate-200">
                           {f.element.text}
                         </span>
                       )}
                     </div>
-                    <div className="mt-0.5 truncate font-mono text-[11px] text-slate-500">
+                    <div className="mt-0.5 truncate font-mono text-[11px] text-slate-500 dark:text-slate-500">
                       {f.element.file}:{f.element.line} · {f.message}
                     </div>
                   </div>
                   <span
                     aria-hidden
-                    className="shrink-0 self-center text-xs text-slate-400"
+                    className="shrink-0 self-center text-xs text-slate-400 dark:text-slate-500"
                   >
                     ↗
                   </span>
@@ -155,7 +155,7 @@ function Section({
 }) {
   return (
     <section className="card p-4" data-testid={testId}>
-      <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+      <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
         {title}
       </h3>
       {children}
@@ -188,7 +188,7 @@ function CodeBlock({
         <span>{label}</span>
         {language && <span className="opacity-60">{language}</span>}
       </div>
-      <pre className="overflow-auto p-3 font-mono text-xs leading-relaxed text-slate-800">
+      <pre className="overflow-auto p-3 font-mono text-xs leading-relaxed text-slate-800 dark:text-slate-200">
         {code}
       </pre>
     </div>
