@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useAuditReport } from '../../services/AuditCache';
 import {
   UI_TYPES,
@@ -13,6 +14,14 @@ type Props = {
   onJump: (path: string, line: number) => void;
 };
 
+const VALID_TYPES = new Set<string>(UI_TYPES);
+
+/** Type-guard for URL-supplied ?type values. */
+function parseTypeParam(raw: string | null): UIElementType | 'all' {
+  if (raw && VALID_TYPES.has(raw)) return raw as UIElementType;
+  return 'all';
+}
+
 export function ComponentInventoryPanel({ onJump }: Props) {
   const report = useAuditReport();
   const elements = report?.elements ?? [];
@@ -25,8 +34,34 @@ export function ComponentInventoryPanel({ onJump }: Props) {
     [inventory],
   );
 
-  const [activeType, setActiveType] = useState<UIElementType | 'all'>('all');
-  const [query, setQuery] = useState('');
+  // Filter state lives in the URL so /analyzer?type=button&q=submit is
+  // shareable, survives tab switches inside the Analyzer, and shows up in
+  // browser history (back / forward).
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeType = parseTypeParam(searchParams.get('type'));
+  const query = searchParams.get('q') ?? '';
+  const groupByFile = searchParams.get('group') === 'file';
+
+  // Helper that mutates one param while preserving the others. `null` clears.
+  const updateParam = useCallback(
+    (key: string, value: string | null) => {
+      setSearchParams(
+        (prev) => {
+          const next = new URLSearchParams(prev);
+          if (value === null || value === '') next.delete(key);
+          else next.set(key, value);
+          return next;
+        },
+        { replace: true },
+      );
+    },
+    [setSearchParams],
+  );
+
+  const setActiveType = (t: UIElementType | 'all') =>
+    updateParam('type', t === 'all' ? null : t);
+  const setQuery = (q: string) => updateParam('q', q.length === 0 ? null : q);
+  const setGroupByFile = (on: boolean) => updateParam('group', on ? 'file' : null);
 
   // Only show chips for types that actually exist in this inventory, sorted
   // by count DESC so the heaviest buckets surface first. Declaration order in
@@ -55,11 +90,38 @@ export function ComponentInventoryPanel({ onJump }: Props) {
     );
   }, [activeType, inventory, query]);
 
+  // Grouping isn't a "filter" in the user's mental model — keep it out of
+  // the filtersActive check so toggling group-by-file doesn't make the
+  // "Clear filters" link light up.
   const filtersActive = activeType !== 'all' || query.length > 0;
   const clearFilters = () => {
-    setActiveType('all');
-    setQuery('');
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        next.delete('type');
+        next.delete('q');
+        return next;
+      },
+      { replace: true },
+    );
   };
+
+  // Bucket elements by file. Sorted by descending count so files with the
+  // most components surface first; ties broken alphabetically for stability.
+  const groupedByFile = useMemo(() => {
+    if (!groupByFile) return null;
+    const map = new Map<string, UIElement[]>();
+    for (const el of visible) {
+      const arr = map.get(el.file);
+      if (arr) arr.push(el);
+      else map.set(el.file, [el]);
+    }
+    return Array.from(map.entries()).sort((a, b) => {
+      const diff = b[1].length - a[1].length;
+      if (diff !== 0) return diff;
+      return a[0].localeCompare(b[0]);
+    });
+  }, [visible, groupByFile]);
 
   if (!report) {
     return (
@@ -151,16 +213,34 @@ export function ComponentInventoryPanel({ onJump }: Props) {
               enriched from CSS
             </span>
           )}
-          {filtersActive && (
+          <span className="ml-auto flex items-center gap-2">
             <button
               type="button"
-              onClick={clearFilters}
-              data-testid="inventory-clear-filters"
-              className="ml-auto rounded px-1.5 py-0.5 text-xs font-medium text-brand-700 underline-offset-2 hover:underline"
+              role="switch"
+              aria-checked={groupByFile}
+              onClick={() => setGroupByFile(!groupByFile)}
+              data-testid="inventory-group-toggle"
+              className={[
+                'rounded-full border px-2 py-0.5 text-[11px] font-medium transition',
+                groupByFile
+                  ? 'border-brand-500 bg-brand-50 text-brand-700'
+                  : 'border-slate-300 bg-white text-slate-600 hover:bg-slate-50',
+              ].join(' ')}
+              title="Group rows by source file"
             >
-              Clear filters
+              Group by file
             </button>
-          )}
+            {filtersActive && (
+              <button
+                type="button"
+                onClick={clearFilters}
+                data-testid="inventory-clear-filters"
+                className="rounded px-1.5 py-0.5 text-xs font-medium text-brand-700 underline-offset-2 hover:underline"
+              >
+                Clear filters
+              </button>
+            )}
+          </span>
         </p>
       </div>
 
@@ -177,6 +257,17 @@ export function ComponentInventoryPanel({ onJump }: Props) {
               Clear filters
             </button>
           </div>
+        ) : groupedByFile ? (
+          <ul className="divide-y divide-slate-200" data-testid="inventory-file-groups">
+            {groupedByFile.map(([file, items]) => (
+              <FileGroup
+                key={file}
+                file={file}
+                items={items}
+                onJump={onJump}
+              />
+            ))}
+          </ul>
         ) : (
           <ul className="divide-y divide-slate-100" data-testid="inventory-list">
             {visible.map((el) => (
@@ -186,6 +277,38 @@ export function ComponentInventoryPanel({ onJump }: Props) {
         )}
       </div>
     </div>
+  );
+}
+
+function FileGroup({
+  file,
+  items,
+  onJump,
+}: {
+  file: string;
+  items: UIElement[];
+  onJump: (path: string, line: number) => void;
+}) {
+  return (
+    <li>
+      {/* `open` by default so users see content immediately on first toggle —
+          if they want to collapse a file they can. */}
+      <details open data-testid="inventory-file-group" data-file={file}>
+        <summary className="flex cursor-pointer items-center justify-between gap-3 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-100">
+          <span className="truncate font-mono" title={file}>
+            {file}
+          </span>
+          <span className="shrink-0 rounded-full bg-white px-2 py-0.5 text-[10px] font-semibold text-slate-600 ring-1 ring-slate-200">
+            {items.length}
+          </span>
+        </summary>
+        <ul className="divide-y divide-slate-100">
+          {items.map((el) => (
+            <ElementRow key={el.id} el={el} onJump={onJump} />
+          ))}
+        </ul>
+      </details>
+    </li>
   );
 }
 
@@ -263,9 +386,11 @@ function ElementRow({
           </div>
           <span
             aria-hidden
+            // → matches the in-page jump behavior. The old ↗ glyph
+            // reads as "external link" which this isn't.
             className="shrink-0 self-center text-xs text-slate-400"
           >
-            ↗
+            →
           </span>
         </button>
       </div>
