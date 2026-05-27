@@ -44,16 +44,19 @@ function isEditableTarget(target: EventTarget | null): boolean {
 }
 
 function focusSearchInput(): boolean {
-  // Try the explorer's search box first (the only page-level search input
-  // at the time of writing). Fall back to the first visible input the user
-  // would obviously want focus on.
-  const explicit = document.querySelector<HTMLInputElement>(
-    'input[data-search="explorer"]',
+  // Look for ANY visible input that opted in with `data-search="…"`. Multiple
+  // tabs across the app expose searches (explorer, inventory, etc.) — the
+  // panel that's currently mounted owns the only visible one.
+  const candidates = Array.from(
+    document.querySelectorAll<HTMLInputElement>('input[data-search]'),
   );
-  if (explicit) {
-    explicit.focus();
-    explicit.select();
-    return true;
+  for (const el of candidates) {
+    // offsetParent is null when the element is display:none or detached.
+    if (el.offsetParent !== null) {
+      el.focus();
+      el.select();
+      return true;
+    }
   }
   return false;
 }

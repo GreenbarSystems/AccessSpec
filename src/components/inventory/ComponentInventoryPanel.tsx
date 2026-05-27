@@ -28,6 +28,19 @@ export function ComponentInventoryPanel({ onJump }: Props) {
   const [activeType, setActiveType] = useState<UIElementType | 'all'>('all');
   const [query, setQuery] = useState('');
 
+  // Only show chips for types that actually exist in this inventory, sorted
+  // by count DESC so the heaviest buckets surface first. Declaration order in
+  // UI_TYPES is the tiebreaker so the chip row stays stable across re-renders.
+  const visibleTypeChips = useMemo(() => {
+    return UI_TYPES.filter((t) => inventory.totals.byType[t] > 0).sort(
+      (a, b) => {
+        const diff = inventory.totals.byType[b] - inventory.totals.byType[a];
+        if (diff !== 0) return diff;
+        return UI_TYPES.indexOf(a) - UI_TYPES.indexOf(b);
+      },
+    );
+  }, [inventory]);
+
   const visible: UIElement[] = useMemo(() => {
     const pool =
       activeType === 'all' ? inventory.elements : inventory.byType[activeType];
@@ -41,6 +54,12 @@ export function ComponentInventoryPanel({ onJump }: Props) {
         el.role.toLowerCase().includes(q),
     );
   }, [activeType, inventory, query]);
+
+  const filtersActive = activeType !== 'all' || query.length > 0;
+  const clearFilters = () => {
+    setActiveType('all');
+    setQuery('');
+  };
 
   if (!report) {
     return (
@@ -61,7 +80,11 @@ export function ComponentInventoryPanel({ onJump }: Props) {
   return (
     <div className="space-y-4" data-testid="inventory-panel">
       <div className="card p-3">
-        <div className="flex flex-wrap items-center gap-1.5">
+        <div
+          role="group"
+          aria-label="Filter by component type"
+          className="flex flex-wrap items-center gap-1.5"
+        >
           <TypeChip
             label="All"
             count={inventory.totals.all}
@@ -69,7 +92,7 @@ export function ComponentInventoryPanel({ onJump }: Props) {
             onClick={() => setActiveType('all')}
             dataAttr="all"
           />
-          {UI_TYPES.map((t) => (
+          {visibleTypeChips.map((t) => (
             <TypeChip
               key={t}
               label={`${TYPE_STYLES[t].icon} ${t}`}
@@ -81,7 +104,7 @@ export function ComponentInventoryPanel({ onJump }: Props) {
             />
           ))}
         </div>
-        <div className="mt-3">
+        <div className="relative mt-3">
           <label htmlFor="inventory-filter" className="sr-only">
             Filter inventory
           </label>
@@ -90,35 +113,70 @@ export function ComponentInventoryPanel({ onJump }: Props) {
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Filter by text, role, tag, or file…"
-            className="w-full rounded-md border border-slate-300 px-3 py-1.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
+            placeholder="Filter by text, role, tag, or file…  (press / to focus)"
+            className="w-full rounded-md border border-slate-300 px-3 py-1.5 pr-9 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
             data-testid="inventory-filter-input"
+            // useKeyboardShortcuts hooks `/` to the visible data-search input.
+            data-search="inventory"
           />
+          {query.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setQuery('')}
+              aria-label="Clear search"
+              data-testid="inventory-clear-search"
+              // The native `type="search"` × is suppressed by Tailwind's
+              // preflight in most browsers — render our own so the affordance
+              // is consistent across Chrome / Safari / Firefox.
+              className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+            >
+              <span aria-hidden>✕</span>
+            </button>
+          )}
         </div>
-        <p className="mt-2 text-xs text-slate-500">
-          Showing{' '}
-          <span className="font-semibold text-slate-800">{visible.length}</span>{' '}
-          of {inventory.totals.all} detected component
-          {inventory.totals.all === 1 ? '' : 's'} across{' '}
-          {Object.keys(inventory.byFile).length} file
-          {Object.keys(inventory.byFile).length === 1 ? '' : 's'}.
+        <p className="mt-2 flex flex-wrap items-center gap-x-2 text-xs text-slate-500">
+          <span>
+            Showing{' '}
+            <span className="font-semibold text-slate-800">{visible.length}</span>{' '}
+            of {inventory.totals.all} detected component
+            {inventory.totals.all === 1 ? '' : 's'} across{' '}
+            {Object.keys(inventory.byFile).length} file
+            {Object.keys(inventory.byFile).length === 1 ? '' : 's'}.
+          </span>
           {enrichedCount > 0 && (
-            <>
-              {' · '}
+            <span>
               <span className="font-semibold text-emerald-700">
                 {enrichedCount}
               </span>{' '}
               enriched from CSS
-            </>
+            </span>
+          )}
+          {filtersActive && (
+            <button
+              type="button"
+              onClick={clearFilters}
+              data-testid="inventory-clear-filters"
+              className="ml-auto rounded px-1.5 py-0.5 text-xs font-medium text-brand-700 underline-offset-2 hover:underline"
+            >
+              Clear filters
+            </button>
           )}
         </p>
       </div>
 
       <div className="card overflow-hidden">
         {visible.length === 0 ? (
-          <p className="p-6 text-sm text-slate-500">
-            No components match the current filter.
-          </p>
+          <div className="space-y-3 p-6 text-sm text-slate-600">
+            <p>No components match the current filter.</p>
+            <button
+              type="button"
+              onClick={clearFilters}
+              className="btn-ghost text-xs"
+              data-testid="inventory-empty-clear"
+            >
+              Clear filters
+            </button>
+          </div>
         ) : (
           <ul className="divide-y divide-slate-100" data-testid="inventory-list">
             {visible.map((el) => (
@@ -188,7 +246,12 @@ function ElementRow({
                 {el.text}
               </p>
             )}
-            <div className="mt-0.5 truncate font-mono text-xs text-slate-500">
+            <div
+              className="mt-0.5 truncate font-mono text-xs text-slate-500"
+              // Truncation hides long paths — the title makes the full path
+              // available on hover without having to jump to the Source tab.
+              title={`${el.file}:${el.line}${el.styles.className ? ` · .${el.styles.className.split(/\s+/).join('.')}` : ''}`}
+            >
               {el.file}:{el.line}
               {el.styles.className && (
                 <span className="ml-2 text-slate-400">
@@ -211,8 +274,18 @@ function ElementRow({
           <summary className="cursor-pointer text-xs text-slate-600 hover:text-slate-900">
             Styles{' '}
             <span className="text-slate-400">
-              ({(computed ? Object.keys(computed).length : 0) +
-                (inline ? Object.keys(inline).length : 0)})
+              {/* Split CSS vs inline so the count matches what the expanded
+                  view actually shows (two separate tables). */}
+              {[
+                computed && Object.keys(computed).length > 0
+                  ? `${Object.keys(computed).length} CSS`
+                  : null,
+                inline && Object.keys(inline).length > 0
+                  ? `${Object.keys(inline).length} inline`
+                  : null,
+              ]
+                .filter(Boolean)
+                .join(' · ')}
             </span>
           </summary>
           {inline && Object.keys(inline).length > 0 && (
