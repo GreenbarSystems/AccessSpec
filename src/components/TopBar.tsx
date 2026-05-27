@@ -1,4 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
+import { Menu } from 'lucide-react';
 import { navItems } from '../lib/nav';
 import { startNewAudit } from '../lib/newAudit';
 
@@ -24,9 +25,7 @@ export function TopBar({ onMenuClick, onShowShortcuts }: TopBarProps) {
         aria-label="Open navigation"
         className="btn-ghost lg:hidden -ml-2 h-10 w-10 p-0"
       >
-        <span aria-hidden className="text-lg">
-          ☰
-        </span>
+        <Menu aria-hidden className="h-5 w-5" />
       </button>
 
       <div className="min-w-0 flex-1">

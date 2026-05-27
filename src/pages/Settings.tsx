@@ -1,3 +1,4 @@
+import { Construction } from 'lucide-react';
 import { PageHeader } from '../components/PageHeader';
 
 const PLANNED: { title: string; body: string; eta: string }[] = [
@@ -36,9 +37,7 @@ export default function Settings() {
       />
       <div className="mx-auto max-w-3xl space-y-4">
         <div className="card flex items-start gap-3 border-amber-200 bg-amber-50/50 p-4">
-          <span aria-hidden className="text-2xl">
-            🚧
-          </span>
+          <Construction aria-hidden className="h-6 w-6 shrink-0 text-amber-700" />
           <div>
             <h2 className="text-sm font-semibold text-amber-900">
               No configurable settings yet

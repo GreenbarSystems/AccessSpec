@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Clipboard } from 'lucide-react';
 import { useSourceRepository } from '../../services/useSourceRepository';
 import { useAuditReport } from '../../services/AuditCache';
 import {
@@ -114,11 +115,11 @@ export function RemediationPlaybook() {
           )}
           <button
             type="button"
-            className="btn-primary text-xs"
+            className="btn-primary inline-flex items-center gap-1 text-xs"
             onClick={handleCopyAll}
             data-testid="copy-markdown"
           >
-            📋 Copy as markdown
+            <Clipboard aria-hidden className="h-3.5 w-3.5" /> Copy as markdown
           </button>
         </div>
       </div>

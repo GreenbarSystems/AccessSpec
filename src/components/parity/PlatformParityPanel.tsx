@@ -7,10 +7,11 @@ import {
   type ParityVerdict,
 } from '../../services/PlatformParityEngine';
 import {
-  PATTERN_ICON,
   PATTERN_LABEL,
   type PatternKind,
 } from '../../services/PatternRecognizer';
+import { PATTERN_ICON } from '../icons/patternIcons';
+import { Bot } from 'lucide-react';
 
 const VERDICT_TONE: Record<ParityVerdict, string> = {
   native: 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200',
@@ -118,16 +119,20 @@ export function PlatformParityPanel() {
           </span>
           {(Object.keys(report.countsByKind) as PatternKind[])
             .filter((k) => report.countsByKind[k] > 0)
-            .map((k) => (
-              <Chip
-                key={k}
-                id={k}
-                label={`${PATTERN_ICON[k]} ${PATTERN_LABEL[k]}`}
-                n={report.countsByKind[k]}
-                active={filter === k}
-                onClick={() => setFilter(k)}
-              />
-            ))}
+            .map((k) => {
+              const Icon = PATTERN_ICON[k];
+              return (
+                <Chip
+                  key={k}
+                  id={k}
+                  icon={<Icon aria-hidden className="h-3.5 w-3.5" />}
+                  label={PATTERN_LABEL[k]}
+                  n={report.countsByKind[k]}
+                  active={filter === k}
+                  onClick={() => setFilter(k)}
+                />
+              );
+            })}
         </div>
         <p className="mt-3 text-xs text-slate-500">
           Each row compares the current implementation against the native iOS
@@ -173,9 +178,10 @@ function ParityCard({
     >
       <header className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 bg-slate-50 px-4 py-2">
         <div className="flex items-center gap-2">
-          <span aria-hidden className="text-lg">
-            {PATTERN_ICON[row.kind]}
-          </span>
+          {(() => {
+            const Icon = PATTERN_ICON[row.kind];
+            return <Icon aria-hidden className="h-5 w-5 text-slate-700" />;
+          })()}
           <span className="text-sm font-semibold text-slate-900">
             {PATTERN_LABEL[row.kind]}
           </span>
@@ -239,8 +245,8 @@ function ParityCard({
 
         {/* Android */}
         <section className="bg-white p-3" data-col="android">
-          <h3 className="text-[10px] font-semibold uppercase tracking-wide text-emerald-700">
-            🤖 Android native
+          <h3 className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-emerald-700">
+            <Bot aria-hidden className="h-3.5 w-3.5" /> Android native
           </h3>
           <div
             className="mt-1 font-mono text-xs text-emerald-900"
@@ -281,6 +287,7 @@ function ParityCard({
 function Chip({
   id,
   label,
+  icon,
   n,
   tone,
   active,
@@ -288,6 +295,7 @@ function Chip({
 }: {
   id: Filter;
   label: string;
+  icon?: React.ReactNode;
   n: number;
   tone?: string;
   active: boolean;
@@ -308,6 +316,7 @@ function Chip({
         base,
       ].join(' ')}
     >
+      {icon}
       {label}
       <span className="rounded-full bg-white/70 px-1.5 text-[10px] font-semibold tabular-nums">
         {n}

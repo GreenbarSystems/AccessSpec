@@ -1,4 +1,11 @@
 import { useState } from 'react';
+import {
+  Image,
+  Microscope,
+  Scale,
+  Smartphone,
+  type LucideIcon,
+} from 'lucide-react';
 import { PageHeader } from '../components/PageHeader';
 import { DeviceSimulator } from '../components/simulator/DeviceSimulator';
 import { PlatformParityPanel } from '../components/parity/PlatformParityPanel';
@@ -27,35 +34,19 @@ export default function Simulator() {
       <div
         role="tablist"
         aria-label="Simulator view"
-        className="mb-4 inline-flex rounded-lg bg-slate-100 p-1"
+        className="mb-4 inline-flex flex-wrap rounded-lg bg-slate-100 p-1"
       >
-        <TabButton
-          active={mode === 'preview'}
-          onClick={() => setMode('preview')}
-          dataKey="preview"
-        >
-          📱 Device preview
+        <TabButton active={mode === 'preview'} onClick={() => setMode('preview')} dataKey="preview" Icon={Smartphone}>
+          Device preview
         </TabButton>
-        <TabButton
-          active={mode === 'parity'}
-          onClick={() => setMode('parity')}
-          dataKey="parity"
-        >
-          ⚖️ Parity report
+        <TabButton active={mode === 'parity'} onClick={() => setMode('parity')} dataKey="parity" Icon={Scale}>
+          Parity report
         </TabButton>
-        <TabButton
-          active={mode === 'runtime'}
-          onClick={() => setMode('runtime')}
-          dataKey="runtime"
-        >
-          🔬 Runtime audit
+        <TabButton active={mode === 'runtime'} onClick={() => setMode('runtime')} dataKey="runtime" Icon={Microscope}>
+          Runtime audit
         </TabButton>
-        <TabButton
-          active={mode === 'screenshot'}
-          onClick={() => setMode('screenshot')}
-          dataKey="screenshot"
-        >
-          🖼️ Screenshot
+        <TabButton active={mode === 'screenshot'} onClick={() => setMode('screenshot')} dataKey="screenshot" Icon={Image}>
+          Screenshot
         </TabButton>
       </div>
 
@@ -71,11 +62,13 @@ function TabButton({
   active,
   onClick,
   dataKey,
+  Icon,
   children,
 }: {
   active: boolean;
   onClick: () => void;
   dataKey: string;
+  Icon: LucideIcon;
   children: React.ReactNode;
 }) {
   return (
@@ -86,12 +79,13 @@ function TabButton({
       onClick={onClick}
       data-mode={dataKey}
       className={[
-        'rounded-md px-3 py-1.5 text-sm font-medium transition',
+        'inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition',
         active
           ? 'bg-white text-brand-700 shadow-sm'
           : 'text-slate-600 hover:text-slate-900',
       ].join(' ')}
     >
+      <Icon aria-hidden className="h-4 w-4" />
       {children}
     </button>
   );

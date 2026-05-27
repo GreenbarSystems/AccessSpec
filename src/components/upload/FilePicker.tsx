@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { FileText, Layers } from 'lucide-react';
 import {
   SOURCE_EXTENSIONS,
   isSourceFilename,
@@ -72,9 +73,11 @@ export function FilePicker({ mode, onStatus }: Props) {
         className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 px-6 py-10 text-center hover:border-brand-400 hover:bg-brand-50/30"
         data-mode={mode}
       >
-        <span aria-hidden className="text-2xl">
-          {mode === 'single' ? '📄' : '🗂️'}
-        </span>
+        {mode === 'single' ? (
+          <FileText aria-hidden className="h-7 w-7 text-slate-400" />
+        ) : (
+          <Layers aria-hidden className="h-7 w-7 text-slate-400" />
+        )}
         <span className="text-sm font-medium text-slate-700">
           Click to choose {mode === 'single' ? 'a file' : 'files'}
         </span>

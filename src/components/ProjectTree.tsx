@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { ChevronRight, File, Folder } from 'lucide-react';
 import type { SourceFile, Language } from '../services/FileParser';
 
 type TreeNode = {
@@ -79,10 +80,14 @@ function NodeRow({
           className="flex w-full items-center gap-1.5 rounded px-1 py-0.5 text-left text-sm hover:bg-slate-100"
           style={indent}
         >
-          <span aria-hidden className="w-3 text-xs text-slate-500">
-            {open ? '▾' : '▸'}
-          </span>
-          <span aria-hidden>📁</span>
+          <ChevronRight
+            aria-hidden
+            className={[
+              'h-3 w-3 shrink-0 text-slate-500 transition-transform',
+              open ? 'rotate-90' : '',
+            ].join(' ')}
+          />
+          <Folder aria-hidden className="h-3.5 w-3.5 shrink-0 text-slate-500" />
           <span className="font-medium text-slate-800">{node.name}</span>
           <span className="ml-auto pr-2 text-xs text-slate-400">
             {node.children.size}
@@ -115,7 +120,7 @@ function NodeRow({
         data-file-path={file.path}
       >
         <span aria-hidden className="w-3" />
-        <span aria-hidden>📄</span>
+        <File aria-hidden className="h-3.5 w-3.5 shrink-0 text-slate-400" />
         <span className="truncate text-slate-700">{file.name}</span>
         <span
           className={[

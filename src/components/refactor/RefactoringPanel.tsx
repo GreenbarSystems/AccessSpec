@@ -1,5 +1,13 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {
+  Accessibility,
+  Clipboard,
+  Code2,
+  Hand,
+  Palette,
+  type LucideIcon,
+} from 'lucide-react';
 import { useSourceRepository } from '../../services/useSourceRepository';
 import { useAuditReport } from '../../services/AuditCache';
 import {
@@ -12,11 +20,11 @@ import type { Severity } from '../../services/RuleEngine';
 
 const CATEGORY_ORDER: RefactorCategory[] = ['html', 'css', 'aria', 'touch-target'];
 
-const CATEGORY_ICON: Record<RefactorCategory, string> = {
-  html: '🧱',
-  css: '🎨',
-  aria: '🦮',
-  'touch-target': '👆',
+const CATEGORY_ICON: Record<RefactorCategory, LucideIcon> = {
+  html: Code2,
+  css: Palette,
+  aria: Accessibility,
+  'touch-target': Hand,
 };
 
 const CATEGORY_TONE: Record<RefactorCategory, string> = {
@@ -97,16 +105,20 @@ export function RefactoringPanel() {
       <div className="card flex flex-wrap items-center justify-between gap-3 p-3">
         <div className="flex flex-wrap items-center gap-1.5">
           <Chip id="all" label="All" n={counts.all} active={filter === 'all'} onClick={() => setFilter('all')} />
-          {CATEGORY_ORDER.map((c) => (
-            <Chip
-              key={c}
-              id={c}
-              label={`${CATEGORY_ICON[c]} ${CAT_LABEL[c]}`}
-              n={counts[c]}
-              active={filter === c}
-              onClick={() => setFilter(c)}
-            />
-          ))}
+          {CATEGORY_ORDER.map((c) => {
+            const Icon = CATEGORY_ICON[c];
+            return (
+              <Chip
+                key={c}
+                id={c}
+                icon={<Icon aria-hidden className="h-3.5 w-3.5" />}
+                label={CAT_LABEL[c]}
+                n={counts[c]}
+                active={filter === c}
+                onClick={() => setFilter(c)}
+              />
+            );
+          })}
         </div>
         {toast && (
           <span className="text-xs text-emerald-700" role="status">
@@ -128,8 +140,12 @@ export function RefactoringPanel() {
             aria-label={CAT_LABEL[cat]}
           >
             <header className="flex items-baseline justify-between">
-              <h2 className="text-sm font-semibold text-slate-900">
-                {CATEGORY_ICON[cat]} {CAT_LABEL[cat]}
+              <h2 className="inline-flex items-center gap-2 text-sm font-semibold text-slate-900">
+                {(() => {
+                  const Icon = CATEGORY_ICON[cat];
+                  return <Icon aria-hidden className="h-4 w-4" />;
+                })()}
+                {CAT_LABEL[cat]}
               </h2>
               <span className="text-xs text-slate-500">
                 {refactor.byCategory[cat].length} suggestion
@@ -208,9 +224,9 @@ function SuggestionCard({
             type="button"
             onClick={onCopy}
             data-testid={`copy-${s.id}`}
-            className="text-[11px] font-medium text-brand-700 hover:underline"
+            className="inline-flex items-center gap-1 text-[11px] font-medium text-brand-700 hover:underline"
           >
-            📋 Copy fix
+            <Clipboard aria-hidden className="h-3 w-3" /> Copy fix
           </button>
         </div>
       </div>
@@ -252,12 +268,14 @@ function DiffBlock({
 function Chip({
   id,
   label,
+  icon,
   n,
   active,
   onClick,
 }: {
   id: Filter;
   label: string;
+  icon?: React.ReactNode;
   n: number;
   active: boolean;
   onClick: () => void;
@@ -275,6 +293,7 @@ function Chip({
           : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300',
       ].join(' ')}
     >
+      {icon}
       {label}
       <span className="rounded-full bg-white/70 px-1.5 text-[10px] font-semibold tabular-nums">
         {n}

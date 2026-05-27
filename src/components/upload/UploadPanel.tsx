@@ -1,4 +1,12 @@
 import { useState, type ReactNode } from 'react';
+import {
+  Archive,
+  Clipboard,
+  FileText,
+  Globe,
+  Layers,
+  type LucideIcon,
+} from 'lucide-react';
 import { PasteSource } from './PasteSource';
 import { FilePicker } from './FilePicker';
 import { ZipUpload } from './ZipUpload';
@@ -7,7 +15,7 @@ import { RepoImport } from './RepoImport';
 type Tab = {
   id: string;
   label: string;
-  icon: string;
+  Icon: LucideIcon;
   render: (onStatus: (m: StatusMessage | null) => void) => ReactNode;
 };
 
@@ -20,31 +28,31 @@ const TABS: Tab[] = [
   {
     id: 'paste',
     label: 'Paste source',
-    icon: '📋',
+    Icon: Clipboard,
     render: (onStatus) => <PasteSource onStatus={onStatus} />,
   },
   {
     id: 'file',
     label: 'Upload file',
-    icon: '📄',
+    Icon: FileText,
     render: (onStatus) => <FilePicker mode="single" onStatus={onStatus} />,
   },
   {
     id: 'multi',
     label: 'Upload multiple',
-    icon: '🗂️',
+    Icon: Layers,
     render: (onStatus) => <FilePicker mode="multi" onStatus={onStatus} />,
   },
   {
     id: 'zip',
     label: 'Upload ZIP',
-    icon: '🗜️',
+    Icon: Archive,
     render: (onStatus) => <ZipUpload onStatus={onStatus} />,
   },
   {
     id: 'repo',
     label: 'Import repo',
-    icon: '🌐',
+    Icon: Globe,
     render: (onStatus) => <RepoImport onStatus={onStatus} />,
   },
 ];
@@ -81,7 +89,7 @@ export function UploadPanel() {
                   : 'text-slate-600 hover:bg-white hover:text-slate-900',
               ].join(' ')}
             >
-              <span aria-hidden>{t.icon}</span>
+              <t.Icon aria-hidden className="h-4 w-4" />
               {t.label}
             </button>
           );

@@ -1,5 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {
+  Accessibility,
+  Eye,
+  Hand,
+  Palette,
+  Type as TypeIcon,
+  type LucideIcon,
+} from 'lucide-react';
 import { useSourceRepository } from '../../services/useSourceRepository';
 import { buildPreviewDocument } from '../../services/DevicePreview';
 import {
@@ -22,12 +30,12 @@ const SEVERITY_TONE: Record<RuntimeSeverity, string> = {
   info: 'bg-sky-50 text-sky-700 ring-1 ring-sky-200',
 };
 
-const CATEGORY_ICON: Record<RuntimeCategory, string> = {
-  touch: '👆',
-  a11y: '🦮',
-  contrast: '🎨',
-  visibility: '👁️',
-  text: '🔤',
+const CATEGORY_ICON: Record<RuntimeCategory, LucideIcon> = {
+  touch: Hand,
+  a11y: Accessibility,
+  contrast: Palette,
+  visibility: Eye,
+  text: TypeIcon,
 };
 
 const SCAN_VIEWPORT = { width: 393, height: 852 }; // iPhone 15 default
@@ -220,16 +228,20 @@ export function RuntimeAuditPanel() {
                     active={categoryFilter === 'all'}
                     onClick={() => setCategoryFilter('all')}
                   />
-                  {RUNTIME_CATEGORIES.map((c) => (
-                    <Chip
-                      key={c}
-                      id={c}
-                      label={`${CATEGORY_ICON[c]} ${c}`}
-                      n={report.countsByCategory[c]}
-                      active={categoryFilter === c}
-                      onClick={() => setCategoryFilter(c)}
-                    />
-                  ))}
+                  {RUNTIME_CATEGORIES.map((c) => {
+                    const Icon = CATEGORY_ICON[c];
+                    return (
+                      <Chip
+                        key={c}
+                        id={c}
+                        icon={<Icon aria-hidden className="h-3.5 w-3.5" />}
+                        label={c}
+                        n={report.countsByCategory[c]}
+                        active={categoryFilter === c}
+                        onClick={() => setCategoryFilter(c)}
+                      />
+                    );
+                  })}
                 </div>
                 <p className="mt-3 text-xs text-slate-500">
                   Live audit walks <code>document.querySelectorAll(&quot;*&quot;)</code>{' '}
@@ -290,9 +302,15 @@ function FindingCard({ f, onJump: _onJump }: { f: RuntimeFinding; onJump: () => 
           >
             {f.severity}
           </span>
-          <span className="rounded bg-slate-200 px-1.5 py-0.5 text-[10px] font-medium uppercase text-slate-700">
-            {CATEGORY_ICON[f.category]} {f.category}
-          </span>
+          {(() => {
+            const Icon = CATEGORY_ICON[f.category];
+            return (
+              <span className="inline-flex items-center gap-1 rounded bg-slate-200 px-1.5 py-0.5 text-[10px] font-medium uppercase text-slate-700">
+                <Icon aria-hidden className="h-3 w-3" />
+                {f.category}
+              </span>
+            );
+          })()}
           <span className="font-mono text-[11px] text-slate-500">{f.ruleId}</span>
         </div>
         <span className="font-mono text-[11px] text-slate-500">
@@ -369,6 +387,7 @@ function SnapshotBlock({
 function Chip({
   id,
   label,
+  icon,
   n,
   tone,
   active,
@@ -376,6 +395,7 @@ function Chip({
 }: {
   id: string;
   label: string;
+  icon?: React.ReactNode;
   n: number;
   tone?: string;
   active: boolean;
@@ -396,6 +416,7 @@ function Chip({
         base,
       ].join(' ')}
     >
+      {icon}
       {label}
       <span className="rounded-full bg-white/70 px-1.5 text-[10px] font-semibold tabular-nums">
         {n}

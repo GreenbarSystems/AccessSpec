@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { Archive } from 'lucide-react';
 import { extractZip } from '../../services/ZipExtractor';
 import { sourceRepository } from '../../services/SourceRepository';
 import { useToast } from '../toast/ToastHost';
@@ -67,9 +68,7 @@ export function ZipUpload({ onStatus }: Props) {
         skipped.
       </p>
       <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 px-6 py-10 text-center hover:border-brand-400 hover:bg-brand-50/30">
-        <span aria-hidden className="text-2xl">
-          🗜️
-        </span>
+        <Archive aria-hidden className="h-7 w-7 text-slate-400" />
         <span className="text-sm font-medium text-slate-700">
           Click to choose a .zip
         </span>

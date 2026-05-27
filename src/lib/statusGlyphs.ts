@@ -11,8 +11,9 @@
  *    conveys a pass / fail / unknown / severity meaning.
  *  - Pair the glyph with a text label and the appropriate Tailwind tone
  *    class so colour-blind users still get the signal.
- *  - Decorative "kind" icons (👁 for visibility, 🎨 for contrast, 👆 for
- *    touch, etc.) are NOT status icons — keep using them as-is.
+ *  - Decorative "kind" icons (Eye for visibility, Palette for contrast,
+ *    Hand for touch, etc., all from lucide-react) are NOT status icons —
+ *    keep using them as-is.
  *
  * The glyphs are deliberately monochrome typographic characters (not
  * emoji) so they inherit text colour from the surrounding tone class and

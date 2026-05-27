@@ -45,15 +45,9 @@ export const PATTERN_LABEL: Record<PatternKind, string> = {
   tabs: 'Tabs',
 };
 
-export const PATTERN_ICON: Record<PatternKind, string> = {
-  'date-picker': '📅',
-  'file-upload': '⬆️',
-  navigation: '🧭',
-  modal: '🪟',
-  toggle: '🎚️',
-  search: '🔎',
-  tabs: '📑',
-};
+// PATTERN_ICON moved to src/components/icons/patternIcons.tsx so this file
+// stays free of React / lucide imports — it's consumed by the inline
+// runtime scanner (vanilla JS) and other React-free callers.
 
 export type PatternCheck = {
   label: string;

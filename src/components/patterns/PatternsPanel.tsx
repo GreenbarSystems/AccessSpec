@@ -1,14 +1,15 @@
 import { useMemo, useState } from 'react';
+import { Bot } from 'lucide-react';
 import { useAuditReport } from '../../services/AuditCache';
 import {
   recognizePatterns,
   PATTERN_KINDS,
   PATTERN_LABEL,
-  PATTERN_ICON,
   type PatternInstance,
   type PatternKind,
   type PatternCheck,
 } from '../../services/PatternRecognizer';
+import { PATTERN_ICON } from '../icons/patternIcons';
 import { iosMappingFor } from '../../services/IOSPatterns';
 import { androidMappingFor } from '../../services/AndroidPatterns';
 
@@ -70,17 +71,20 @@ export function PatternsPanel({ onJump }: Props) {
             active={activeKind === 'all'}
             onClick={() => setActiveKind('all')}
           />
-          {PATTERN_KINDS.map((k) => (
-            <Chip
-              key={k}
-              id={k}
-              icon={PATTERN_ICON[k]}
-              label={PATTERN_LABEL[k]}
-              n={report.countsByKind[k]}
-              active={activeKind === k}
-              onClick={() => setActiveKind(k)}
-            />
-          ))}
+          {PATTERN_KINDS.map((k) => {
+            const Icon = PATTERN_ICON[k];
+            return (
+              <Chip
+                key={k}
+                id={k}
+                icon={<Icon aria-hidden className="h-3.5 w-3.5" />}
+                label={PATTERN_LABEL[k]}
+                n={report.countsByKind[k]}
+                active={activeKind === k}
+                onClick={() => setActiveKind(k)}
+              />
+            );
+          })}
         </div>
         <p className="mt-3 text-xs text-slate-500">
           Functional patterns recognized on top of the component inventory.
@@ -121,12 +125,17 @@ function PatternCard({
       data-anchor={pattern.anchor.id}
     >
       <header className="flex items-start gap-3">
-        <span
-          aria-hidden
-          className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-slate-100 text-lg"
-        >
-          {PATTERN_ICON[pattern.kind]}
-        </span>
+        {(() => {
+          const Icon = PATTERN_ICON[pattern.kind];
+          return (
+            <span
+              aria-hidden
+              className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-slate-100 text-slate-700"
+            >
+              <Icon className="h-5 w-5" />
+            </span>
+          );
+        })()}
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-baseline gap-2">
             <span className="text-sm font-semibold text-slate-900">
@@ -244,7 +253,7 @@ function AndroidRecommendation({ kind }: { kind: PatternKind }) {
       data-kind={kind}
     >
       <div className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-700">
-        <span aria-hidden>🤖</span>
+        <Bot aria-hidden className="h-3.5 w-3.5" />
         Android recommendation
       </div>
       <div className="mt-1.5 flex flex-wrap gap-1.5">
@@ -289,7 +298,7 @@ function Chip({
   onClick,
 }: {
   id: PatternKind | 'all';
-  icon?: string;
+  icon?: React.ReactNode;
   label: string;
   n: number;
   active: boolean;
@@ -308,7 +317,7 @@ function Chip({
           : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300',
       ].join(' ')}
     >
-      {icon && <span aria-hidden>{icon}</span>}
+      {icon}
       {label}
       <span
         className={[

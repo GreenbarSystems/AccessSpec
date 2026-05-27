@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Bot, Scissors, Search, Wrench, type LucideIcon } from 'lucide-react';
 import { PageHeader } from '../components/PageHeader';
 import { ReportExportPanel } from '../components/reports/ReportExportPanel';
 import { ViolationInspector } from '../components/inspector/ViolationInspector';
@@ -32,33 +33,17 @@ export default function Reports() {
           aria-label="Reports view"
           className="inline-flex rounded-lg bg-slate-100 p-1"
         >
-          <TabButton
-            active={mode === 'inspector'}
-            onClick={() => setMode('inspector')}
-            dataKey="inspector"
-          >
-            🔍 Inspector
+          <TabButton active={mode === 'inspector'} onClick={() => setMode('inspector')} dataKey="inspector" Icon={Search}>
+            Inspector
           </TabButton>
-          <TabButton
-            active={mode === 'playbook'}
-            onClick={() => setMode('playbook')}
-            dataKey="playbook"
-          >
-            🛠️ Remediation playbook
+          <TabButton active={mode === 'playbook'} onClick={() => setMode('playbook')} dataKey="playbook" Icon={Wrench}>
+            Remediation playbook
           </TabButton>
-          <TabButton
-            active={mode === 'assistant'}
-            onClick={() => setMode('assistant')}
-            dataKey="assistant"
-          >
-            🤖 Assistant
+          <TabButton active={mode === 'assistant'} onClick={() => setMode('assistant')} dataKey="assistant" Icon={Bot}>
+            Assistant
           </TabButton>
-          <TabButton
-            active={mode === 'refactor'}
-            onClick={() => setMode('refactor')}
-            dataKey="refactor"
-          >
-            ✂️ Refactor
+          <TabButton active={mode === 'refactor'} onClick={() => setMode('refactor')} dataKey="refactor" Icon={Scissors}>
+            Refactor
           </TabButton>
         </div>
 
@@ -75,11 +60,13 @@ function TabButton({
   active,
   onClick,
   dataKey,
+  Icon,
   children,
 }: {
   active: boolean;
   onClick: () => void;
   dataKey: string;
+  Icon: LucideIcon;
   children: React.ReactNode;
 }) {
   return (
@@ -90,12 +77,13 @@ function TabButton({
       onClick={onClick}
       data-mode={dataKey}
       className={[
-        'rounded-md px-3 py-1.5 text-sm font-medium transition',
+        'inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition',
         active
           ? 'bg-white text-brand-700 shadow-sm'
           : 'text-slate-600 hover:text-slate-900',
       ].join(' ')}
     >
+      <Icon aria-hidden className="h-4 w-4" />
       {children}
     </button>
   );

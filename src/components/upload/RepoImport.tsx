@@ -8,10 +8,13 @@ type Props = {
   onStatus: (s: StatusMessage | null) => void;
 };
 
+// Provider labels are intentionally text-only — lucide doesn't ship vendor
+// marks (GitHub octocat / GitLab fox / Bitbucket bucket) and using a generic
+// shape glyph for each would be more misleading than no icon at all.
 const PROVIDER_LABEL: Record<RepoProvider, string> = {
-  github: '🐙 GitHub',
-  gitlab: '🦊 GitLab',
-  bitbucket: '🟦 Bitbucket',
+  github: 'GitHub',
+  gitlab: 'GitLab',
+  bitbucket: 'Bitbucket',
 };
 
 const PROVIDER_TONE: Record<RepoProvider, string> = {

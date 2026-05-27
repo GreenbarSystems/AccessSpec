@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import { Accessibility } from 'lucide-react';
 import { navItems } from '../lib/nav';
 
 type SidebarProps = {
@@ -31,9 +32,9 @@ export function Sidebar({ open, onClose }: SidebarProps) {
         <div className="flex h-16 items-center gap-2 border-b border-slate-200 px-5">
           <span
             aria-hidden
-            className="grid h-9 w-9 place-items-center rounded-lg bg-brand-600 text-lg text-white"
+            className="grid h-9 w-9 place-items-center rounded-lg bg-brand-600 text-white"
           >
-            ♿
+            <Accessibility className="h-5 w-5" />
           </span>
           <div className="leading-tight">
             <div className="text-sm font-semibold text-slate-900">
@@ -53,9 +54,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                 ['nav-link', isActive ? 'nav-link-active' : ''].join(' ')
               }
             >
-              <span aria-hidden className="text-base">
-                {item.icon}
-              </span>
+              <item.Icon aria-hidden className="h-4 w-4 shrink-0" />
               <span className="flex-1">{item.label}</span>
             </NavLink>
           ))}

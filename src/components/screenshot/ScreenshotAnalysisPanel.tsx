@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { Image as ImageIcon } from 'lucide-react';
 import {
   analyzeFile,
   type ColorBlindnessMode,
@@ -68,9 +69,7 @@ export function ScreenshotAnalysisPanel() {
           htmlFor="screenshot-input"
           className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 px-6 py-8 text-center hover:border-brand-400 hover:bg-brand-50/40"
         >
-          <span aria-hidden className="text-3xl">
-            🖼️
-          </span>
+          <ImageIcon aria-hidden className="h-9 w-9 text-slate-400" />
           <span className="text-sm font-semibold text-slate-800">
             Upload one or more screenshots
           </span>

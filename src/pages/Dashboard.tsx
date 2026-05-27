@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { BarChart3, Smartphone, Wrench, type LucideIcon } from 'lucide-react';
 import { PageHeader } from '../components/PageHeader';
 import { UploadPanel } from '../components/upload/UploadPanel';
 import { ProjectTree } from '../components/ProjectTree';
@@ -62,19 +63,19 @@ function EmptyState() {
           </h2>
           <ul className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             <PreviewCard
-              icon="📊"
+              Icon={BarChart3}
               title="Compliance scores"
               body="Accessibility, mobile usability, and platform-parity scores with severity counts."
               to="/analyzer"
             />
             <PreviewCard
-              icon="📱"
+              Icon={Smartphone}
               title="Device + screenshot simulator"
               body="Render the app inside iPhone / Pixel / Galaxy / iPad frames; check contrast on screenshots."
               to="/simulator"
             />
             <PreviewCard
-              icon="🛠️"
+              Icon={Wrench}
               title="Remediation playbook"
               body="Per-issue WCAG reference, code fix snippets, and a markdown export for tickets."
               to="/reports"
@@ -87,12 +88,12 @@ function EmptyState() {
 }
 
 function PreviewCard({
-  icon,
+  Icon,
   title,
   body,
   to,
 }: {
-  icon: string;
+  Icon: LucideIcon;
   title: string;
   body: string;
   to: string;
@@ -103,9 +104,7 @@ function PreviewCard({
         to={to}
         className="card flex h-full flex-col gap-2 p-4 transition hover:border-brand-300 hover:shadow-md"
       >
-        <span aria-hidden className="text-2xl">
-          {icon}
-        </span>
+        <Icon aria-hidden className="h-6 w-6 text-brand-700" />
         <span className="text-sm font-semibold text-slate-900">{title}</span>
         <span className="text-xs text-slate-600">{body}</span>
         <span className="mt-auto text-xs font-medium text-brand-700">

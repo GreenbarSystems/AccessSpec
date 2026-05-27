@@ -1,5 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import {
+  Brain,
+  FolderOpen,
+  Hand,
+  Maximize,
+  Palette,
+  Puzzle,
+  Type,
+  type LucideIcon,
+} from 'lucide-react';
 import { PageHeader } from '../components/PageHeader';
 import { SourceExplorer } from '../components/explorer/SourceExplorer';
 import { ComponentInventoryPanel } from '../components/inventory/ComponentInventoryPanel';
@@ -63,56 +73,28 @@ export default function Analyzer() {
       <div
         role="tablist"
         aria-label="Analyzer view"
-        className="mb-4 inline-flex rounded-lg bg-slate-100 p-1"
+        className="mb-4 inline-flex flex-wrap rounded-lg bg-slate-100 p-1"
       >
-        <TabButton
-          active={mode === 'source'}
-          onClick={() => setMode('source')}
-          dataKey="source"
-        >
-          📂 Source
+        <TabButton active={mode === 'source'} onClick={() => setMode('source')} dataKey="source" Icon={FolderOpen}>
+          Source
         </TabButton>
-        <TabButton
-          active={mode === 'components'}
-          onClick={() => setMode('components')}
-          dataKey="components"
-        >
-          🧩 Components
+        <TabButton active={mode === 'components'} onClick={() => setMode('components')} dataKey="components" Icon={Puzzle}>
+          Components
         </TabButton>
-        <TabButton
-          active={mode === 'targets'}
-          onClick={() => setMode('targets')}
-          dataKey="targets"
-        >
-          👆 Touch targets
+        <TabButton active={mode === 'targets'} onClick={() => setMode('targets')} dataKey="targets" Icon={Hand}>
+          Touch targets
         </TabButton>
-        <TabButton
-          active={mode === 'contrast'}
-          onClick={() => setMode('contrast')}
-          dataKey="contrast"
-        >
-          🎨 Contrast
+        <TabButton active={mode === 'contrast'} onClick={() => setMode('contrast')} dataKey="contrast" Icon={Palette}>
+          Contrast
         </TabButton>
-        <TabButton
-          active={mode === 'dynamic'}
-          onClick={() => setMode('dynamic')}
-          dataKey="dynamic"
-        >
-          🔤 Dynamic type
+        <TabButton active={mode === 'dynamic'} onClick={() => setMode('dynamic')} dataKey="dynamic" Icon={Type}>
+          Dynamic type
         </TabButton>
-        <TabButton
-          active={mode === 'reflow'}
-          onClick={() => setMode('reflow')}
-          dataKey="reflow"
-        >
-          📐 Reflow
+        <TabButton active={mode === 'reflow'} onClick={() => setMode('reflow')} dataKey="reflow" Icon={Maximize}>
+          Reflow
         </TabButton>
-        <TabButton
-          active={mode === 'patterns'}
-          onClick={() => setMode('patterns')}
-          dataKey="patterns"
-        >
-          🧠 Patterns
+        <TabButton active={mode === 'patterns'} onClick={() => setMode('patterns')} dataKey="patterns" Icon={Brain}>
+          Patterns
         </TabButton>
       </div>
 
@@ -143,11 +125,13 @@ function TabButton({
   active,
   onClick,
   dataKey,
+  Icon,
   children,
 }: {
   active: boolean;
   onClick: () => void;
   dataKey: string;
+  Icon: LucideIcon;
   children: React.ReactNode;
 }) {
   return (
@@ -158,12 +142,13 @@ function TabButton({
       onClick={onClick}
       data-mode={dataKey}
       className={[
-        'rounded-md px-3 py-1.5 text-sm font-medium transition',
+        'inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition',
         active
           ? 'bg-white text-brand-700 shadow-sm'
           : 'text-slate-600 hover:text-slate-900',
       ].join(' ')}
     >
+      <Icon aria-hidden className="h-4 w-4" />
       {children}
     </button>
   );

@@ -1,4 +1,11 @@
 import { useState } from 'react';
+import {
+  BarChart3,
+  Braces,
+  FileText,
+  Globe,
+  type LucideIcon,
+} from 'lucide-react';
 import { useSourceRepository } from '../../services/useSourceRepository';
 import { useAuditReport } from '../../services/AuditCache';
 import {
@@ -9,28 +16,28 @@ import {
 
 const FORMAT_META: Record<
   ReportFormat,
-  { icon: string; title: string; subtitle: string; tone: string }
+  { Icon: LucideIcon; title: string; subtitle: string; tone: string }
 > = {
   pdf: {
-    icon: '📄',
+    Icon: FileText,
     title: 'PDF',
     subtitle: 'Print-ready, shareable',
     tone: 'bg-rose-50 text-rose-700 border-rose-200',
   },
   html: {
-    icon: '🌐',
+    Icon: Globe,
     title: 'HTML',
     subtitle: 'Self-contained webpage',
     tone: 'bg-sky-50 text-sky-700 border-sky-200',
   },
   json: {
-    icon: '🧱',
+    Icon: Braces,
     title: 'JSON',
     subtitle: 'Pipelines, tooling',
     tone: 'bg-amber-50 text-amber-800 border-amber-200',
   },
   csv: {
-    icon: '📊',
+    Icon: BarChart3,
     title: 'CSV',
     subtitle: 'Open in any spreadsheet',
     tone: 'bg-emerald-50 text-emerald-700 border-emerald-200',
@@ -132,9 +139,7 @@ export function ReportExportPanel() {
                 'hover:brightness-95',
               ].join(' ')}
             >
-              <span className="text-2xl" aria-hidden>
-                {meta.icon}
-              </span>
+              <meta.Icon aria-hidden className="h-6 w-6" />
               <span className="text-sm font-semibold">{meta.title}</span>
               <span className="text-[11px] opacity-80">{meta.subtitle}</span>
             </button>

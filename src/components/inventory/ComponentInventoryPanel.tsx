@@ -154,17 +154,21 @@ export function ComponentInventoryPanel({ onJump }: Props) {
             onClick={() => setActiveType('all')}
             dataAttr="all"
           />
-          {visibleTypeChips.map((t) => (
-            <TypeChip
-              key={t}
-              label={`${TYPE_STYLES[t].icon} ${t}`}
-              count={inventory.totals.byType[t]}
-              active={activeType === t}
-              onClick={() => setActiveType(t)}
-              dataAttr={t}
-              chipClass={TYPE_STYLES[t].chip}
-            />
-          ))}
+          {visibleTypeChips.map((t) => {
+            const Icon = TYPE_STYLES[t].Icon;
+            return (
+              <TypeChip
+                key={t}
+                label={t}
+                icon={<Icon aria-hidden className="h-3 w-3" />}
+                count={inventory.totals.byType[t]}
+                active={activeType === t}
+                onClick={() => setActiveType(t)}
+                dataAttr={t}
+                chipClass={TYPE_STYLES[t].chip}
+              />
+            );
+          })}
         </div>
         <div className="relative mt-3">
           <label htmlFor="inventory-filter" className="sr-only">
@@ -343,8 +347,9 @@ function ElementRow({
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-baseline gap-2">
               <span
-                className={`rounded border px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide ${style.chip}`}
+                className={`inline-flex items-center gap-1 rounded border px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide ${style.chip}`}
               >
+                <style.Icon aria-hidden className="h-3 w-3" />
                 {el.type}
               </span>
               <span className="font-mono text-xs text-slate-700">
@@ -467,6 +472,7 @@ function StyleTable({
 
 function TypeChip({
   label,
+  icon,
   count,
   active,
   onClick,
@@ -474,6 +480,7 @@ function TypeChip({
   chipClass,
 }: {
   label: string;
+  icon?: React.ReactNode;
   count: number;
   active: boolean;
   onClick: () => void;
@@ -493,6 +500,7 @@ function TypeChip({
         base,
       ].join(' ')}
     >
+      {icon}
       <span>{label}</span>
       <span className="rounded-full bg-white/70 px-1.5 text-[10px] font-semibold text-slate-700">
         {count}

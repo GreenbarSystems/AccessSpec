@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { Apple, Bot, Smartphone, Tablet } from 'lucide-react';
 import { useSourceRepository } from '../../services/useSourceRepository';
 import {
   DEVICES,
@@ -243,9 +244,15 @@ function DevicePicker({
             ].join(' ')}
           >
             <span className="flex items-center gap-1.5 text-xs font-semibold">
-              <span aria-hidden>
-                {d.category === 'tablet' ? '🟦' : d.id.includes('iphone') ? '🍎' : '🤖'}
-              </span>
+              {(() => {
+                const FamilyIcon =
+                  d.category === 'tablet'
+                    ? Tablet
+                    : d.id.includes('iphone')
+                      ? Apple
+                      : Bot;
+                return <FamilyIcon aria-hidden className="h-3.5 w-3.5" />;
+              })()}
               {d.name}
             </span>
             <span className="font-mono text-[10px] text-slate-500">
@@ -326,9 +333,7 @@ function EmptyStage({ device, reason }: { device: Device; reason?: string }) {
   return (
     <DeviceFrame device={device}>
       <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-white p-6 text-center text-sm text-slate-500">
-        <span aria-hidden className="text-4xl">
-          📱
-        </span>
+        <Smartphone aria-hidden className="h-10 w-10 text-slate-400" />
         <p>{reason ?? 'No preview available for this project.'}</p>
         <p className="text-xs text-slate-400">
           Upload an HTML file (with optional CSS) on the Dashboard to see it
