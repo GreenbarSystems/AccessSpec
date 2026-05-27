@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "vendor:tesseract": "node scripts/vendor-tesseract.mjs",
+    "audit:dark": "node scripts/audit-dark-mode.mjs --verbose",
+    "fix:dark": "node scripts/fix-dark-mode.mjs",
     "predev": "npm run vendor:tesseract",
     "prebuild": "npm run vendor:tesseract",
     "dev": "vite",

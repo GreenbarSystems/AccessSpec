@@ -19,7 +19,7 @@ export function PageHeader({ title, description, actions, section }: PageHeaderP
         {section && (
           <nav
             aria-label="Breadcrumb"
-            className="mb-1 text-xs text-slate-500 dark:text-slate-500"
+            className="mb-1 text-xs text-slate-500"
           >
             <span className="font-medium">{title}</span>
             <span aria-hidden className="mx-1.5">

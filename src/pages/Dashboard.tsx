@@ -58,7 +58,7 @@ function EmptyState() {
         </section>
 
         <section aria-label="What you'll get">
-          <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
+          <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
             What you'll get after uploading
           </h2>
           <ul className="grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -187,14 +187,14 @@ function PopulatedState({
       </section>
 
       <div className="mt-8">
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
           Executive summary
         </h2>
         <ExecutiveKpis />
       </div>
 
       <div className="mt-8">
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
           Compliance scores
         </h2>
         <ScoringDashboard />
@@ -208,13 +208,13 @@ function PopulatedState({
         data-upload-panel
       >
         <div className="lg:col-span-3">
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
             Add or replace source
           </h2>
           <UploadPanel />
         </div>
         <div className="lg:col-span-2">
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
             Project tree
           </h2>
           <div className="card p-3" data-testid="project-tree">
@@ -239,7 +239,7 @@ function SummaryCard({
 }) {
   return (
     <div className="card p-4">
-      <div className="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-500">
+      <div className="text-xs font-medium uppercase tracking-wide text-slate-500">
         {label}
       </div>
       <div
@@ -253,7 +253,7 @@ function SummaryCard({
       >
         {value}
       </div>
-      <div className="mt-1 text-xs text-slate-500 dark:text-slate-500">{hint}</div>
+      <div className="mt-1 text-xs text-slate-500">{hint}</div>
     </div>
   );
 }

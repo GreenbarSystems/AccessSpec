@@ -68,7 +68,7 @@ export default function Settings() {
                   'rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ring-1',
                   item.eta === 'Next'
                     ? 'bg-emerald-50 text-emerald-700 ring-emerald-200'
-                    : 'bg-slate-100 text-slate-600 dark:text-slate-400 ring-slate-200',
+                    : 'bg-slate-100 text-slate-600 dark:text-slate-400 ring-slate-200 dark:bg-slate-800',
                 ].join(' ')}
               >
                 {item.eta}

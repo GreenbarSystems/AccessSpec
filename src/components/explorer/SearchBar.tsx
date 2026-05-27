@@ -31,7 +31,7 @@ export function SearchBar({
           value={query}
           onChange={(e) => onQuery(e.target.value)}
           placeholder="Search across all loaded files…"
-          className="flex-1 min-w-[200px] rounded-md border border-slate-300 px-3 py-1.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
+          className="flex-1 min-w-[200px] rounded-md border border-slate-300 px-3 py-1.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100 dark:border-slate-700"
           data-testid="search-input"
           // useKeyboardShortcuts hooks `/` to focus this input.
           data-search="explorer"
@@ -81,7 +81,7 @@ function ToggleChip({
         'rounded-md border px-2 py-1 font-mono text-xs transition',
         active
           ? 'border-brand-500 bg-brand-50 text-brand-700'
-          : 'border-slate-300 bg-white text-slate-600 dark:text-slate-400 hover:bg-slate-50',
+          : 'border-slate-300 bg-white text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:bg-slate-900 dark:border-slate-700',
       ].join(' ')}
     >
       {label}
@@ -98,7 +98,7 @@ function SummaryLine({
 }) {
   if (!query) {
     return (
-      <p className="mt-2 text-xs text-slate-500 dark:text-slate-500">
+      <p className="mt-2 text-xs text-slate-500">
         Empty query — type to filter and highlight matches.
       </p>
     );
@@ -111,7 +111,7 @@ function SummaryLine({
     );
   }
   if (summary.matches.length === 0) {
-    return <p className="mt-2 text-xs text-slate-500 dark:text-slate-500">No matches.</p>;
+    return <p className="mt-2 text-xs text-slate-500">No matches.</p>;
   }
   return (
     <p className="mt-2 text-xs text-slate-600 dark:text-slate-400">

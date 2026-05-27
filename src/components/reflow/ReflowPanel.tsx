@@ -18,7 +18,7 @@ const VERDICT_BADGE: Record<ReflowVerdict, string> = {
   scrolls: 'bg-rose-50 text-rose-700 ring-1 ring-rose-200',
   clipped: 'bg-orange-50 text-orange-800 ring-1 ring-orange-200',
   fluid: 'bg-sky-50 text-sky-700 ring-1 ring-sky-200',
-  unmeasurable: 'bg-slate-100 text-slate-500 dark:text-slate-500 ring-1 ring-slate-200',
+  unmeasurable: 'bg-slate-100 text-slate-500 ring-1 ring-slate-200 dark:bg-slate-800',
 };
 
 const VERDICT_GLYPH: Record<ReflowVerdict, string> = {
@@ -102,7 +102,7 @@ export function ReflowPanel({ onJump }: Props) {
             label="All"
             primary={report.checks.length}
             secondary="components analyzed"
-            tone="bg-slate-100 text-slate-700 dark:text-slate-300 border-slate-200"
+            tone="bg-slate-100 text-slate-700 dark:text-slate-300 border-slate-200 dark:bg-slate-800 dark:border-slate-800"
             active={filter === 'all'}
             onClick={() => setFilter('all')}
           />
@@ -144,7 +144,7 @@ export function ReflowPanel({ onJump }: Props) {
             return (
               <div
                 key={vp}
-                className="rounded border border-slate-200 bg-slate-50 px-3 py-2 text-xs"
+                className="rounded border border-slate-200 bg-slate-50 px-3 py-2 text-xs dark:bg-slate-900 dark:border-slate-800"
                 data-viewport-summary={vp}
               >
                 <div className="font-mono text-[11px] font-semibold text-slate-700 dark:text-slate-300">
@@ -160,7 +160,7 @@ export function ReflowPanel({ onJump }: Props) {
             );
           })}
         </div>
-        <p className="mt-3 text-xs text-slate-500 dark:text-slate-500">
+        <p className="mt-3 text-xs text-slate-500">
           Tests against four reference widths. Elements with no declared px
           width are treated as <span className="text-sky-700">fluid</span> —
           the browser reflows them naturally. Fixed widths exceeding the
@@ -180,7 +180,7 @@ export function ReflowPanel({ onJump }: Props) {
           <div className="overflow-x-auto">
             <table className="w-full text-sm" data-testid="reflow-table">
               <thead>
-                <tr className="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500 dark:text-slate-500">
+                <tr className="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500 dark:bg-slate-900 dark:border-slate-800">
                   <th className="px-3 py-2 font-medium">Component</th>
                   <th className="px-3 py-2 font-medium">Declared width</th>
                   {VIEWPORTS.map((vp) => (
@@ -213,7 +213,7 @@ function Row({
   const el = c.element;
   return (
     <tr
-      className="border-b border-slate-100 last:border-b-0 hover:bg-slate-50"
+      className="border-b border-slate-100 last:border-b-0 hover:bg-slate-50 dark:bg-slate-900 dark:border-slate-800"
       data-row-id={el.id}
       data-worst={c.worstFailingViewport ?? undefined}
     >
@@ -225,7 +225,7 @@ function Row({
           className="text-left hover:text-brand-700"
         >
           <div className="flex items-baseline gap-2">
-            <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium uppercase text-slate-700 dark:text-slate-300">
+            <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium uppercase text-slate-700 dark:text-slate-300 dark:bg-slate-800">
               {el.type}
             </span>
             <span className="font-mono text-xs text-slate-700 dark:text-slate-300">
@@ -237,7 +237,7 @@ function Row({
               {el.text}
             </div>
           )}
-          <div className="mt-0.5 truncate font-mono text-[11px] text-slate-500 dark:text-slate-500">
+          <div className="mt-0.5 truncate font-mono text-[11px] text-slate-500">
             {el.file}:{el.line}
           </div>
         </button>
@@ -251,13 +251,13 @@ function Row({
               : 'w —'}
         </div>
         {c.declaredMinWidth !== null && (
-          <div className="text-slate-500 dark:text-slate-500">min {c.declaredMinWidth}px</div>
+          <div className="text-slate-500">min {c.declaredMinWidth}px</div>
         )}
         {c.declaredMaxWidth !== null && (
-          <div className="text-slate-500 dark:text-slate-500">max {c.declaredMaxWidth}px</div>
+          <div className="text-slate-500">max {c.declaredMaxWidth}px</div>
         )}
         {c.overflow && (
-          <div className="mt-1 text-[10px] text-slate-500 dark:text-slate-500">
+          <div className="mt-1 text-[10px] text-slate-500">
             overflow: {c.overflow}
           </div>
         )}

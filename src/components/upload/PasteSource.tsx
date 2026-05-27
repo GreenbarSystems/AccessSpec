@@ -54,9 +54,9 @@ export function PasteSource({ onStatus }: Props) {
           type="text"
           value={filename}
           onChange={(e) => setFilename(e.target.value)}
-          className="flex-1 min-w-[180px] rounded-md border border-slate-300 px-3 py-1.5 text-sm font-mono focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
+          className="flex-1 min-w-[180px] rounded-md border border-slate-300 px-3 py-1.5 text-sm font-mono focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100 dark:border-slate-700"
         />
-        <span className="text-xs text-slate-500 dark:text-slate-500">
+        <span className="text-xs text-slate-500">
           Supported: {SOURCE_EXTS.map((e) => `.${e}`).join(', ')}
         </span>
       </div>
@@ -66,7 +66,7 @@ export function PasteSource({ onStatus }: Props) {
         onChange={(e) => setContent(e.target.value)}
         spellCheck={false}
         placeholder="// paste source here…"
-        className="h-56 w-full resize-y rounded-md border border-slate-300 bg-slate-50 p-3 font-mono text-xs leading-relaxed text-slate-800 dark:text-slate-200 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
+        className="h-56 w-full resize-y rounded-md border border-slate-300 bg-slate-50 p-3 font-mono text-xs leading-relaxed text-slate-800 dark:text-slate-200 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100 dark:bg-slate-900 dark:border-slate-700"
       />
       <div className="flex justify-end">
         <button

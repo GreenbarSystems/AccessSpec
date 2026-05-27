@@ -128,7 +128,7 @@ export function RefactoringPanel() {
       </div>
 
       {visibleCategories.length === 0 ? (
-        <div className="card p-6 text-sm text-slate-500 dark:text-slate-500">
+        <div className="card p-6 text-sm text-slate-500">
           No suggestions in that category.
         </div>
       ) : (
@@ -147,7 +147,7 @@ export function RefactoringPanel() {
                 })()}
                 {CAT_LABEL[cat]}
               </h2>
-              <span className="text-xs text-slate-500 dark:text-slate-500">
+              <span className="text-xs text-slate-500">
                 {refactor.byCategory[cat].length} suggestion
                 {refactor.byCategory[cat].length === 1 ? '' : 's'}
               </span>
@@ -190,7 +190,7 @@ function SuggestionCard({
       data-severity={s.severity}
       data-auto={s.autoApplicable || undefined}
     >
-      <header className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 bg-white/60 px-3 py-2">
+      <header className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 bg-white/60 px-3 py-2 dark:border-slate-800">
         <div className="flex flex-wrap items-center gap-2">
           <span
             className={`rounded px-1.5 py-0.5 text-[11px] font-semibold uppercase ${SEVERITY_TONE[s.severity]}`}
@@ -290,7 +290,7 @@ function Chip({
         'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium transition',
         active
           ? 'border-brand-500 bg-brand-50 text-brand-800 ring-2 ring-brand-500 ring-offset-1'
-          : 'border-slate-200 bg-white text-slate-700 dark:text-slate-300 hover:border-slate-300',
+          : 'border-slate-200 bg-white text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:bg-slate-900 dark:border-slate-800 dark:border-slate-700',
       ].join(' ')}
     >
       {icon}

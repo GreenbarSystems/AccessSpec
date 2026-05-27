@@ -14,7 +14,7 @@ export function ScoringDashboard() {
           <div className="mt-3 text-sm font-semibold text-slate-900 dark:text-slate-100">
             Overall Score
           </div>
-          <p className="mt-0.5 max-w-[22ch] text-xs text-slate-500 dark:text-slate-500">
+          <p className="mt-0.5 max-w-[22ch] text-xs text-slate-500">
             Overall WCAG 2.2 + mobile + parity composite.
           </p>
           <dl className="mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs">
@@ -60,7 +60,7 @@ export function ScoringDashboard() {
         {report ? (
           <FindingsList findings={report.findings} />
         ) : (
-          <div className="card p-4 text-sm text-slate-500 dark:text-slate-500">
+          <div className="card p-4 text-sm text-slate-500">
             Upload a project below to generate scores.
           </div>
         )}
@@ -82,7 +82,7 @@ function Tally({
 }) {
   return (
     <div className="flex items-center gap-1">
-      <dt className="text-slate-500 dark:text-slate-500">{label}</dt>
+      <dt className="text-slate-500">{label}</dt>
       <dd
         className={`inline-flex min-w-[1.5rem] justify-center rounded px-1.5 py-0.5 font-mono font-semibold tabular-nums ${tone}`}
         data-count={dataKey}

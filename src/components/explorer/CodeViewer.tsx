@@ -84,7 +84,7 @@ export function CodeViewer({
 
   if (!file) {
     return (
-      <div className="card flex h-96 items-center justify-center text-sm text-slate-500 dark:text-slate-500">
+      <div className="card flex h-96 items-center justify-center text-sm text-slate-500">
         Select a file to view its source.
       </div>
     );
@@ -96,7 +96,7 @@ export function CodeViewer({
     <div className="card overflow-hidden" data-testid="code-viewer">
       <div
         ref={scrollerRef}
-        className="max-h-[60vh] overflow-auto bg-slate-50"
+        className="max-h-[60vh] overflow-auto bg-slate-50 dark:bg-slate-900"
         data-file-path={file.path}
       >
         <pre className="m-0 font-mono text-xs leading-5 text-slate-800 dark:text-slate-200">
@@ -117,7 +117,7 @@ export function CodeViewer({
               >
                 <span
                   aria-hidden
-                  className="sticky left-0 select-none border-r border-slate-200 bg-slate-100 px-2 text-right text-slate-400 dark:text-slate-500"
+                  className="sticky left-0 select-none border-r border-slate-200 bg-slate-100 px-2 text-right text-slate-400 dark:text-slate-500 dark:bg-slate-800 dark:border-slate-800"
                   style={{ minWidth: `calc(${gutterWidth} + 1rem)` }}
                 >
                   {lineNo}

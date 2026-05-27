@@ -31,7 +31,7 @@ export default function Reports() {
         <div
           role="tablist"
           aria-label="Reports view"
-          className="inline-flex rounded-lg bg-slate-100 p-1"
+          className="inline-flex rounded-lg bg-slate-100 p-1 dark:bg-slate-800"
         >
           <TabButton active={mode === 'inspector'} onClick={() => setMode('inspector')} dataKey="inspector" Icon={Search}>
             Inspector
@@ -79,8 +79,8 @@ function TabButton({
       className={[
         'inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition',
         active
-          ? 'bg-white text-brand-700 shadow-sm'
-          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900',
+          ? 'bg-white text-brand-700 shadow-sm dark:bg-slate-900'
+          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100',
       ].join(' ')}
     >
       <Icon aria-hidden className="h-4 w-4" />

@@ -67,13 +67,13 @@ export function ScreenshotAnalysisPanel() {
       <div className="card p-4" data-testid="screenshot-dropzone">
         <label
           htmlFor="screenshot-input"
-          className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 px-6 py-8 text-center hover:border-brand-400 hover:bg-brand-50/40"
+          className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 px-6 py-8 text-center hover:border-brand-400 hover:bg-brand-50/40 dark:bg-slate-900 dark:border-slate-700"
         >
           <ImageIcon aria-hidden className="h-9 w-9 text-slate-400 dark:text-slate-500" />
           <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">
             Upload one or more screenshots
           </span>
-          <span className="text-xs text-slate-500 dark:text-slate-500">
+          <span className="text-xs text-slate-500">
             PNG or JPEG · we&apos;ll measure contrast, palette, and simulate
             color-blindness — no images leave your browser
           </span>
@@ -90,7 +90,7 @@ export function ScreenshotAnalysisPanel() {
           />
         </label>
         {busy && (
-          <p className="mt-3 text-sm text-slate-500 dark:text-slate-500" data-testid="screenshot-busy">
+          <p className="mt-3 text-sm text-slate-500" data-testid="screenshot-busy">
             Analyzing…
           </p>
         )}
@@ -111,7 +111,7 @@ export function ScreenshotAnalysisPanel() {
                 checked={overlayOn}
                 onChange={(e) => setOverlayOn(e.target.checked)}
                 data-testid="overlay-toggle"
-                className="h-3.5 w-3.5 rounded border-slate-300 text-brand-600 focus:ring-brand-500"
+                className="h-3.5 w-3.5 rounded border-slate-300 text-brand-600 focus:ring-brand-500 dark:border-slate-700"
               />
               Show contrast heatmap overlay
             </label>
@@ -178,9 +178,9 @@ function ScreenshotCard({
       data-testid="screenshot-card"
       data-file={name}
     >
-      <header className="flex flex-wrap items-baseline justify-between gap-2 border-b border-slate-200 bg-slate-50 px-4 py-2">
+      <header className="flex flex-wrap items-baseline justify-between gap-2 border-b border-slate-200 bg-slate-50 px-4 py-2 dark:bg-slate-900 dark:border-slate-800">
         <div className="font-mono text-xs text-slate-700 dark:text-slate-300">{name}</div>
-        <div className="text-[11px] text-slate-500 dark:text-slate-500">
+        <div className="text-[11px] text-slate-500">
           {report.width} × {report.height} ·{' '}
           <span className="font-mono">{report.aspectRatio.toFixed(2)}</span> ·{' '}
           {report.inferredOrientation}
@@ -225,7 +225,7 @@ function ContrastPreview({
   const { analyzedSize, contrastBlocks } = report;
   return (
     <div
-      className="relative overflow-hidden rounded border border-slate-200 bg-white"
+      className="relative overflow-hidden rounded border border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800"
       style={{ aspectRatio: `${analyzedSize.width} / ${analyzedSize.height}` }}
       data-testid="contrast-preview"
     >
@@ -315,8 +315,8 @@ function MetricsBlock({ report }: { report: ScreenshotAnalysis }) {
   const lowBlocks = report.contrastBlocks.filter((b) => b.band === 'low').length;
   const midBlocks = report.contrastBlocks.filter((b) => b.band === 'medium').length;
   return (
-    <section className="rounded border border-slate-200 bg-slate-50 px-3 py-2">
-      <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
+    <section className="rounded border border-slate-200 bg-slate-50 px-3 py-2 dark:bg-slate-900 dark:border-slate-800">
+      <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
         Metrics
       </div>
       <dl className="mt-1 grid grid-cols-2 gap-x-3 gap-y-1 text-xs sm:grid-cols-4">
@@ -350,7 +350,7 @@ function Metric({
 }) {
   return (
     <div>
-      <dt className="text-[10px] uppercase tracking-wide text-slate-500 dark:text-slate-500">
+      <dt className="text-[10px] uppercase tracking-wide text-slate-500">
         {label}
       </dt>
       <dd
@@ -365,8 +365,8 @@ function Metric({
 function PaletteBlock({ report }: { report: ScreenshotAnalysis }) {
   const total = report.dominantColors.reduce((s, c) => s + c.population, 0) || 1;
   return (
-    <section className="rounded border border-slate-200 bg-white px-3 py-2">
-      <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
+    <section className="rounded border border-slate-200 bg-white px-3 py-2 dark:bg-slate-900 dark:border-slate-800">
+      <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
         Dominant palette
       </div>
       <div className="mt-1.5 flex flex-wrap gap-1.5" data-testid="palette">
@@ -375,7 +375,7 @@ function PaletteBlock({ report }: { report: ScreenshotAnalysis }) {
           return (
             <div
               key={c.hex}
-              className="flex items-center gap-1 rounded border border-slate-200 bg-slate-50 pr-2 text-[11px]"
+              className="flex items-center gap-1 rounded border border-slate-200 bg-slate-50 pr-2 text-[11px] dark:bg-slate-900 dark:border-slate-800"
               data-swatch={c.hex}
               title={`${c.hex} · ${share}% of pixels`}
             >
@@ -385,7 +385,7 @@ function PaletteBlock({ report }: { report: ScreenshotAnalysis }) {
                 style={{ backgroundColor: c.hex }}
               />
               <span className="font-mono text-slate-700 dark:text-slate-300">{c.hex}</span>
-              <span className="text-slate-500 dark:text-slate-500">{share}%</span>
+              <span className="text-slate-500">{share}%</span>
             </div>
           );
         })}
@@ -398,10 +398,10 @@ function FindingsBlock({ report }: { report: ScreenshotAnalysis }) {
   if (report.findings.length === 0) return null;
   return (
     <section
-      className="rounded border border-slate-200 bg-white"
+      className="rounded border border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800"
       data-testid="screenshot-findings"
     >
-      <div className="border-b border-slate-100 px-3 py-1 text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
+      <div className="border-b border-slate-100 px-3 py-1 text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:border-slate-800">
         Visual findings ({report.findings.length})
       </div>
       <ul className="divide-y divide-slate-100">
@@ -429,13 +429,13 @@ function OcrBlock({ ocr, onRun }: { ocr: OcrState; onRun: () => void }) {
   if (ocr.phase === 'idle') {
     return (
       <section
-        className="rounded border border-slate-200 bg-white p-3"
+        className="rounded border border-slate-200 bg-white p-3 dark:bg-slate-900 dark:border-slate-800"
         data-testid="ocr-block"
         data-ocr-phase="idle"
       >
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
+            <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
               Text detection
             </div>
             <p className="mt-0.5 text-xs text-slate-700 dark:text-slate-300">
@@ -461,17 +461,17 @@ function OcrBlock({ ocr, onRun }: { ocr: OcrState; onRun: () => void }) {
     const pct = Math.round((ocr.progress?.progress ?? 0) * 100);
     return (
       <section
-        className="rounded border border-slate-200 bg-white p-3"
+        className="rounded border border-slate-200 bg-white p-3 dark:bg-slate-900 dark:border-slate-800"
         data-testid="ocr-block"
         data-ocr-phase="running"
       >
-        <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
+        <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
           Running OCR
         </div>
         <p className="mt-0.5 text-xs text-slate-700 dark:text-slate-300">
           {ocr.progress?.status ?? 'starting…'} · {pct}%
         </p>
-        <div className="mt-2 h-1.5 w-full overflow-hidden rounded bg-slate-200">
+        <div className="mt-2 h-1.5 w-full overflow-hidden rounded bg-slate-200 dark:bg-slate-800">
           <div
             className="h-full bg-brand-500 transition-all"
             style={{ width: `${pct}%` }}
@@ -506,13 +506,13 @@ function OcrBlock({ ocr, onRun }: { ocr: OcrState; onRun: () => void }) {
     .slice(0, 8);
   return (
     <section
-      className="rounded border border-slate-200 bg-white"
+      className="rounded border border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800"
       data-testid="ocr-block"
       data-ocr-phase="done"
     >
-      <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-slate-100 px-3 py-2">
+      <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-slate-100 px-3 py-2 dark:border-slate-800">
         <div>
-          <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
+          <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
             Text detection · {result.words.length} words ({result.durationMs}ms)
           </div>
           <div className="mt-0.5 flex flex-wrap gap-1.5 text-[11px]">
@@ -524,7 +524,7 @@ function OcrBlock({ ocr, onRun }: { ocr: OcrState; onRun: () => void }) {
         </div>
       </div>
       {worst.length === 0 ? (
-        <p className="px-3 py-2 text-xs text-slate-500 dark:text-slate-500">
+        <p className="px-3 py-2 text-xs text-slate-500">
           No measurable text regions to score.
         </p>
       ) : (
@@ -536,12 +536,12 @@ function OcrBlock({ ocr, onRun }: { ocr: OcrState; onRun: () => void }) {
               data-verdict={c.verdict}
             >
               <span
-                className="inline-block h-4 w-4 shrink-0 rounded border border-slate-200"
+                className="inline-block h-4 w-4 shrink-0 rounded border border-slate-200 dark:border-slate-800"
                 style={{ backgroundColor: `rgb(${c.fg.r},${c.fg.g},${c.fg.b})` }}
                 aria-hidden
               />
               <span
-                className="inline-block h-4 w-4 shrink-0 rounded border border-slate-200"
+                className="inline-block h-4 w-4 shrink-0 rounded border border-slate-200 dark:border-slate-800"
                 style={{ backgroundColor: `rgb(${c.bg.r},${c.bg.g},${c.bg.b})` }}
                 aria-hidden
               />
@@ -598,14 +598,14 @@ function CvdRow({ report }: { report: ScreenshotAnalysis }) {
   const modes: ColorBlindnessMode[] = ['protanopia', 'deuteranopia', 'tritanopia'];
   return (
     <div className="mt-3" data-testid="cvd-row">
-      <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
+      <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
         Color-blindness simulations
       </div>
       <div className="mt-1 grid grid-cols-3 gap-1.5">
         {modes.map((m) => (
           <figure
             key={m}
-            className="overflow-hidden rounded border border-slate-200"
+            className="overflow-hidden rounded border border-slate-200 dark:border-slate-800"
             data-cvd={m}
           >
             <img
@@ -613,7 +613,7 @@ function CvdRow({ report }: { report: ScreenshotAnalysis }) {
               alt={CVD_LABEL[m]}
               className="block h-auto w-full"
             />
-            <figcaption className="bg-slate-50 px-1 py-0.5 text-[10px] text-slate-600 dark:text-slate-400">
+            <figcaption className="bg-slate-50 px-1 py-0.5 text-[10px] text-slate-600 dark:text-slate-400 dark:bg-slate-900">
               {CVD_LABEL[m]}
             </figcaption>
           </figure>

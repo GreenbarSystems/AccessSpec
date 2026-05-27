@@ -34,7 +34,7 @@ export function TopBar({ onMenuClick, onShowShortcuts }: TopBarProps) {
         <div className="truncate text-base font-semibold text-slate-900 dark:text-slate-100">
           {current.label}
         </div>
-        <div className="hidden truncate text-xs text-slate-500 dark:text-slate-500 sm:block">
+        <div className="hidden truncate text-xs text-slate-500 sm:block">
           {current.description}
         </div>
       </div>

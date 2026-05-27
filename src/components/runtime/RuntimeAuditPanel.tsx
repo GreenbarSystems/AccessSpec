@@ -128,10 +128,10 @@ export function RuntimeAuditPanel() {
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[14rem_1fr]">
         {/* Live iframe (small, fixed) */}
         <div className="card p-2">
-          <div className="text-[11px] font-medium uppercase tracking-wide text-slate-500 dark:text-slate-500">
+          <div className="text-[11px] font-medium uppercase tracking-wide text-slate-500">
             Live preview · iPhone 15
           </div>
-          <div className="mt-1 overflow-hidden rounded border border-slate-200 bg-white">
+          <div className="mt-1 overflow-hidden rounded border border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800">
             <iframe
               ref={iframeRef}
               title="Runtime audit preview"
@@ -166,7 +166,7 @@ export function RuntimeAuditPanel() {
             {scanning ? 'Scanning…' : 'Re-run scan'}
           </button>
           {report && (
-            <p className="mt-2 text-[11px] text-slate-500 dark:text-slate-500">
+            <p className="mt-2 text-[11px] text-slate-500">
               Scanned {new Date(report.scannedAt).toLocaleTimeString()} ·{' '}
               {report.elementCount} elements
               <br />
@@ -192,7 +192,7 @@ export function RuntimeAuditPanel() {
                   className="flex flex-wrap items-center gap-1.5"
                   aria-label="Filter by severity"
                 >
-                  <span className="mr-1 text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
+                  <span className="mr-1 text-[10px] font-semibold uppercase tracking-wide text-slate-500">
                     Severity
                   </span>
                   <Chip
@@ -215,10 +215,10 @@ export function RuntimeAuditPanel() {
                   ))}
                 </div>
                 <div
-                  className="mt-2 flex flex-wrap items-center gap-1.5 border-t border-slate-100 pt-2"
+                  className="mt-2 flex flex-wrap items-center gap-1.5 border-t border-slate-100 pt-2 dark:border-slate-800"
                   aria-label="Filter by category"
                 >
-                  <span className="mr-1 text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
+                  <span className="mr-1 text-[10px] font-semibold uppercase tracking-wide text-slate-500">
                     Category
                   </span>
                   <Chip
@@ -243,7 +243,7 @@ export function RuntimeAuditPanel() {
                     );
                   })}
                 </div>
-                <p className="mt-3 text-xs text-slate-500 dark:text-slate-500">
+                <p className="mt-3 text-xs text-slate-500">
                   Live audit walks <code>document.querySelectorAll(&quot;*&quot;)</code>{' '}
                   in the rendered iframe and reads{' '}
                   <code>getComputedStyle</code>, <code>getBoundingClientRect</code>,
@@ -276,7 +276,7 @@ export function RuntimeAuditPanel() {
               )}
             </>
           ) : (
-            <div className="card p-6 text-sm text-slate-500 dark:text-slate-500">
+            <div className="card p-6 text-sm text-slate-500">
               Waiting for the iframe to load… If nothing appears, click{' '}
               <span className="font-semibold">Re-run scan</span>.
             </div>
@@ -295,7 +295,7 @@ function FindingCard({ f, onJump: _onJump }: { f: RuntimeFinding; onJump: () => 
       data-severity={f.severity}
       data-category={f.category}
     >
-      <header className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 bg-slate-50 px-3 py-2">
+      <header className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 bg-slate-50 px-3 py-2 dark:bg-slate-900 dark:border-slate-800">
         <div className="flex flex-wrap items-center gap-2">
           <span
             className={`rounded px-1.5 py-0.5 text-[11px] font-semibold uppercase ${SEVERITY_TONE[f.severity]}`}
@@ -305,15 +305,15 @@ function FindingCard({ f, onJump: _onJump }: { f: RuntimeFinding; onJump: () => 
           {(() => {
             const Icon = CATEGORY_ICON[f.category];
             return (
-              <span className="inline-flex items-center gap-1 rounded bg-slate-200 px-1.5 py-0.5 text-[10px] font-medium uppercase text-slate-700 dark:text-slate-300">
+              <span className="inline-flex items-center gap-1 rounded bg-slate-200 px-1.5 py-0.5 text-[10px] font-medium uppercase text-slate-700 dark:text-slate-300 dark:bg-slate-800">
                 <Icon aria-hidden className="h-3 w-3" />
                 {f.category}
               </span>
             );
           })()}
-          <span className="font-mono text-[11px] text-slate-500 dark:text-slate-500">{f.ruleId}</span>
+          <span className="font-mono text-[11px] text-slate-500">{f.ruleId}</span>
         </div>
-        <span className="font-mono text-[11px] text-slate-500 dark:text-slate-500">
+        <span className="font-mono text-[11px] text-slate-500">
           {f.snapshot.boundingRect.width}×{f.snapshot.boundingRect.height} @ (
           {f.snapshot.boundingRect.x},{f.snapshot.boundingRect.y})
         </span>
@@ -321,10 +321,10 @@ function FindingCard({ f, onJump: _onJump }: { f: RuntimeFinding; onJump: () => 
       <div className="p-3">
         <p className="text-sm text-slate-900 dark:text-slate-100">{f.message}</p>
         <div className="mt-1 flex flex-wrap items-baseline gap-2 text-xs">
-          <span className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[11px] text-slate-700 dark:text-slate-300">
+          <span className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[11px] text-slate-700 dark:text-slate-300 dark:bg-slate-800">
             &lt;{f.tagName}&gt;
           </span>
-          <code className="truncate text-[11px] text-slate-500 dark:text-slate-500">
+          <code className="truncate text-[11px] text-slate-500">
             {f.selector}
           </code>
         </div>
@@ -334,7 +334,7 @@ function FindingCard({ f, onJump: _onJump }: { f: RuntimeFinding; onJump: () => 
           </p>
         )}
         <details className="mt-2">
-          <summary className="cursor-pointer text-[11px] font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900">
+          <summary className="cursor-pointer text-[11px] font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100">
             Captured snapshot
           </summary>
           <div className="mt-1 grid grid-cols-1 gap-2 md:grid-cols-2">
@@ -357,8 +357,8 @@ function SnapshotBlock({
   const rows = Object.entries(entries).filter(([, v]) => v && v !== 'normal');
   if (rows.length === 0) {
     return (
-      <div className="rounded border border-slate-100 bg-slate-50 px-2 py-1.5 text-[11px] text-slate-500 dark:text-slate-500">
-        <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
+      <div className="rounded border border-slate-100 bg-slate-50 px-2 py-1.5 text-[11px] text-slate-500 dark:bg-slate-900 dark:border-slate-800">
+        <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
           {title}
         </div>
         <div>—</div>
@@ -366,14 +366,14 @@ function SnapshotBlock({
     );
   }
   return (
-    <div className="rounded border border-slate-100 bg-slate-50 px-2 py-1.5">
-      <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
+    <div className="rounded border border-slate-100 bg-slate-50 px-2 py-1.5 dark:bg-slate-900 dark:border-slate-800">
+      <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
         {title}
       </div>
       <dl className="mt-1 grid grid-cols-1 gap-x-2 gap-y-0.5 font-mono text-[11px]">
         {rows.map(([k, v]) => (
           <div key={k} className="flex gap-1">
-            <dt className="text-slate-500 dark:text-slate-500">{k}:</dt>
+            <dt className="text-slate-500">{k}:</dt>
             <dd className="truncate text-slate-800 dark:text-slate-200" title={v}>
               {v}
             </dd>
@@ -401,7 +401,7 @@ function Chip({
   active: boolean;
   onClick: () => void;
 }) {
-  const base = tone ?? 'bg-slate-100 text-slate-700 dark:text-slate-300';
+  const base = tone ?? 'bg-slate-100 text-slate-700 dark:text-slate-300 dark:bg-slate-800';
   return (
     <button
       type="button"
@@ -412,7 +412,7 @@ function Chip({
         'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium transition',
         active
           ? 'border-brand-500 ring-2 ring-brand-500 ring-offset-1'
-          : 'border-slate-200 hover:border-slate-300',
+          : 'border-slate-200 hover:border-slate-300 dark:border-slate-800 dark:border-slate-700',
         base,
       ].join(' ')}
     >

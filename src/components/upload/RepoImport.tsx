@@ -18,7 +18,7 @@ const PROVIDER_LABEL: Record<RepoProvider, string> = {
 };
 
 const PROVIDER_TONE: Record<RepoProvider, string> = {
-  github: 'bg-slate-100 text-slate-800 dark:text-slate-200 ring-slate-200',
+  github: 'bg-slate-100 text-slate-800 dark:text-slate-200 ring-slate-200 dark:bg-slate-800',
   gitlab: 'bg-orange-50 text-orange-800 ring-orange-200',
   bitbucket: 'bg-blue-50 text-blue-800 ring-blue-200',
 };
@@ -87,7 +87,7 @@ export function RepoImport({ onStatus }: Props) {
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           placeholder="https://github.com/owner/repo · https://gitlab.com/group/project · https://bitbucket.org/workspace/repo"
-          className="flex-1 min-w-[260px] rounded-md border border-slate-300 px-3 py-2 text-sm font-mono focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
+          className="flex-1 min-w-[260px] rounded-md border border-slate-300 px-3 py-2 text-sm font-mono focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100 dark:border-slate-700"
           data-testid="repo-url"
         />
         <button
@@ -118,15 +118,15 @@ export function RepoImport({ onStatus }: Props) {
         </div>
       )}
 
-      <p className="text-xs text-slate-500 dark:text-slate-500">
+      <p className="text-xs text-slate-500">
         Examples:{' '}
-        <code className="rounded bg-slate-100 px-1 py-0.5">facebook/react</code>{' '}
+        <code className="rounded bg-slate-100 px-1 py-0.5 dark:bg-slate-800">facebook/react</code>{' '}
         ·{' '}
-        <code className="rounded bg-slate-100 px-1 py-0.5">
+        <code className="rounded bg-slate-100 px-1 py-0.5 dark:bg-slate-800">
           https://gitlab.com/gitlab-org/gitlab-foss
         </code>{' '}
         ·{' '}
-        <code className="rounded bg-slate-100 px-1 py-0.5">
+        <code className="rounded bg-slate-100 px-1 py-0.5 dark:bg-slate-800">
           https://bitbucket.org/atlassian/atlaskit-mk-2
         </code>
       </p>

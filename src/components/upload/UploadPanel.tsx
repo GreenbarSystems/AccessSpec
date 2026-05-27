@@ -67,7 +67,7 @@ export function UploadPanel() {
       <div
         role="tablist"
         aria-label="Upload source"
-        className="flex flex-wrap gap-1 border-b border-slate-200 bg-slate-50 p-2"
+        className="flex flex-wrap gap-1 border-b border-slate-200 bg-slate-50 p-2 dark:bg-slate-900 dark:border-slate-800"
       >
         {TABS.map((t) => {
           const isActive = t.id === active;
@@ -85,8 +85,8 @@ export function UploadPanel() {
               className={[
                 'inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition',
                 isActive
-                  ? 'bg-white text-brand-700 shadow-sm ring-1 ring-slate-200'
-                  : 'text-slate-600 dark:text-slate-400 hover:bg-white hover:text-slate-900',
+                  ? 'bg-white text-brand-700 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900'
+                  : 'text-slate-600 dark:text-slate-400 hover:bg-white hover:text-slate-900 dark:bg-slate-900 dark:hover:text-slate-100',
               ].join(' ')}
             >
               <t.Icon aria-hidden className="h-4 w-4" />

@@ -85,7 +85,7 @@ export function ScoreRing({ score, size = 80, emptyLabel = '—' }: Props) {
           {score === null ? emptyLabel : score}
         </span>
         {score !== null && (
-          <span className="mt-0.5 text-[10px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-500">
+          <span className="mt-0.5 text-[10px] font-medium uppercase tracking-wider text-slate-500">
             / 100
           </span>
         )}

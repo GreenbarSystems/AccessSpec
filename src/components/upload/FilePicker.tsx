@@ -70,7 +70,7 @@ export function FilePicker({ mode, onStatus }: Props) {
           : 'Select multiple source files. Folder structure is preserved when you drag a folder in.'}
       </p>
       <label
-        className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 px-6 py-10 text-center hover:border-brand-400 hover:bg-brand-50/30"
+        className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 px-6 py-10 text-center hover:border-brand-400 hover:bg-brand-50/30 dark:bg-slate-900 dark:border-slate-700"
         data-mode={mode}
       >
         {mode === 'single' ? (
@@ -81,7 +81,7 @@ export function FilePicker({ mode, onStatus }: Props) {
         <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
           Click to choose {mode === 'single' ? 'a file' : 'files'}
         </span>
-        <span className="text-xs text-slate-500 dark:text-slate-500">
+        <span className="text-xs text-slate-500">
           Accepts {SOURCE_EXTENSIONS.map((e) => `.${e}`).join(', ')}
         </span>
         <input
@@ -95,7 +95,7 @@ export function FilePicker({ mode, onStatus }: Props) {
           className="sr-only"
         />
       </label>
-      {busy && <p className="text-sm text-slate-500 dark:text-slate-500">Reading…</p>}
+      {busy && <p className="text-sm text-slate-500">Reading…</p>}
     </div>
   );
 }

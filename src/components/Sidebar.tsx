@@ -22,9 +22,8 @@ export function Sidebar({ open, onClose }: SidebarProps) {
 
       <aside
         className={[
-          'fixed inset-y-0 left-0 z-40 w-72 transform border-r border-slate-200',
-          'bg-white transition-transform duration-200 ease-out',
-          'dark:border-slate-800 dark:bg-slate-900',
+          'fixed inset-y-0 left-0 z-40 w-72 transform border-r border-slate-200 dark:border-slate-800',
+          'bg-white transition-transform duration-200 ease-out dark:bg-slate-900',
           open ? 'translate-x-0' : '-translate-x-full',
           'lg:static lg:translate-x-0 lg:w-64 lg:shrink-0',
         ].join(' ')}
@@ -41,7 +40,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
             <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">
               AccessSpec
             </div>
-            <div className="text-xs text-slate-500 dark:text-slate-500">WCAG 2.2 dashboard</div>
+            <div className="text-xs text-slate-500">WCAG 2.2 dashboard</div>
           </div>
         </div>
 
@@ -61,7 +60,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
           ))}
         </nav>
 
-        <div className="absolute bottom-0 left-0 right-0 border-t border-slate-200 p-4 text-xs text-slate-500 dark:text-slate-500 dark:border-slate-800">
+        <div className="absolute bottom-0 left-0 right-0 border-t border-slate-200 p-4 text-xs text-slate-500 dark:border-slate-800">
           <div className="font-medium text-slate-700 dark:text-slate-300">Active ruleset</div>
           <div>WCAG 2.2 AA · Mobile</div>
         </div>

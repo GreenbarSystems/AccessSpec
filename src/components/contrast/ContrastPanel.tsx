@@ -81,7 +81,7 @@ export function ContrastPanel({ onJump }: Props) {
           <Chip
             id="all"
             label="All"
-            tone="bg-slate-100 text-slate-700 dark:text-slate-300 border-slate-200"
+            tone="bg-slate-100 text-slate-700 dark:text-slate-300 border-slate-200 dark:bg-slate-800 dark:border-slate-800"
             primary={report.checks.length}
             secondary={`${report.totals.checked} measured · ${report.totals.skipped} skipped`}
             active={filter === 'all'}
@@ -116,14 +116,14 @@ export function ContrastPanel({ onJump }: Props) {
           <Chip
             id="skipped"
             label="Skipped"
-            tone="bg-slate-100 text-slate-500 dark:text-slate-500 border-slate-200"
+            tone="bg-slate-100 text-slate-500 border-slate-200 dark:bg-slate-800 dark:border-slate-800"
             primary={report.totals.skipped}
             secondary="no color resolved"
             active={filter === 'skipped'}
             onClick={() => setFilter('skipped')}
           />
         </div>
-        <p className="mt-3 text-xs text-slate-500 dark:text-slate-500">
+        <p className="mt-3 text-xs text-slate-500">
           Page background:{' '}
           <SwatchInline rgb={report.pageBackground} />{' '}
           <span className="font-mono">{formatRgba(report.pageBackground)}</span>
@@ -145,7 +145,7 @@ export function ContrastPanel({ onJump }: Props) {
           <div className="overflow-x-auto">
             <table className="w-full text-sm" data-testid="contrast-table">
               <thead>
-                <tr className="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500 dark:text-slate-500">
+                <tr className="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500 dark:bg-slate-900 dark:border-slate-800">
                   <th className="px-3 py-2 font-medium">Component</th>
                   <th className="px-3 py-2 font-medium">Foreground</th>
                   <th className="px-3 py-2 font-medium">Background</th>
@@ -181,7 +181,7 @@ function Row({
   const bgPreview = c.bg ?? null;
   return (
     <tr
-      className="border-b border-slate-100 last:border-b-0 hover:bg-slate-50"
+      className="border-b border-slate-100 last:border-b-0 hover:bg-slate-50 dark:bg-slate-900 dark:border-slate-800"
       data-row-id={el.id}
       data-skipped={c.skipped ? 'true' : undefined}
     >
@@ -193,7 +193,7 @@ function Row({
           className="text-left hover:text-brand-700"
         >
           <div className="flex items-baseline gap-2">
-            <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium uppercase text-slate-700 dark:text-slate-300">
+            <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium uppercase text-slate-700 dark:text-slate-300 dark:bg-slate-800">
               {el.type}
             </span>
             <span className="font-mono text-xs text-slate-700 dark:text-slate-300">
@@ -208,7 +208,7 @@ function Row({
           <div className="mt-0.5 max-w-[28ch] truncate text-xs text-slate-800 dark:text-slate-200">
             {el.text}
           </div>
-          <div className="mt-0.5 truncate font-mono text-[11px] text-slate-500 dark:text-slate-500">
+          <div className="mt-0.5 truncate font-mono text-[11px] text-slate-500">
             {el.file}:{el.line}
           </div>
         </button>
@@ -285,7 +285,7 @@ function SwatchInline({ rgb }: { rgb: RGB }) {
   return (
     <span
       aria-hidden
-      className="inline-block h-4 w-4 shrink-0 rounded border border-slate-300"
+      className="inline-block h-4 w-4 shrink-0 rounded border border-slate-300 dark:border-slate-700"
       style={{ backgroundColor: `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})` }}
     />
   );

@@ -65,7 +65,7 @@ export function DeviceFrame({ device, scale = 1, children }: Props) {
             height: device.height,
             borderRadius: device.radius,
           }}
-          className="absolute overflow-hidden bg-white shadow-inner"
+          className="absolute overflow-hidden bg-white shadow-inner dark:bg-slate-900"
         >
           {children}
         </div>

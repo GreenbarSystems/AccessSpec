@@ -159,9 +159,9 @@ function RemediationCard({
       data-ruleid={item.ruleId}
       data-severity={item.severity}
     >
-      <header className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 bg-slate-50 px-4 py-2">
+      <header className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 bg-slate-50 px-4 py-2 dark:bg-slate-900 dark:border-slate-800">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="font-mono text-[11px] text-slate-500 dark:text-slate-500">
+          <span className="font-mono text-[11px] text-slate-500">
             #{index + 1}
           </span>
           <span
@@ -170,7 +170,7 @@ function RemediationCard({
           >
             {item.severity}
           </span>
-          <span className="font-mono text-[11px] text-slate-500 dark:text-slate-500">{item.ruleId}</span>
+          <span className="font-mono text-[11px] text-slate-500">{item.ruleId}</span>
         </div>
         <button
           type="button"
@@ -185,7 +185,7 @@ function RemediationCard({
       <div className="p-4">
         <Section label="Problem" testId="field-problem">
           <p className="text-sm text-slate-800 dark:text-slate-200">{item.problem}</p>
-          <p className="mt-1 text-xs text-slate-500 dark:text-slate-500">{item.affected.message}</p>
+          <p className="mt-1 text-xs text-slate-500">{item.affected.message}</p>
         </Section>
 
         <Section label="WCAG reference" testId="field-wcag">
@@ -196,7 +196,7 @@ function RemediationCard({
 
         <Section label="Affected element" testId="field-affected">
           <p className="text-xs text-slate-700 dark:text-slate-300">
-            <span className="rounded bg-slate-100 px-1.5 py-0.5 font-medium uppercase">
+            <span className="rounded bg-slate-100 px-1.5 py-0.5 font-medium uppercase dark:bg-slate-800">
               {item.affected.type}
             </span>{' '}
             <span className="font-mono">&lt;{item.affected.tagName}&gt;</span>
@@ -245,7 +245,7 @@ function Section({
 }) {
   return (
     <section className="mb-3 last:mb-0" data-testid={testId}>
-      <h3 className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-500">
+      <h3 className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
         {label}
       </h3>
       {children}
@@ -297,7 +297,7 @@ function Chip({
   active: boolean;
   onClick: () => void;
 }) {
-  const base = tone ?? 'bg-slate-100 text-slate-700 dark:text-slate-300 border-slate-200';
+  const base = tone ?? 'bg-slate-100 text-slate-700 dark:text-slate-300 border-slate-200 dark:bg-slate-800 dark:border-slate-800';
   return (
     <button
       type="button"

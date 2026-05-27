@@ -73,7 +73,7 @@ export default function Analyzer() {
       <div
         role="tablist"
         aria-label="Analyzer view"
-        className="mb-4 inline-flex flex-wrap rounded-lg bg-slate-100 p-1"
+        className="mb-4 inline-flex flex-wrap rounded-lg bg-slate-100 p-1 dark:bg-slate-800"
       >
         <TabButton active={mode === 'source'} onClick={() => setMode('source')} dataKey="source" Icon={FolderOpen}>
           Source
@@ -144,8 +144,8 @@ function TabButton({
       className={[
         'inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition',
         active
-          ? 'bg-white text-brand-700 shadow-sm'
-          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900',
+          ? 'bg-white text-brand-700 shadow-sm dark:bg-slate-900'
+          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100',
       ].join(' ')}
     >
       <Icon aria-hidden className="h-4 w-4" />

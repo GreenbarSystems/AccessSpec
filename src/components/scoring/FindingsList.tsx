@@ -37,7 +37,7 @@ export function FindingsList({ findings, limit = 10 }: Props) {
 
   return (
     <div className="card overflow-hidden" data-testid="findings-list">
-      <div className="border-b border-slate-200 bg-slate-50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
+      <div className="border-b border-slate-200 bg-slate-50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:bg-slate-900 dark:border-slate-800">
         Top findings ({visible.length} of {findings.length})
       </div>
       <ul className="divide-y divide-slate-100">
@@ -53,7 +53,7 @@ export function FindingsList({ findings, limit = 10 }: Props) {
               }
               data-finding={f.ruleId}
               data-severity={f.severity}
-              className="flex w-full items-start gap-3 px-4 py-2 text-left hover:bg-slate-50"
+              className="flex w-full items-start gap-3 px-4 py-2 text-left hover:bg-slate-50 dark:bg-slate-900"
             >
               <span
                 className={`mt-0.5 rounded border px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide ${SEVERITY_TONE[f.severity]}`}
@@ -69,7 +69,7 @@ export function FindingsList({ findings, limit = 10 }: Props) {
                     {f.ruleId}
                   </span>
                 </div>
-                <div className="mt-0.5 truncate font-mono text-xs text-slate-500 dark:text-slate-500">
+                <div className="mt-0.5 truncate font-mono text-xs text-slate-500">
                   {f.element.file}:{f.element.line} · {f.element.type} &lt;{f.element.tagName}&gt;
                 </div>
               </div>

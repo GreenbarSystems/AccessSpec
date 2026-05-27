@@ -31,10 +31,10 @@ export function IssueDetail({ rule, findings }: Props) {
           >
             {rule.severity}
           </span>
-          <span className="rounded bg-slate-100 px-2 py-0.5 text-[11px] font-medium uppercase text-slate-700 dark:text-slate-300">
+          <span className="rounded bg-slate-100 px-2 py-0.5 text-[11px] font-medium uppercase text-slate-700 dark:text-slate-300 dark:bg-slate-800">
             {CATEGORY_LABEL[rule.category]}
           </span>
-          <span className="font-mono text-[11px] text-slate-500 dark:text-slate-500">{rule.id}</span>
+          <span className="font-mono text-[11px] text-slate-500">{rule.id}</span>
         </div>
         <h2 className="mt-2 text-lg font-semibold text-slate-900 dark:text-slate-100">
           {rule.description}
@@ -53,7 +53,7 @@ export function IssueDetail({ rule, findings }: Props) {
         {rule.spec ? (
           <p className="font-mono text-sm text-slate-800 dark:text-slate-200">{rule.spec}</p>
         ) : (
-          <p className="text-sm text-slate-500 dark:text-slate-500">No spec citation on this rule.</p>
+          <p className="text-sm text-slate-500">No spec citation on this rule.</p>
         )}
       </Section>
 
@@ -108,11 +108,11 @@ export function IssueDetail({ rule, findings }: Props) {
                     })
                   }
                   data-jump={`${f.element.file}:${f.element.line}`}
-                  className="flex w-full items-start gap-3 px-1 py-2 text-left hover:bg-slate-50"
+                  className="flex w-full items-start gap-3 px-1 py-2 text-left hover:bg-slate-50 dark:bg-slate-900"
                 >
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-baseline gap-2">
-                      <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium uppercase text-slate-700 dark:text-slate-300">
+                      <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium uppercase text-slate-700 dark:text-slate-300 dark:bg-slate-800">
                         {f.element.type}
                       </span>
                       <span className="font-mono text-xs text-slate-700 dark:text-slate-300">
@@ -124,7 +124,7 @@ export function IssueDetail({ rule, findings }: Props) {
                         </span>
                       )}
                     </div>
-                    <div className="mt-0.5 truncate font-mono text-[11px] text-slate-500 dark:text-slate-500">
+                    <div className="mt-0.5 truncate font-mono text-[11px] text-slate-500">
                       {f.element.file}:{f.element.line} · {f.message}
                     </div>
                   </div>
@@ -155,7 +155,7 @@ function Section({
 }) {
   return (
     <section className="card p-4" data-testid={testId}>
-      <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-500">
+      <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
         {title}
       </h3>
       {children}
