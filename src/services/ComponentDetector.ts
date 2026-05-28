@@ -195,7 +195,7 @@ const COMPONENT_NAME_RULES: { pattern: RegExp; type: UIElementType }[] = [
 const CLASS_RULES: { pattern: RegExp; type: UIElementType }[] = [
   { pattern: /\bcard\b/i, type: 'card' },
   { pattern: /\bmodal\b/i, type: 'modal' },
-  { pattern: /\b(nav|navigation)\b/i, type: 'navigation' },
+  { pattern: /^(nav|navigation|sidebar|topbar|tabbar)$/i, type: 'navigation' },
   { pattern: /\btab(list|panel)?\b/i, type: 'tab' },
   { pattern: /\btooltip\b/i, type: 'tooltip' },
   { pattern: /\b(toast|snackbar|alert|banner)\b/i, type: 'alert' },

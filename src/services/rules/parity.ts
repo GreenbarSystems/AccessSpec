@@ -158,6 +158,14 @@ export const parityRules: Rule[] = [
     },
     check: (el) => {
       if (el.type !== 'navigation') return null;
+      // Only fire on true navigation landmarks: <nav>, role="navigation",
+      // or component names like Navigation/Sidebar/TabBar. A class containing
+      // "nav" (e.g. setup-nav, nav-icon) is a styling hook, not a landmark.
+      const isLandmark =
+        el.tagName.toLowerCase() === 'nav' ||
+        el.role === 'navigation' ||
+        /^(nav(igation)?|sidebar|topbar|tabbar)$/i.test(el.tagName);
+      if (!isLandmark) return null;
       if (accessibleName(el).length > 0) return null;
       return { message: 'Navigation has no aria-label' };
     },
