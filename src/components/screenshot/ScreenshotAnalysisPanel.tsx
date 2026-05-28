@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Image as ImageIcon } from 'lucide-react';
+import { Image as ImageIcon, X } from 'lucide-react';
 import {
   analyzeFile,
   type ColorBlindnessMode,
@@ -48,18 +48,35 @@ export function ScreenshotAnalysisPanel() {
     if (!files || files.length === 0) return;
     setBusy(true);
     setError(null);
-    const results: AnalysisEntry[] = [];
+    const fresh: AnalysisEntry[] = [];
     for (const file of Array.from(files)) {
       try {
         const report = await analyzeFile(file);
-        results.push({ file, name: file.name, report });
+        fresh.push({ file, name: file.name, report });
       } catch (e) {
         setError(e instanceof Error ? e.message : 'Failed to analyze image');
       }
     }
-    setAnalyses(results);
+    // Append, don't replace — users uploading screenshots one at a time
+    // were silently losing earlier results. If the same filename comes in
+    // twice, the new analysis wins (replaces the prior entry with that name).
+    setAnalyses((prev) => {
+      const byName = new Map<string, AnalysisEntry>();
+      for (const e of prev) byName.set(e.name, e);
+      for (const e of fresh) byName.set(e.name, e);
+      return [...byName.values()];
+    });
     setBusy(false);
     if (inputRef.current) inputRef.current.value = '';
+  }, []);
+
+  const removeAnalysis = useCallback((name: string) => {
+    setAnalyses((prev) => prev.filter((e) => e.name !== name));
+  }, []);
+
+  const clearAll = useCallback(() => {
+    setAnalyses([]);
+    setError(null);
   }, []);
 
   return (
@@ -104,7 +121,7 @@ export function ScreenshotAnalysisPanel() {
           </p>
         )}
         {analyses.length > 0 && (
-          <div className="mt-3 flex items-center gap-3 text-xs text-slate-600 dark:text-slate-400">
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-600 dark:text-slate-400">
             <label className="inline-flex cursor-pointer items-center gap-2">
               <input
                 type="checkbox"
@@ -115,6 +132,19 @@ export function ScreenshotAnalysisPanel() {
               />
               Show contrast heatmap overlay
             </label>
+            <div className="flex items-center gap-3">
+              <span data-testid="screenshot-count">
+                {analyses.length} screenshot{analyses.length === 1 ? '' : 's'} loaded
+              </span>
+              <button
+                type="button"
+                onClick={clearAll}
+                data-testid="screenshot-clear-all"
+                className="rounded px-1.5 py-0.5 text-xs font-medium text-rose-700 hover:underline dark:text-rose-300"
+              >
+                Clear all
+              </button>
+            </div>
           </div>
         )}
       </div>
@@ -124,6 +154,7 @@ export function ScreenshotAnalysisPanel() {
           key={entry.name}
           entry={entry}
           overlayOn={overlayOn}
+          onRemove={() => removeAnalysis(entry.name)}
         />
       ))}
     </div>
@@ -139,9 +170,11 @@ type OcrState =
 function ScreenshotCard({
   entry,
   overlayOn,
+  onRemove,
 }: {
   entry: AnalysisEntry;
   overlayOn: boolean;
+  onRemove: () => void;
 }) {
   const { file, name, report } = entry;
   const [ocr, setOcr] = useState<OcrState>({ phase: 'idle' });
@@ -180,10 +213,21 @@ function ScreenshotCard({
     >
       <header className="flex flex-wrap items-baseline justify-between gap-2 border-b border-slate-200 bg-slate-50 px-4 py-2 dark:bg-slate-900 dark:border-slate-800">
         <div className="font-mono text-xs text-slate-700 dark:text-slate-300">{name}</div>
-        <div className="text-[11px] text-slate-500">
-          {report.width} × {report.height} ·{' '}
-          <span className="font-mono">{report.aspectRatio.toFixed(2)}</span> ·{' '}
-          {report.inferredOrientation}
+        <div className="flex items-center gap-3">
+          <div className="text-[11px] text-slate-500">
+            {report.width} × {report.height} ·{' '}
+            <span className="font-mono">{report.aspectRatio.toFixed(2)}</span> ·{' '}
+            {report.inferredOrientation}
+          </div>
+          <button
+            type="button"
+            onClick={onRemove}
+            aria-label={`Remove ${name}`}
+            data-testid="screenshot-card-remove"
+            className="rounded p-1 text-slate-400 hover:bg-slate-200 hover:text-slate-700 dark:text-slate-500 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+          >
+            <X aria-hidden className="h-3.5 w-3.5" />
+          </button>
         </div>
       </header>
 

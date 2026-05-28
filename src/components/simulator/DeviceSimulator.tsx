@@ -80,7 +80,10 @@ export function DeviceSimulator() {
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_18rem]">
         <div
           ref={stageRef}
-          className="flex min-h-[640px] items-start justify-center rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 p-6"
+          // The stage frames the device chassis with a subtle gradient. Without
+          // a dark variant the slate-100→200 light gradient reads as a broken
+          // loading skeleton on the slate-950 page background.
+          className="flex min-h-[640px] items-start justify-center rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 p-6 dark:from-slate-800 dark:to-slate-900"
           data-testid="device-stage"
         >
           {preview.html ? (
@@ -338,15 +341,35 @@ function DeviceInfo({
 }
 
 function EmptyStage({ device, reason }: { device: Device; reason?: string }) {
+  const { project } = useSourceRepository();
+  // A project IS loaded but it's HTML-free (typical for React Native / Swift /
+  // Compose / Vue-only uploads). Tell the user why their app didn't render
+  // here instead of just showing a generic "no preview" message.
+  const hasNonHtmlProject =
+    !!project && project.filesByPath.size > 0 &&
+    ![...project.filesByPath.values()].some((f) => f.ext === 'html');
+
+  const message = hasNonHtmlProject
+    ? `Your project has ${project!.filesByPath.size} file${project!.filesByPath.size === 1 ? '' : 's'} but no .html entry — the device preview can only render HTML. Other analyzer tabs (Components, Touch targets, Contrast, Patterns) still work on JSX / Vue / Swift / Kotlin source.`
+    : reason ?? 'No preview available for this project.';
+
   return (
     <DeviceFrame device={device}>
       <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-white p-6 text-center text-sm text-slate-500 dark:bg-slate-900">
         <Smartphone aria-hidden className="h-10 w-10 text-slate-400 dark:text-slate-500" />
-        <p>{reason ?? 'No preview available for this project.'}</p>
-        <p className="text-xs text-slate-400 dark:text-slate-500">
-          Upload an HTML file (with optional CSS) on the Dashboard to see it
-          render here at {device.width} × {device.height}.
-        </p>
+        <p>{message}</p>
+        {!hasNonHtmlProject && (
+          <p className="text-xs text-slate-400 dark:text-slate-500">
+            Upload an HTML file (with optional CSS) on the Dashboard to see it
+            render here at {device.width} × {device.height}.
+          </p>
+        )}
+        {hasNonHtmlProject && (
+          <p className="text-xs text-slate-400 dark:text-slate-500">
+            Tip: paste a minimal {`<html><body>...</body></html>`} wrapper that
+            mounts your app to render at {device.width} × {device.height}.
+          </p>
+        )}
       </div>
     </DeviceFrame>
   );
