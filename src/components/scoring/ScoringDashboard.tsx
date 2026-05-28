@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuditReport } from '../../services/AuditCache';
+import { useUserPreferences } from '../../services/UserPreferences';
 import { ScoreRing } from './ScoreRing';
 import { ScoreCard } from './ScoreCard';
 import { FindingsList } from './FindingsList';
@@ -21,10 +22,16 @@ import { SeverityTally, type SeverityFilter } from './SeverityTally';
  */
 export function ScoringDashboard() {
   const report = useAuditReport();
-  const [filter, setFilter] = useState<SeverityFilter>({
+  const prefs = useUserPreferences();
+  // Lazy init: honour the user's default severity preference on first
+  // render. Changing the preference later won't yank an in-progress
+  // selection — it just affects the next mount, which matches the
+  // "default" semantics of the setting.
+  const [filter, setFilter] = useState<SeverityFilter>(() => ({
     category: 'all',
-    severity: 'all',
-  });
+    severity:
+      prefs.defaultSeverityFilter === 'all' ? 'all' : prefs.defaultSeverityFilter,
+  }));
 
   const clearFilter = () =>
     setFilter({ category: 'all', severity: 'all' });
@@ -107,6 +114,7 @@ export function ScoringDashboard() {
         {report ? (
           <FindingsList
             findings={report.findings}
+            limit={prefs.findingsLimit}
             filter={filter}
             onClearFilter={clearFilter}
           />

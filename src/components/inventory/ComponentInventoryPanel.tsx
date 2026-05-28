@@ -7,6 +7,7 @@ import {
   type UIElementType,
 } from '../../services/ComponentDetector';
 import { buildInventory } from '../../services/ComponentInventory';
+import { getPreferences } from '../../services/UserPreferences';
 import { TYPE_STYLES } from './typeStyles';
 
 type Props = {
@@ -40,7 +41,15 @@ export function ComponentInventoryPanel({ onJump }: Props) {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeType = parseTypeParam(searchParams.get('type'));
   const query = searchParams.get('q') ?? '';
-  const groupByFile = searchParams.get('group') === 'file';
+  // URL param wins when present; fall back to the user's saved default
+  // so visiting the tab fresh respects the Settings choice.
+  const groupParam = searchParams.get('group');
+  const groupByFile =
+    groupParam === 'file'
+      ? true
+      : groupParam === 'flat'
+        ? false
+        : getPreferences().inventoryGroupByFile;
 
   // Helper that mutates one param while preserving the others. `null` clears.
   const updateParam = useCallback(
@@ -61,7 +70,11 @@ export function ComponentInventoryPanel({ onJump }: Props) {
   const setActiveType = (t: UIElementType | 'all') =>
     updateParam('type', t === 'all' ? null : t);
   const setQuery = (q: string) => updateParam('q', q.length === 0 ? null : q);
-  const setGroupByFile = (on: boolean) => updateParam('group', on ? 'file' : null);
+  // Use an explicit "flat" string (vs deleting the param) when overriding
+  // the pref to OFF — otherwise the pref would re-assert itself on the
+  // next render.
+  const setGroupByFile = (on: boolean) =>
+    updateParam('group', on ? 'file' : 'flat');
 
   // Only show chips for types that actually exist in this inventory, sorted
   // by count DESC so the heaviest buckets surface first. Declaration order in

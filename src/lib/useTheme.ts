@@ -1,34 +1,41 @@
 import { useCallback, useEffect, useState } from 'react';
+import {
+  getPreferences,
+  setPreferences,
+  subscribePreferences,
+  type ThemePreference,
+} from '../services/UserPreferences';
 
 /**
  * useTheme
  *
  * Tiny dependency-free theme manager. Adds / removes the `.dark` class on
- * <html>, persists the choice in localStorage, and falls back to the user's
- * OS preference when no choice has been saved yet.
+ * <html>, persists the choice via the shared UserPreferences store, and
+ * falls back to the user's OS preference when no choice has been saved.
  *
  * Returns:
  *   theme       — 'light' | 'dark', the *effective* theme right now
  *   preference  — 'light' | 'dark' | 'system', what's stored
- *   setPreference(p) — change it
+ *   setPreference(p) — change it (persists across reloads)
  *   toggle()    — flip between light and dark (jumps out of 'system')
  *
  * Pair with Tailwind's `darkMode: 'class'` config (already set). Any time
  * Tailwind sees a `dark:` prefix, those rules apply when <html> has the
  * `.dark` class.
+ *
+ * Storage lives inside UserPreferences ("accessspec:user-preferences" →
+ * `.theme`). The Settings page reads/writes the same key, so toggling
+ * the TopBar Sun/Moon button and switching the radio on Settings stay
+ * in sync without any extra wiring.
+ *
+ * Legacy single-key store ("accessspec:theme") is still honoured at
+ * boot to migrate users from the pre-UserPreferences build seamlessly.
  */
 
-export type ThemePreference = 'light' | 'dark' | 'system';
+export type { ThemePreference } from '../services/UserPreferences';
 export type ResolvedTheme = 'light' | 'dark';
 
-const STORAGE_KEY = 'accessspec:theme';
-
-function readPreference(): ThemePreference {
-  if (typeof window === 'undefined') return 'system';
-  const raw = window.localStorage?.getItem(STORAGE_KEY);
-  if (raw === 'light' || raw === 'dark' || raw === 'system') return raw;
-  return 'system';
-}
+const LEGACY_KEY = 'accessspec:theme';
 
 function systemPrefersDark(): boolean {
   return (
@@ -50,11 +57,45 @@ function apply(theme: ResolvedTheme): void {
   root.style.colorScheme = theme;
 }
 
-export function useTheme() {
-  const [preference, setPreferenceState] = useState<ThemePreference>(() => readPreference());
-  const [theme, setTheme] = useState<ResolvedTheme>(() => resolve(readPreference()));
+/**
+ * One-shot migration: if the user has a legacy theme entry but no
+ * UserPreferences entry yet, copy it forward and drop the legacy key.
+ */
+function migrateLegacy(): void {
+  if (typeof window === 'undefined') return;
+  try {
+    const legacy = window.localStorage?.getItem(LEGACY_KEY);
+    if (!legacy) return;
+    if (legacy === 'light' || legacy === 'dark' || legacy === 'system') {
+      setPreferences({ theme: legacy });
+    }
+    window.localStorage?.removeItem(LEGACY_KEY);
+  } catch {
+    /* private mode — skip */
+  }
+}
 
-  // Apply on mount + whenever preference changes.
+export function useTheme() {
+  const [preference, setPreferenceState] = useState<ThemePreference>(
+    () => getPreferences().theme,
+  );
+  const [theme, setTheme] = useState<ResolvedTheme>(() =>
+    resolve(getPreferences().theme),
+  );
+
+  // Subscribe to the shared store so TopBar + Settings stay in sync.
+  useEffect(() => {
+    const unsub = subscribePreferences(() => {
+      const next = getPreferences().theme;
+      setPreferenceState(next);
+      const resolved = resolve(next);
+      setTheme(resolved);
+      apply(resolved);
+    });
+    return unsub;
+  }, []);
+
+  // Apply on mount + whenever preference changes locally.
   useEffect(() => {
     const resolved = resolve(preference);
     setTheme(resolved);
@@ -75,26 +116,22 @@ export function useTheme() {
   }, [preference]);
 
   const setPreference = useCallback((p: ThemePreference) => {
-    setPreferenceState(p);
-    try {
-      window.localStorage?.setItem(STORAGE_KEY, p);
-    } catch {
-      /* private mode or quota — ignore, preference still applies for this session */
-    }
+    setPreferences({ theme: p });
   }, []);
 
   const toggle = useCallback(() => {
-    setPreference(theme === 'dark' ? 'light' : 'dark');
-  }, [theme, setPreference]);
+    setPreferences({ theme: theme === 'dark' ? 'light' : 'dark' });
+  }, [theme]);
 
   return { theme, preference, setPreference, toggle } as const;
 }
 
 /**
- * Boot-time helper that runs before React mounts. Keeps the FIRST paint in
- * the correct theme so users don't see a light flash before the React tree
- * comes online. Call from main.tsx synchronously.
+ * Boot-time helper that runs before React mounts. Migrates the legacy
+ * key (one-time) then applies the resolved theme so users don't see a
+ * light flash before the React tree comes online.
  */
 export function bootstrapTheme(): void {
-  apply(resolve(readPreference()));
+  migrateLegacy();
+  apply(resolve(getPreferences().theme));
 }

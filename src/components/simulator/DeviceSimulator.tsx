@@ -7,6 +7,7 @@ import {
   buildPreviewDocument,
   type Device,
 } from '../../services/DevicePreview';
+import { getPreferences } from '../../services/UserPreferences';
 import { DeviceFrame } from './DeviceFrame';
 import { HeatmapOverlay, type HeatmapCounts } from './HeatmapOverlay';
 
@@ -19,7 +20,14 @@ export function DeviceSimulator() {
 
   const preview = useMemo(() => buildPreviewDocument(files), [files]);
 
-  const [deviceId, setDeviceId] = useState<string>(DEFAULT_DEVICE_ID);
+  // Seed from the user's saved default device preference. We read once on
+  // first render (lazy initializer) so changing the preference from
+  // Settings doesn't yank the device out from under an in-progress audit;
+  // the new default applies the next time the panel mounts.
+  const [deviceId, setDeviceId] = useState<string>(() => {
+    const pref = getPreferences().defaultDeviceId;
+    return DEVICES.some((d) => d.id === pref) ? pref : DEFAULT_DEVICE_ID;
+  });
   const device = DEVICES.find((d) => d.id === deviceId) ?? DEVICES[0];
 
   // Fit-to-screen scaling: shrink the chassis if the available stage is
