@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AccessSpec sample app</title>
+    <style>
+      body {
+        font-family: -apple-system, system-ui, sans-serif;
+        margin: 0;
+        padding: 16px;
+        background: #fafafa;
+        color: #1f2937;
+      }
+      h1 { font-size: 22px; margin: 0 0 6px; }
+      .lead { color: #6b7280; font-size: 13px; margin: 0 0 16px; }
+      .section-h { font-size: 14px; color: #374151; margin: 16px 0 4px; }
+      .row { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>AccessSpec sample app</h1>
+      <p class="lead">
+        Intentionally seeded with a mix of good + broken patterns so every
+        rule in the engine has something to report.
+      </p>
+    </header>
+
+    <!-- =================================================================
+         GOOD examples — should NOT trigger findings
+         ================================================================= -->
+    <section aria-labelledby="good">
+      <h2 id="good" class="section-h">Good examples</h2>
+      <div class="row">
+        <button
+          type="button"
+          aria-label="Save changes"
+          autocomplete="off"
+          style="width:100px;height:44px;background:#0369a1;color:#ffffff;border:0;border-radius:6px;font-size:14px;font-weight:600;"
+        >
+          Save
+        </button>
+        <a
+          href="https://example.com/docs"
+          style="color:#0c4a6e;font-size:16px;line-height:44px;text-decoration:underline;"
+        >
+          Read the documentation guide
+        </a>
+      </div>
+
+      <label
+        for="email"
+        style="display:block;font-size:13px;color:#374151;margin-top:8px;"
+      >
+        Email address
+      </label>
+      <input
+        id="email"
+        type="email"
+        name="email"
+        autocomplete="email"
+        aria-label="Email address"
+        placeholder="you@example.com"
+        style="width:240px;height:40px;padding:6px 10px;font-size:14px;border:1px solid #9ca3af;border-radius:6px;"
+      />
+    </section>
+
+    <!-- =================================================================
+         BAD examples — SHOULD trigger findings across every severity
+         ================================================================= -->
+    <section aria-labelledby="bad">
+      <h2 id="bad" class="section-h">Things that need fixing</h2>
+
+      <!-- CRITICAL · A11Y-NAME-MISSING
+           Icon-only button with no aria-label / title / text. Screen
+           readers announce only "button" with no purpose. -->
+      <div class="row">
+        <button type="button" style="width:24px;height:24px;background:#eee;border:0;">
+          <svg width="14" height="14" aria-hidden="true" viewBox="0 0 14 14">
+            <path d="M1 1 L13 13 M13 1 L1 13" stroke="#666" stroke-width="2"/>
+          </svg>
+        </button>
+        <!-- CRITICAL · A11Y-NAME-MISSING (input)
+             A bare text input with no label, no aria-label, no placeholder,
+             no title — the most common reason screen readers go silent. -->
+        <input type="text" name="search" style="width:200px;height:32px;padding:4px 8px;border:1px solid #d1d5db;" />
+        <!-- CRITICAL · A11Y-IMG-INPUT-ALT
+             <input type="image"> with no alt — sighted users see a glyph;
+             screen-reader users hear nothing about what the button does. -->
+        <input
+          type="image"
+          src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Crect width='32' height='32' fill='%230369a1'/%3E%3C/svg%3E"
+          style="width:32px;height:32px;border:0;"
+        />
+      </div>
+
+      <!-- WARNING · A11Y-LINK-PURPOSE
+           Generic link text — fails 2.4.4 Link Purpose because "click here"
+           tells screen-reader users nothing when read out of context. -->
+      <p style="margin:8px 0;">
+        <a href="https://example.com/pricing" style="color:#0369a1;">Click here</a>
+        for our latest pricing.
+      </p>
+      <p style="margin:8px 0;">
+        <a href="https://example.com/blog" style="color:#0369a1;">Read more</a>
+      </p>
+
+      <!-- WARNING · A11Y-DIALOG-LABEL  +  INFO · PAR-DIALOG-MODAL
+           A dialog with no aria-label / aria-labelledby and no aria-modal. -->
+      <div
+        role="dialog"
+        style="background:#fff;border:1px solid #d1d5db;padding:16px;margin-top:16px;max-width:300px;border-radius:8px;"
+      >
+        <p style="margin:0 0 8px;font-weight:600;">Confirm delete?</p>
+        <button
+          type="button"
+          aria-label="Confirm delete"
+          style="width:90px;height:36px;background:#ef4444;color:#fff;border:0;border-radius:4px;"
+        >
+          Delete
+        </button>
+      </div>
+
+      <!-- WARNING · PAR-INPUT-NATIVE
+           A div styled as a button — fails platform-parity because native
+           Button on iOS / Android picks up focus / haptics / VoiceOver
+           automatically; a styled div doesn't. -->
+      <div
+        role="button"
+        tabindex="0"
+        onclick="alert('hello')"
+        style="cursor:pointer;background:#0ea5e9;color:#fff;padding:10px 14px;display:inline-block;border-radius:4px;margin-top:12px;"
+      >
+        Custom click target
+      </div>
+
+      <!-- INFO · A11Y-FORM-NAME
+           A form without aria-label / aria-labelledby. -->
+      <form style="margin-top:16px;padding:12px;border:1px solid #e5e7eb;border-radius:6px;">
+        <label
+          for="name"
+          style="display:block;font-size:13px;color:#374151;"
+        >Name</label>
+        <input
+          id="name"
+          type="text"
+          name="name"
+          style="width:200px;height:32px;padding:4px 8px;margin-top:4px;border:1px solid #d1d5db;"
+        />
+        <!-- INFO · PAR-INPUT-AUTOCOMPLETE
+             Inputs without `autocomplete` skip platform autofill. -->
+        <input
+          type="tel"
+          name="phone"
+          aria-label="Phone number"
+          placeholder="Phone"
+          style="width:200px;height:32px;padding:4px 8px;margin-top:4px;border:1px solid #d1d5db;"
+        />
+      </form>
+    </section>
+  </body>
+</html>

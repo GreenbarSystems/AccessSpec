@@ -1,7 +1,13 @@
 import type { Category } from '../../services/RuleEngine';
-import type { CategoryScore } from '../../services/Scoring';
+import { BAND_LABEL, bandOf, type CategoryScore } from '../../services/Scoring';
 import { ScoreRing } from './ScoreRing';
 import { SeverityTally, type SeverityFilter } from './SeverityTally';
+
+const BAND_PILL: Record<'good' | 'warn' | 'bad', string> = {
+  good: 'bg-emerald-50 text-emerald-700 ring-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-200 dark:ring-emerald-800',
+  warn: 'bg-amber-50 text-amber-800 ring-amber-200 dark:bg-amber-900/30 dark:text-amber-200 dark:ring-amber-800',
+  bad: 'bg-rose-50 text-rose-700 ring-rose-200 dark:bg-rose-900/30 dark:text-rose-200 dark:ring-rose-800',
+};
 
 type Props = {
   title: string;
@@ -30,7 +36,18 @@ export function ScoreCard({
     >
       <ScoreRing score={score?.score ?? null} />
       <div className="mt-3 text-sm font-semibold text-slate-900 dark:text-slate-100">{title}</div>
-      <p className="mt-0.5 max-w-[18ch] text-xs text-slate-500">{description}</p>
+      {/* Band pill — "Good" / "Needs attention" / "Action required". Gives
+          novices a plain-language reading of the number above. */}
+      {score && (
+        <span
+          className={`mt-1 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ring-1 ${BAND_PILL[bandOf(score.score)]}`}
+          data-band={bandOf(score.score)}
+          data-testid="score-band"
+        >
+          {BAND_LABEL[bandOf(score.score)]}
+        </span>
+      )}
+      <p className="mt-1 max-w-[18ch] text-xs text-slate-500">{description}</p>
       <div className="mt-3 flex flex-wrap items-center justify-center gap-x-1.5 gap-y-1 text-xs">
         <SeverityTally
           severity="critical"

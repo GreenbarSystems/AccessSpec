@@ -89,3 +89,21 @@ export function bandOf(score: number): ScoreBand {
   if (score >= 70) return 'warn';
   return 'bad';
 }
+
+/**
+ * Human-readable label for each band. Surfaced next to the score so a
+ * novice doesn't have to remember "is 85 good or bad?". Pair with the
+ * tone classes from a panel-level constant for visual consistency.
+ */
+export const BAND_LABEL: Record<ScoreBand, string> = {
+  good: 'Good',
+  warn: 'Needs attention',
+  bad: 'Action required',
+};
+
+/** Thresholds copy used by the legend strip on the Dashboard. */
+export const BAND_THRESHOLDS: Record<ScoreBand, string> = {
+  good: '≥ 90',
+  warn: '70 – 89',
+  bad: '< 70',
+};

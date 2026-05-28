@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BarChart3, Smartphone, Wrench, type LucideIcon } from 'lucide-react';
+import { BarChart3, Sparkles, Smartphone, Wrench, type LucideIcon } from 'lucide-react';
 import { PageHeader } from '../components/PageHeader';
+import { sourceRepository } from '../services/SourceRepository';
+import { useToast } from '../components/toast/ToastHost';
 import { UploadPanel } from '../components/upload/UploadPanel';
 import { ProjectTree } from '../components/ProjectTree';
 import { ScoringDashboard } from '../components/scoring/ScoringDashboard';
@@ -34,6 +36,38 @@ export default function Dashboard() {
 /* ------------------------------------------------------------------ */
 
 function EmptyState() {
+  const toast = useToast();
+  // Load a pre-bundled sample so a brand-new user can see a populated
+  // dashboard in one click — no need to bring their own code first.
+  const loadSample = async () => {
+    try {
+      const url = `${import.meta.env.BASE_URL}samples/demo.html`.replace(/\/{2,}/g, '/');
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const content = await res.text();
+      sourceRepository.loadFiles(
+        [
+          {
+            path: 'demo.html',
+            name: 'demo.html',
+            ext: 'html',
+            language: 'html',
+            size: content.length,
+            content,
+            origin: 'paste',
+          },
+        ],
+        'AccessSpec sample',
+        'paste',
+      );
+      toast.success('Loaded the sample project — see scores below');
+    } catch (err) {
+      toast.error(
+        `Could not load the sample (${err instanceof Error ? err.message : 'unknown'})`,
+      );
+    }
+  };
+
   return (
     <>
       <PageHeader
@@ -41,6 +75,41 @@ function EmptyState() {
         description="Audit a mobile app for WCAG 2.2 compliance — paste a snippet, drop files, upload a zip, or import a public repo."
       />
       <div className="mx-auto max-w-3xl space-y-6">
+        {/* New-user shortcut: skip upload and load the bundled sample so the
+            dashboard populates immediately. The sample is intentionally
+            seeded with a mix of good + bad patterns so every rule has
+            something to report. */}
+        <section
+          aria-label="Quick start"
+          className="card flex flex-wrap items-center justify-between gap-3 border-brand-200 bg-brand-50/50 p-4 dark:border-brand-800 dark:bg-brand-900/20"
+          data-testid="quickstart-banner"
+        >
+          <div className="flex items-start gap-3">
+            <Sparkles
+              aria-hidden
+              className="mt-0.5 h-5 w-5 shrink-0 text-brand-700 dark:text-brand-300"
+            />
+            <div>
+              <h2 className="text-sm font-semibold text-brand-900 dark:text-brand-100">
+                New here? Try a sample project
+              </h2>
+              <p className="text-xs text-brand-800 dark:text-brand-200">
+                Loads a small HTML page that intentionally fails several
+                rules — so you can see what a populated dashboard looks
+                like without uploading your own code yet.
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={loadSample}
+            className="btn-primary text-sm"
+            data-testid="load-sample"
+          >
+            Load sample
+          </button>
+        </section>
+
         <section
           aria-label="Upload source"
           className="card p-5"
@@ -48,7 +117,7 @@ function EmptyState() {
         >
           <div className="mb-3">
             <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">
-              Start an audit
+              Or audit your own code
             </h2>
             <p className="text-sm text-slate-600 dark:text-slate-400">
               Everything runs locally in your browser. No code leaves the page.
