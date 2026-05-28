@@ -154,7 +154,6 @@ const TAG_TO_TYPE: Record<string, UIElementType> = {
   input: 'input',
   textarea: 'input',
   select: 'input',
-  option: 'input',
   nav: 'navigation',
   table: 'table',
   form: 'form',

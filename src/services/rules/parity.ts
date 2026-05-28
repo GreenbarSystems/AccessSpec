@@ -23,6 +23,7 @@ const NATIVE_INPUT_NAMES = new Set([
   'input',
   'textarea',
   'select',
+  'option',
   'textinput',
   'switch',
   'slider',
