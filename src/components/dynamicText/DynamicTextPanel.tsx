@@ -7,6 +7,11 @@ import {
   type ScaleResult,
   type SimulationVerdict,
 } from '../../services/DynamicTextSimulator';
+import {
+  applyInboundFilter,
+  useInboundComponentFilter,
+} from '../../services/analyzerFilters';
+import { InboundFilterBanner } from '../inventory/InboundFilterBanner';
 
 type Props = {
   onJump: (path: string, line: number) => void;
@@ -40,9 +45,17 @@ type Filter = 'all' | 'any-fail' | 'breaks-at-200' | 'breaks-at-150' | 'unmeasur
 
 export function DynamicTextPanel({ onJump }: Props) {
   const audit = useAuditReport();
+  // Honor the Components-tab handoff: narrow the simulation pool to the
+  // same ?type / ?q scope so verdicts mirror what the user just filtered.
+  const inboundFilter = useInboundComponentFilter();
+  const rawElements = audit?.elements ?? [];
+  const scopedElements = useMemo(
+    () => applyInboundFilter(rawElements, inboundFilter),
+    [rawElements, inboundFilter],
+  );
   const report = useMemo(
-    () => simulateDynamicText(audit?.elements ?? []),
-    [audit],
+    () => simulateDynamicText(scopedElements),
+    [scopedElements],
   );
 
   const [filter, setFilter] = useState<Filter>('any-fail');
@@ -88,6 +101,11 @@ export function DynamicTextPanel({ onJump }: Props) {
 
   return (
     <div className="space-y-4" data-testid="dynamic-text-panel">
+      <InboundFilterBanner
+        filter={inboundFilter}
+        scopedCount={scopedElements.length}
+        totalCount={rawElements.length}
+      />
       {/* Summary chips */}
       <div className="card p-3">
         <div className="flex flex-wrap items-center gap-2">

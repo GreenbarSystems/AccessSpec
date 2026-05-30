@@ -8,6 +8,11 @@ import {
   type TouchTargetMeasurement,
   type VerdictStatus,
 } from '../../services/TouchTargetAnalyzer';
+import {
+  applyInboundFilter,
+  useInboundComponentFilter,
+} from '../../services/analyzerFilters';
+import { InboundFilterBanner } from '../inventory/InboundFilterBanner';
 
 type Props = {
   onJump: (path: string, line: number) => void;
@@ -27,9 +32,18 @@ const STATUS_GLYPH: Record<VerdictStatus, string> = {
 
 export function TouchTargetsPanel({ onJump }: Props) {
   const audit = useAuditReport();
+  // When the user arrives via the Components tab's "Run on this filter"
+  // handoff, narrow the analyzed pool to the same ?type / ?q scope so the
+  // verdicts line up with what they were just looking at.
+  const inboundFilter = useInboundComponentFilter();
+  const rawElements = audit?.elements ?? [];
+  const scopedElements = useMemo(
+    () => applyInboundFilter(rawElements, inboundFilter),
+    [rawElements, inboundFilter],
+  );
   const report = useMemo(
-    () => analyzeTouchTargets(audit?.elements ?? []),
-    [audit],
+    () => analyzeTouchTargets(scopedElements),
+    [scopedElements],
   );
 
   const [onlyViolations, setOnlyViolations] = useState(true);
@@ -64,6 +78,11 @@ export function TouchTargetsPanel({ onJump }: Props) {
 
   return (
     <div className="space-y-4" data-testid="touch-targets-panel">
+      <InboundFilterBanner
+        filter={inboundFilter}
+        scopedCount={scopedElements.length}
+        totalCount={rawElements.length}
+      />
       {/* Summary chips per standard */}
       <div className="card p-3">
         <div className="flex flex-wrap items-center gap-2">

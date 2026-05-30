@@ -8,6 +8,11 @@ import {
   type Viewport,
   type ViewportResult,
 } from '../../services/ReflowAnalyzer';
+import {
+  applyInboundFilter,
+  useInboundComponentFilter,
+} from '../../services/analyzerFilters';
+import { InboundFilterBanner } from '../inventory/InboundFilterBanner';
 
 type Props = {
   onJump: (path: string, line: number) => void;
@@ -48,9 +53,17 @@ type Filter = 'any-fail' | 'fail-320' | 'fail-768' | 'all';
 
 export function ReflowPanel({ onJump }: Props) {
   const audit = useAuditReport();
+  // Honor the Components-tab handoff (?type / ?q) so a user inspecting
+  // reflow on a narrowed pool sees verdicts only for that pool.
+  const inboundFilter = useInboundComponentFilter();
+  const rawElements = audit?.elements ?? [];
+  const scopedElements = useMemo(
+    () => applyInboundFilter(rawElements, inboundFilter),
+    [rawElements, inboundFilter],
+  );
   const report = useMemo(
-    () => analyzeReflow(audit?.elements ?? []),
-    [audit],
+    () => analyzeReflow(scopedElements),
+    [scopedElements],
   );
 
   const [filter, setFilter] = useState<Filter>('any-fail');
@@ -94,6 +107,11 @@ export function ReflowPanel({ onJump }: Props) {
 
   return (
     <div className="space-y-4" data-testid="reflow-panel">
+      <InboundFilterBanner
+        filter={inboundFilter}
+        scopedCount={scopedElements.length}
+        totalCount={rawElements.length}
+      />
       {/* Per-viewport summary chips */}
       <div className="card p-3">
         <div className="flex flex-wrap items-center gap-2">

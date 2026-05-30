@@ -12,6 +12,11 @@ import {
 import { PATTERN_ICON } from '../icons/patternIcons';
 import { iosMappingFor } from '../../services/IOSPatterns';
 import { androidMappingFor } from '../../services/AndroidPatterns';
+import {
+  applyInboundFilter,
+  useInboundComponentFilter,
+} from '../../services/analyzerFilters';
+import { InboundFilterBanner } from '../inventory/InboundFilterBanner';
 
 type Props = {
   onJump: (path: string, line: number) => void;
@@ -31,9 +36,17 @@ const CHECK_GLYPH: Record<PatternCheck['status'], string> = {
 
 export function PatternsPanel({ onJump }: Props) {
   const audit = useAuditReport();
+  // Honor the Components-tab handoff: recognise only patterns whose
+  // constituent elements fall in the inbound scope.
+  const inboundFilter = useInboundComponentFilter();
+  const rawElements = audit?.elements ?? [];
+  const scopedElements = useMemo(
+    () => applyInboundFilter(rawElements, inboundFilter),
+    [rawElements, inboundFilter],
+  );
   const report = useMemo(
-    () => recognizePatterns(audit?.elements ?? []),
-    [audit],
+    () => recognizePatterns(scopedElements),
+    [scopedElements],
   );
 
   const [activeKind, setActiveKind] = useState<PatternKind | 'all'>('all');
@@ -61,6 +74,11 @@ export function PatternsPanel({ onJump }: Props) {
 
   return (
     <div className="space-y-4" data-testid="patterns-panel">
+      <InboundFilterBanner
+        filter={inboundFilter}
+        scopedCount={scopedElements.length}
+        totalCount={rawElements.length}
+      />
       {/* Chip row: All + 7 kinds */}
       <div className="card p-3">
         <div className="flex flex-wrap items-center gap-1.5">

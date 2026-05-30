@@ -8,6 +8,11 @@ import {
   type RGB,
   type Verdict,
 } from '../../services/ContrastChecker';
+import {
+  applyInboundFilter,
+  useInboundComponentFilter,
+} from '../../services/analyzerFilters';
+import { InboundFilterBanner } from '../inventory/InboundFilterBanner';
 
 type Props = {
   onJump: (path: string, line: number) => void;
@@ -34,9 +39,18 @@ export function ContrastPanel({ onJump }: Props) {
     () => (project ? [...project.filesByPath.values()] : []),
     [project],
   );
+  // Inbound scope from the Components tab handoff narrows what we analyze;
+  // files stays unfiltered so background-colour resolution from :root /
+  // <body> declarations still works.
+  const inboundFilter = useInboundComponentFilter();
+  const rawElements = audit?.elements ?? [];
+  const scopedElements = useMemo(
+    () => applyInboundFilter(rawElements, inboundFilter),
+    [rawElements, inboundFilter],
+  );
   const report = useMemo(
-    () => analyzeContrast(audit?.elements ?? [], files),
-    [audit, files],
+    () => analyzeContrast(scopedElements, files),
+    [scopedElements, files],
   );
 
   const [filter, setFilter] = useState<Filter>('aa-fail');
@@ -75,6 +89,11 @@ export function ContrastPanel({ onJump }: Props) {
 
   return (
     <div className="space-y-4" data-testid="contrast-panel">
+      <InboundFilterBanner
+        filter={inboundFilter}
+        scopedCount={scopedElements.length}
+        totalCount={rawElements.length}
+      />
       {/* Summary chips */}
       <div className="card p-3">
         <div className="flex flex-wrap items-center gap-2">

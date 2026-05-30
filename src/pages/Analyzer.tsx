@@ -100,7 +100,14 @@ export default function Analyzer() {
 
       {mode === 'source' && <SourceExplorer externalJump={jumpTo} />}
       {mode === 'components' && (
-        <ComponentInventoryPanel onJump={handleJumpFromInventory} />
+        // `onSwitchMode` powers the cross-tab handoff strip — when a user
+        // has narrowed the inventory, clicking a check name flips the
+        // Analyzer mode without disturbing the URL filter params, so the
+        // sibling panel inherits the same scope via the URL.
+        <ComponentInventoryPanel
+          onJump={handleJumpFromInventory}
+          onSwitchMode={(next) => setMode(next as Mode)}
+        />
       )}
       {mode === 'targets' && (
         <TouchTargetsPanel onJump={handleJumpFromInventory} />
