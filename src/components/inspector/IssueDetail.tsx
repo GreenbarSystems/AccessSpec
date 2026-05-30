@@ -22,7 +22,13 @@ export function IssueDetail({ rule, findings }: Props) {
   const navigate = useNavigate();
   return (
     <article className="space-y-4" data-testid="issue-detail" data-rule={rule.id}>
-      {/* Header — severity + ID + category + summary */}
+      {/*
+        Header — severity + ID + category + title + spec citation + count.
+        We deliberately fold the spec citation in here (and drop the
+        separate "WCAG reference" card) so a single short string doesn't
+        get its own card. The "Issue details" card was removed for the
+        same reason: it duplicated the title verbatim.
+      */}
       <header className="card p-4">
         <div className="flex flex-wrap items-center gap-2">
           <span
@@ -35,27 +41,25 @@ export function IssueDetail({ rule, findings }: Props) {
             {CATEGORY_LABEL[rule.category]}
           </span>
           <span className="font-mono text-[11px] text-slate-500">{rule.id}</span>
+          {rule.spec && (
+            <span
+              className="rounded bg-slate-100 px-2 py-0.5 font-mono text-[11px] text-slate-700 dark:bg-slate-800 dark:text-slate-300"
+              data-testid="rule-spec"
+              title="WCAG reference"
+            >
+              {rule.spec}
+            </span>
+          )}
         </div>
         <h2 className="mt-2 text-lg font-semibold text-slate-900 dark:text-slate-100">
           {rule.description}
         </h2>
         <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-          {findings.length} affected component{findings.length === 1 ? '' : 's'} in the loaded project.
+          {findings.length === 0
+            ? 'No components in the loaded project fail this rule.'
+            : `${findings.length} affected component${findings.length === 1 ? '' : 's'} in the loaded project.`}
         </p>
       </header>
-
-      {/* Sections */}
-      <Section title="Issue details" testId="section-details">
-        <p className="text-sm text-slate-700 dark:text-slate-300">{rule.description}</p>
-      </Section>
-
-      <Section title="WCAG reference" testId="section-wcag">
-        {rule.spec ? (
-          <p className="font-mono text-sm text-slate-800 dark:text-slate-200">{rule.spec}</p>
-        ) : (
-          <p className="text-sm text-slate-500">No spec citation on this rule.</p>
-        )}
-      </Section>
 
       <Section title="Suggested fix" testId="section-fix">
         <p className="text-sm text-slate-700 dark:text-slate-300">{rule.suggestedFix.summary}</p>
@@ -188,7 +192,15 @@ function CodeBlock({
         <span>{label}</span>
         {language && <span className="opacity-60">{language}</span>}
       </div>
-      <pre className="overflow-auto p-3 font-mono text-xs leading-relaxed text-slate-800 dark:text-slate-200">
+      {/*
+        Two-column DO/DON'T grids leave each `<pre>` quite narrow, so HTML
+        and JSX snippets used to clip — readers had to horizontally scroll
+        a pane that gave no visual cue it was scrollable. Wrap instead:
+        `whitespace-pre-wrap` keeps newlines/leading indent, `break-words`
+        lets long attribute values break at safe points rather than
+        overflow.
+      */}
+      <pre className="whitespace-pre-wrap break-words p-3 font-mono text-xs leading-relaxed text-slate-800 dark:text-slate-200">
         {code}
       </pre>
     </div>
