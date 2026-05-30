@@ -36,16 +36,16 @@ export default function Simulator() {
         aria-label="Simulator view"
         className="mb-4 inline-flex flex-wrap rounded-lg bg-slate-100 p-1 dark:bg-slate-800"
       >
-        <TabButton active={mode === 'preview'} onClick={() => setMode('preview')} dataKey="preview" Icon={Smartphone}>
+        <TabButton active={mode === 'preview'} onClick={() => setMode('preview')} dataKey="preview" Icon={Smartphone} hint="Render your HTML inside iPhone / Pixel / Galaxy / iPad chassis at correct CSS px dimensions.">
           Device preview
         </TabButton>
-        <TabButton active={mode === 'parity'} onClick={() => setMode('parity')} dataKey="parity" Icon={Scale}>
+        <TabButton active={mode === 'parity'} onClick={() => setMode('parity')} dataKey="parity" Icon={Scale} hint="Side-by-side: your component vs the native iOS and Android primitive it should map to.">
           Parity report
         </TabButton>
-        <TabButton active={mode === 'runtime'} onClick={() => setMode('runtime')} dataKey="runtime" Icon={Microscope}>
+        <TabButton active={mode === 'runtime'} onClick={() => setMode('runtime')} dataKey="runtime" Icon={Microscope} hint="Walks the rendered DOM with computed styles — catches issues the static parser can't see.">
           Runtime audit
         </TabButton>
-        <TabButton active={mode === 'screenshot'} onClick={() => setMode('screenshot')} dataKey="screenshot" Icon={Image}>
+        <TabButton active={mode === 'screenshot'} onClick={() => setMode('screenshot')} dataKey="screenshot" Icon={Image} hint="Upload PNG/JPEG screenshots; measures pixel contrast and simulates colour-blindness.">
           Screenshot
         </TabButton>
       </div>
@@ -63,12 +63,14 @@ function TabButton({
   onClick,
   dataKey,
   Icon,
+  hint,
   children,
 }: {
   active: boolean;
   onClick: () => void;
   dataKey: string;
   Icon: LucideIcon;
+  hint?: string;
   children: React.ReactNode;
 }) {
   return (
@@ -78,6 +80,7 @@ function TabButton({
       aria-selected={active}
       onClick={onClick}
       data-mode={dataKey}
+      title={hint}
       className={[
         'inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition',
         active

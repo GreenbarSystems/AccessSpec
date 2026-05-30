@@ -228,18 +228,33 @@ export default function Settings() {
           title="Data"
           description="Reset stored preferences. Doesn't touch the in-memory project — use Clear project on the Dashboard for that."
         >
-          <button
-            type="button"
-            onClick={() => {
-              resetPreferences();
-              toast.success('Preferences reset to defaults');
-            }}
-            className="btn-ghost inline-flex items-center gap-2 text-rose-700 hover:bg-rose-50 dark:text-rose-300 dark:hover:bg-rose-900/20"
-            data-action="reset-prefs"
-          >
-            <RotateCcw aria-hidden className="h-4 w-4" />
-            Reset preferences to defaults
-          </button>
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              onClick={() => {
+                resetPreferences();
+                toast.success('Preferences reset to defaults');
+              }}
+              className="btn-ghost inline-flex items-center gap-2 text-rose-700 hover:bg-rose-50 dark:text-rose-300 dark:hover:bg-rose-900/20"
+              data-action="reset-prefs"
+            >
+              <RotateCcw aria-hidden className="h-4 w-4" />
+              Reset preferences to defaults
+            </button>
+            {prefs.onboardingDismissed && (
+              <button
+                type="button"
+                onClick={() => {
+                  setPreferences({ onboardingDismissed: false });
+                  toast.info('Tour will replay on next Dashboard visit');
+                }}
+                className="btn-ghost text-xs"
+                data-action="replay-tour"
+              >
+                Replay onboarding tour
+              </button>
+            )}
+          </div>
         </Section>
 
         <div

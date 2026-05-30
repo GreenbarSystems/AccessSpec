@@ -75,25 +75,25 @@ export default function Analyzer() {
         aria-label="Analyzer view"
         className="mb-4 inline-flex flex-wrap rounded-lg bg-slate-100 p-1 dark:bg-slate-800"
       >
-        <TabButton active={mode === 'source'} onClick={() => setMode('source')} dataKey="source" Icon={FolderOpen}>
+        <TabButton active={mode === 'source'} onClick={() => setMode('source')} dataKey="source" Icon={FolderOpen} hint="Search and browse every file in your project.">
           Source
         </TabButton>
-        <TabButton active={mode === 'components'} onClick={() => setMode('components')} dataKey="components" Icon={Puzzle}>
+        <TabButton active={mode === 'components'} onClick={() => setMode('components')} dataKey="components" Icon={Puzzle} hint="Every button, link, input, dialog… that the engine detected, with filters.">
           Components
         </TabButton>
-        <TabButton active={mode === 'targets'} onClick={() => setMode('targets')} dataKey="targets" Icon={Hand}>
+        <TabButton active={mode === 'targets'} onClick={() => setMode('targets')} dataKey="targets" Icon={Hand} hint="WCAG 2.5.8 tap-target sizes, scored against 24×24 / 44×44 / 48×48.">
           Touch targets
         </TabButton>
-        <TabButton active={mode === 'contrast'} onClick={() => setMode('contrast')} dataKey="contrast" Icon={Palette}>
+        <TabButton active={mode === 'contrast'} onClick={() => setMode('contrast')} dataKey="contrast" Icon={Palette} hint="Text vs background contrast ratios, scored against WCAG AA / AAA.">
           Contrast
         </TabButton>
-        <TabButton active={mode === 'dynamic'} onClick={() => setMode('dynamic')} dataKey="dynamic" Icon={Type}>
+        <TabButton active={mode === 'dynamic'} onClick={() => setMode('dynamic')} dataKey="dynamic" Icon={Type} hint="Simulate iOS Dynamic Type and Android Font Scale on every text-bearing element.">
           Dynamic type
         </TabButton>
-        <TabButton active={mode === 'reflow'} onClick={() => setMode('reflow')} dataKey="reflow" Icon={Maximize}>
+        <TabButton active={mode === 'reflow'} onClick={() => setMode('reflow')} dataKey="reflow" Icon={Maximize} hint="WCAG 1.4.10 — does your layout reflow at 320px without horizontal scroll?">
           Reflow
         </TabButton>
-        <TabButton active={mode === 'patterns'} onClick={() => setMode('patterns')} dataKey="patterns" Icon={Brain}>
+        <TabButton active={mode === 'patterns'} onClick={() => setMode('patterns')} dataKey="patterns" Icon={Brain} hint="Recognised mobile patterns (modals, tabs, date pickers…) with iOS + Android mappings.">
           Patterns
         </TabButton>
       </div>
@@ -126,12 +126,14 @@ function TabButton({
   onClick,
   dataKey,
   Icon,
+  hint,
   children,
 }: {
   active: boolean;
   onClick: () => void;
   dataKey: string;
   Icon: LucideIcon;
+  hint?: string;
   children: React.ReactNode;
 }) {
   return (
@@ -141,6 +143,7 @@ function TabButton({
       aria-selected={active}
       onClick={onClick}
       data-mode={dataKey}
+      title={hint}
       className={[
         'inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition',
         active

@@ -1,6 +1,8 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { Finding, Severity } from '../../services/RuleEngine';
+import { ChevronDown, ChevronRight, ExternalLink } from 'lucide-react';
+import type { Finding, Rule, Severity } from '../../services/RuleEngine';
+import { ALL_RULE_DEFS } from '../../services/AuditService';
 import type { SeverityFilter } from './SeverityTally';
 
 const SEVERITY_RANK: Record<Severity, number> = {
@@ -27,6 +29,11 @@ const CATEGORY_LABEL: Record<string, string> = {
   parity: 'Platform parity',
 };
 
+// Build a lookup once so each row can find its rule without scanning.
+const RULES_BY_ID: Record<string, Rule> = Object.fromEntries(
+  ALL_RULE_DEFS.map((r) => [r.id, r] as const),
+);
+
 type Props = {
   findings: Finding[];
   /** Default cap when no filter is active. Filtered views show everything. */
@@ -44,6 +51,16 @@ export function FindingsList({
   onClearFilter,
 }: Props) {
   const navigate = useNavigate();
+  // Which finding keys are currently expanded showing the fix preview?
+  // Tracked as a Set in state so expanding one doesn't collapse the others.
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
+  const toggleExpand = (key: string) =>
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
 
   // Apply category + severity filter first, then sort by severity then file.
   const filtered = useMemo(() => {
@@ -78,7 +95,6 @@ export function FindingsList({
   })();
 
   if (filtered.length === 0) {
-    // Two flavours of empty state: filtered → "no matches"; unfiltered → "all clear".
     if (filtersActive) {
       return (
         <div
@@ -137,46 +153,169 @@ export function FindingsList({
         )}
       </div>
       <ul className="divide-y divide-slate-100 dark:divide-slate-800">
-        {visible.map((f) => (
-          <li key={`${f.ruleId}:${f.element.id}`}>
-            <button
-              type="button"
-              onClick={() =>
-                // Jump to the Analyzer with the file/line stashed in location state.
-                navigate('/analyzer', {
-                  state: { jump: { path: f.element.file, line: f.element.line } },
-                })
-              }
-              data-finding={f.ruleId}
-              data-severity={f.severity}
-              data-category={f.category}
-              className="flex w-full items-start gap-3 px-4 py-2 text-left hover:bg-slate-50 dark:hover:bg-slate-800/50"
-            >
-              <span
-                className={`mt-0.5 rounded border px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide ${SEVERITY_TONE[f.severity]}`}
+        {visible.map((f) => {
+          const key = `${f.ruleId}:${f.element.id}`;
+          const isOpen = expanded.has(key);
+          const rule = RULES_BY_ID[f.ruleId];
+          // Some rules have a code-level fix example (most do); some don't.
+          // The expander still shows the description + suggestion summary
+          // even when there's no diff block.
+          const hasFixDetail =
+            !!rule &&
+            (!!rule.description || !!rule.suggestedFix?.summary || !!rule.suggestedFix?.example);
+          return (
+            <li key={key}>
+              <div
+                className="flex w-full items-start gap-3 px-4 py-2"
+                data-finding={f.ruleId}
+                data-severity={f.severity}
+                data-category={f.category}
               >
-                {f.severity}
-              </span>
-              <div className="min-w-0 flex-1">
-                <div className="flex flex-wrap items-baseline gap-2">
-                  <span className="text-sm font-medium text-slate-900 dark:text-slate-100">
-                    {f.message}
-                  </span>
-                  <span className="font-mono text-[11px] text-slate-400 dark:text-slate-500">
-                    {f.ruleId}
-                  </span>
-                </div>
-                <div className="mt-0.5 truncate font-mono text-xs text-slate-500">
-                  {f.element.file}:{f.element.line} · {f.element.type} &lt;{f.element.tagName}&gt;
-                </div>
+                <span
+                  className={`mt-0.5 rounded border px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide ${SEVERITY_TONE[f.severity]}`}
+                >
+                  {f.severity}
+                </span>
+                {/* Main row click expands the inline fix preview. We split the
+                    click handlers so the trailing "Open in code" arrow can
+                    still jump to the Analyzer without re-triggering the
+                    expand. */}
+                <button
+                  type="button"
+                  onClick={() => toggleExpand(key)}
+                  aria-expanded={isOpen}
+                  data-action="toggle-fix"
+                  className="min-w-0 flex-1 cursor-pointer text-left"
+                >
+                  <div className="flex flex-wrap items-baseline gap-2">
+                    <span className="text-sm font-medium text-slate-900 dark:text-slate-100">
+                      {f.message}
+                    </span>
+                    <span className="font-mono text-[11px] text-slate-400 dark:text-slate-500">
+                      {f.ruleId}
+                    </span>
+                  </div>
+                  <div className="mt-0.5 truncate font-mono text-xs text-slate-500">
+                    {f.element.file}:{f.element.line} · {f.element.type} &lt;{f.element.tagName}&gt;
+                  </div>
+                </button>
+                {hasFixDetail && (
+                  <button
+                    type="button"
+                    onClick={() => toggleExpand(key)}
+                    aria-label={isOpen ? 'Hide fix preview' : 'Show fix preview'}
+                    data-action="toggle-fix-icon"
+                    className="shrink-0 self-center rounded p-1 text-slate-500 hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-100"
+                    title={isOpen ? 'Hide fix preview' : 'Show fix preview'}
+                  >
+                    {isOpen ? (
+                      <ChevronDown aria-hidden className="h-4 w-4" />
+                    ) : (
+                      <ChevronRight aria-hidden className="h-4 w-4" />
+                    )}
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={() =>
+                    navigate('/analyzer', {
+                      state: { jump: { path: f.element.file, line: f.element.line } },
+                    })
+                  }
+                  aria-label="Open in code"
+                  data-action="open-in-code"
+                  className="shrink-0 self-center rounded p-1 text-slate-500 hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-100"
+                  title="Open in Analyzer source view"
+                >
+                  <ExternalLink aria-hidden className="h-4 w-4" />
+                </button>
               </div>
-              <span aria-hidden className="shrink-0 self-center text-xs text-slate-400 dark:text-slate-500">
-                →
-              </span>
-            </button>
-          </li>
-        ))}
+              {isOpen && rule && (
+                <FixPreview rule={rule} />
+              )}
+            </li>
+          );
+        })}
       </ul>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Inline fix preview                                                  */
+/* ------------------------------------------------------------------ */
+
+/** Per-finding expander that surfaces the rule's description + fix example. */
+function FixPreview({ rule }: { rule: Rule }) {
+  const fix = rule.suggestedFix;
+  return (
+    <div
+      className="border-t border-slate-100 bg-slate-50/50 px-4 py-3 dark:border-slate-800 dark:bg-slate-900/50"
+      data-testid="finding-fix-preview"
+      data-rule={rule.id}
+    >
+      {rule.description && (
+        <p className="text-xs text-slate-700 dark:text-slate-300">
+          <span className="font-semibold">Why this matters · </span>
+          {rule.description}
+        </p>
+      )}
+      {rule.spec && (
+        <p className="mt-1 text-[11px] text-slate-500">{rule.spec}</p>
+      )}
+      {fix?.summary && (
+        <p className="mt-2 text-xs text-slate-700 dark:text-slate-300">
+          <span className="font-semibold">How to fix · </span>
+          {fix.summary}
+        </p>
+      )}
+      {fix?.example && (
+        <div className="mt-2 grid grid-cols-1 gap-2 md:grid-cols-2">
+          {fix.example.bad && (
+            <DiffBlock label="Before" tone="rose" code={fix.example.bad} language={fix.example.language} />
+          )}
+          <DiffBlock label="After" tone="emerald" code={fix.example.good} language={fix.example.language} />
+        </div>
+      )}
+      {fix?.notes && fix.notes.length > 0 && (
+        <ul className="mt-2 list-inside list-disc text-[11px] text-slate-600 dark:text-slate-400">
+          {fix.notes.map((n, i) => (
+            <li key={i}>{n}</li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+function DiffBlock({
+  label,
+  tone,
+  code,
+  language,
+}: {
+  label: string;
+  tone: 'rose' | 'emerald';
+  code: string;
+  language?: string;
+}) {
+  const toneClass =
+    tone === 'rose'
+      ? 'border-rose-200 bg-rose-50 dark:border-rose-800 dark:bg-rose-900/20'
+      : 'border-emerald-200 bg-emerald-50 dark:border-emerald-800 dark:bg-emerald-900/20';
+  const labelClass =
+    tone === 'rose'
+      ? 'text-rose-800 dark:text-rose-200'
+      : 'text-emerald-800 dark:text-emerald-200';
+  return (
+    <div className={`overflow-hidden rounded border ${toneClass}`}>
+      <div className={`flex items-center justify-between border-b border-current/10 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide ${labelClass}`}>
+        <span>{label}</span>
+        {language && <span className="opacity-60">{language}</span>}
+      </div>
+      <pre className="overflow-auto p-2 font-mono text-xs leading-relaxed text-slate-800 dark:text-slate-200">
+        {code}
+      </pre>
     </div>
   );
 }

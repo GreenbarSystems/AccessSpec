@@ -33,16 +33,16 @@ export default function Reports() {
           aria-label="Reports view"
           className="inline-flex rounded-lg bg-slate-100 p-1 dark:bg-slate-800"
         >
-          <TabButton active={mode === 'inspector'} onClick={() => setMode('inspector')} dataKey="inspector" Icon={Search}>
+          <TabButton active={mode === 'inspector'} onClick={() => setMode('inspector')} dataKey="inspector" Icon={Search} hint="Pick a rule from the left, see every element that fails it on the right.">
             Browse by rule
           </TabButton>
-          <TabButton active={mode === 'playbook'} onClick={() => setMode('playbook')} dataKey="playbook" Icon={Wrench}>
+          <TabButton active={mode === 'playbook'} onClick={() => setMode('playbook')} dataKey="playbook" Icon={Wrench} hint="Copy-paste-ready markdown for engineering tickets, one item per finding.">
             Playbook
           </TabButton>
-          <TabButton active={mode === 'assistant'} onClick={() => setMode('assistant')} dataKey="assistant" Icon={Bot}>
+          <TabButton active={mode === 'assistant'} onClick={() => setMode('assistant')} dataKey="assistant" Icon={Bot} hint="Type a question in plain English — answers reference your actual findings.">
             Ask assistant
           </TabButton>
-          <TabButton active={mode === 'refactor'} onClick={() => setMode('refactor')} dataKey="refactor" Icon={Scissors}>
+          <TabButton active={mode === 'refactor'} onClick={() => setMode('refactor')} dataKey="refactor" Icon={Scissors} hint="Before / after code diffs you can copy straight into your codebase.">
             Code fixes
           </TabButton>
         </div>
@@ -61,12 +61,14 @@ function TabButton({
   onClick,
   dataKey,
   Icon,
+  hint,
   children,
 }: {
   active: boolean;
   onClick: () => void;
   dataKey: string;
   Icon: LucideIcon;
+  hint?: string;
   children: React.ReactNode;
 }) {
   return (
@@ -76,6 +78,7 @@ function TabButton({
       aria-selected={active}
       onClick={onClick}
       data-mode={dataKey}
+      title={hint}
       className={[
         'inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition',
         active

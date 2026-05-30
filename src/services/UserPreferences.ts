@@ -43,6 +43,8 @@ export type UserPreferences = {
   defaultSeverityFilter: SeverityDefault;
   /** Group inventory rows by file on the Components tab by default. */
   inventoryGroupByFile: boolean;
+  /** Set to true after the user dismisses or completes the onboarding tour. */
+  onboardingDismissed: boolean;
 };
 
 export const DEFAULT_PREFERENCES: UserPreferences = {
@@ -51,6 +53,7 @@ export const DEFAULT_PREFERENCES: UserPreferences = {
   findingsLimit: 10,
   defaultSeverityFilter: 'all',
   inventoryGroupByFile: false,
+  onboardingDismissed: false,
 };
 
 const STORAGE_KEY = 'accessspec:user-preferences';
@@ -88,6 +91,9 @@ function normalize(raw: unknown): UserPreferences {
   }
   if (typeof obj.inventoryGroupByFile === 'boolean') {
     next.inventoryGroupByFile = obj.inventoryGroupByFile;
+  }
+  if (typeof obj.onboardingDismissed === 'boolean') {
+    next.onboardingDismissed = obj.onboardingDismissed;
   }
   return next;
 }

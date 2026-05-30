@@ -3,7 +3,12 @@ import { Link } from 'react-router-dom';
 import { BarChart3, Sparkles, Smartphone, Wrench, type LucideIcon } from 'lucide-react';
 import { PageHeader } from '../components/PageHeader';
 import { Glossary } from '../components/Glossary';
+import { OnboardingTour } from '../components/OnboardingTour';
 import { sourceRepository } from '../services/SourceRepository';
+import {
+  setPreferences,
+  useUserPreferences,
+} from '../services/UserPreferences';
 import { useToast } from '../components/toast/ToastHost';
 import { UploadPanel } from '../components/upload/UploadPanel';
 import { ProjectTree } from '../components/ProjectTree';
@@ -204,6 +209,16 @@ function PopulatedState({
 }) {
   const stats = summarize(project);
   const [uploadOpen, setUploadOpen] = useState(false);
+  // Show the onboarding tour the FIRST time we land here with a project
+  // loaded. Persisted dismissal lives in UserPreferences so the tour
+  // never replays. We use local state on top of the pref so dismissing
+  // doesn't require a re-render race.
+  const prefs = useUserPreferences();
+  const [tourOpen, setTourOpen] = useState(!prefs.onboardingDismissed);
+  const dismissTour = () => {
+    setTourOpen(false);
+    setPreferences({ onboardingDismissed: true });
+  };
 
   return (
     <>
@@ -303,6 +318,7 @@ function PopulatedState({
           </div>
         </div>
       </div>
+      {tourOpen && <OnboardingTour onDismiss={dismissTour} />}
     </>
   );
 }
