@@ -24,6 +24,8 @@ export type NavItem = {
   description: string;
   /** Sub-tab count surfaced as a badge next to the label in the Sidebar. */
   subTabCount?: number;
+  /** Stable marker the OnboardingTour anchors to (see OnboardingTour.tsx). */
+  onboardingId?: string;
 };
 
 export const navItems: NavItem[] = [
@@ -53,6 +55,7 @@ export const navItems: NavItem[] = [
     Icon: FileText,
     description: 'Saved audits and exports',
     subTabCount: 4,
+    onboardingId: 'reports-nav',
   },
   {
     to: '/settings',

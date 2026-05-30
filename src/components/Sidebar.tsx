@@ -50,6 +50,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
               key={item.to}
               to={item.to}
               end={item.to === '/'}
+              data-onboarding={item.onboardingId}
               className={({ isActive }) =>
                 ['nav-link', isActive ? 'nav-link-active' : ''].join(' ')
               }
