@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import {
   Archive,
+  ChevronDown,
   Clipboard,
   FileText,
   Globe,
@@ -57,19 +58,27 @@ const TABS: Tab[] = [
   },
 ];
 
+// The primary path (paste) shows on first visit; the four others are tucked
+// behind a "More upload options" disclosure to lower decision fatigue for
+// brand-new users. Once they pick a non-primary method we keep the row
+// expanded so the choice doesn't visually disappear.
+const PRIMARY_TAB_IDS = new Set(['paste']);
+
 export function UploadPanel() {
   const [active, setActive] = useState<string>('paste');
   const [status, setStatus] = useState<StatusMessage | null>(null);
+  const [moreOpen, setMoreOpen] = useState(false);
   const tab = TABS.find((t) => t.id === active) ?? TABS[0];
+  const showSecondaries = moreOpen || !PRIMARY_TAB_IDS.has(active);
 
   return (
     <div className="card overflow-hidden">
       <div
         role="tablist"
         aria-label="Upload source"
-        className="flex flex-wrap gap-1 border-b border-slate-200 bg-slate-50 p-2 dark:bg-slate-900 dark:border-slate-800"
+        className="flex flex-wrap items-center gap-1 border-b border-slate-200 bg-slate-50 p-2 dark:bg-slate-900 dark:border-slate-800"
       >
-        {TABS.map((t) => {
+        {TABS.filter((t) => PRIMARY_TAB_IDS.has(t.id) || showSecondaries).map((t) => {
           const isActive = t.id === active;
           return (
             <button
@@ -94,6 +103,19 @@ export function UploadPanel() {
             </button>
           );
         })}
+        {!showSecondaries && (
+          <button
+            type="button"
+            onClick={() => setMoreOpen(true)}
+            aria-expanded={moreOpen}
+            aria-controls="upload-more-tabs"
+            data-action="more-upload-options"
+            className="ml-1 inline-flex items-center gap-1 rounded-md px-2 py-1.5 text-xs font-medium text-slate-500 transition hover:bg-white hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-slate-100"
+          >
+            More upload options
+            <ChevronDown aria-hidden className="h-3.5 w-3.5" />
+          </button>
+        )}
       </div>
 
       <div className="p-5">

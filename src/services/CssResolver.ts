@@ -177,21 +177,62 @@ export function resolveStyles(
 }
 
 /**
+ * Extract <style> blocks from an HTML / Vue / JSX source file. Each block's
+ * body is concatenated with a synthetic source label so attribution still
+ * works in dev tools. We don't bother filtering scoped Vue styles, etc. —
+ * an over-broad match is fine because the unmatched selectors just won't
+ * key into the index later.
+ */
+function extractInlineStyleBlocks(file: SourceFile): string[] {
+  // We only mine markup formats that actually embed <style>. Svelte uses
+  // the same pattern but isn't in the SupportedExt union yet — when it
+  // joins, extend the guard.
+  if (file.ext !== 'html' && file.ext !== 'vue') return [];
+  const out: string[] = [];
+  const re = /<style\b[^>]*>([\s\S]*?)<\/style\s*>/gi;
+  let m;
+  while ((m = re.exec(file.content)) !== null) {
+    out.push(m[1]);
+  }
+  return out;
+}
+
+/**
  * Top-level helper: take detected elements + loaded source files, and attach
- * `styles.computed` to any element whose className resolves against the
- * project's CSS. Non-destructive — returns a new array.
+ * `styles.computed` to any element whose styles can be resolved.
+ *
+ * Three sources fold into `computed`, in browser-correct precedence order:
+ *
+ *   1. `<style>` blocks inside HTML / Vue / Svelte source (lowest precedence)
+ *   2. Standalone `.css` files matched by classname
+ *   3. Inline `style="…"` declarations on the element itself (highest)
+ *
+ * Without #1 we'd miss whole-doc demo HTML where every style lives in a
+ * single inline <style> at the top. Without #3 the rules engine would
+ * register 100/100 on a project full of inline-styled tiny buttons —
+ * which is what made the bundled sample look like the tool was broken.
  */
 export function enrichElements(
   elements: UIElement[],
   files: SourceFile[],
 ): UIElement[] {
-  const cssFiles = files.filter((f) => f.ext === 'css');
-  if (cssFiles.length === 0) return elements;
   const rules: CssRule[] = [];
-  for (const f of cssFiles) rules.push(...parseCss(f.content, f.path));
+  for (const f of files) {
+    if (f.ext === 'css') {
+      rules.push(...parseCss(f.content, f.path));
+    } else {
+      const blocks = extractInlineStyleBlocks(f);
+      for (let i = 0; i < blocks.length; i++) {
+        rules.push(...parseCss(blocks[i], `${f.path}#style[${i}]`));
+      }
+    }
+  }
   const index = indexRules(rules);
   return elements.map((el) => {
-    const computed = resolveStyles(el.styles.className, index);
+    const fromCss = resolveStyles(el.styles.className, index);
+    const fromInline = el.styles.inline ?? {};
+    // Browser order: external CSS sets the base; inline overrides.
+    const computed = { ...fromCss, ...fromInline };
     if (Object.keys(computed).length === 0) return el;
     return { ...el, styles: { ...el.styles, computed } };
   });

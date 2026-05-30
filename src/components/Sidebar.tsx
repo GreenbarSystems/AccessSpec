@@ -56,6 +56,17 @@ export function Sidebar({ open, onClose }: SidebarProps) {
             >
               <item.Icon aria-hidden className="h-4 w-4 shrink-0" />
               <span className="flex-1">{item.label}</span>
+              {/* Sub-tab badge so users see how much is in each section
+                  before clicking. Quiet, monospace, blends with the link. */}
+              {item.subTabCount !== undefined && (
+                <span
+                  aria-label={`${item.subTabCount} sub-tabs`}
+                  className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] font-semibold tabular-nums text-slate-500 dark:bg-slate-800 dark:text-slate-400"
+                  data-tab-count={item.to}
+                >
+                  {item.subTabCount}
+                </span>
+              )}
             </NavLink>
           ))}
         </nav>
