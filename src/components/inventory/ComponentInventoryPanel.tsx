@@ -1,6 +1,6 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Brain, Hand, Maximize, Palette, Type } from 'lucide-react';
+import { Brain, ChevronDown, Hand, Maximize, Palette, Type } from 'lucide-react';
 import { useAuditReport } from '../../services/AuditCache';
 import {
   UI_TYPES,
@@ -590,28 +590,63 @@ function ElementRow({
   const style = TYPE_STYLES[el.type];
   const computed = el.styles.computed;
   const inline = el.styles.inline;
-  const hasStyleDetails =
-    (computed && Object.keys(computed).length > 0) ||
-    (inline && Object.keys(inline).length > 0);
+  const computedCount = computed ? Object.keys(computed).length : 0;
+  const inlineCount = inline ? Object.keys(inline).length : 0;
+  const hasStyleDetails = computedCount > 0 || inlineCount > 0;
+
+  // C9 — converted from native <details> to useState so the toggle can
+  // live as a sibling button in the row's top bar instead of as a strip
+  // below the jump button. Avoids the affordance ambiguity of "click row
+  // jumps / click details expands" living in the same vertical space.
+  const [expanded, setExpanded] = useState(false);
+
+  // C8 — plain-language Styles count. Single label rolls up CSS + inline so
+  // users see ONE thing where two competing badges used to live (the
+  // standalone `+N CSS` chip in the chip row and the `<details>` summary
+  // below). Tooltip explains the source.
+  const stylesLabel = (() => {
+    if (computedCount > 0 && inlineCount > 0)
+      return `Styles · ${computedCount} CSS · ${inlineCount} inline`;
+    if (computedCount > 0) return `Styles · ${computedCount}`;
+    if (inlineCount > 0) return `Styles · ${inlineCount} inline`;
+    return 'Styles';
+  })();
+  const stylesTitle =
+    computedCount > 0 && inlineCount > 0
+      ? 'Styles resolved from your stylesheets plus the element\'s inline style attribute.'
+      : computedCount > 0
+        ? 'Resolved from your stylesheets.'
+        : 'From the element\'s inline style attribute.';
 
   return (
     <li>
-      <div className="flex items-stretch">
+      <div
+        className="flex items-start gap-2 px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800/40"
+        data-row={el.id}
+      >
+        {/*
+          Jump trigger — the chip cluster + text + path. C7 dropped the
+          standalone colored dot that used to sit here; the type chip
+          already carries the color (border + bg), the icon, and the label,
+          so the dot was a third signal for the same fact.
+        */}
         <button
           type="button"
           onClick={() => onJump(el.file, el.line)}
           data-jump={`${el.file}:${el.line}`}
           data-type={el.type}
-          className="flex flex-1 items-start gap-3 px-3 py-2 text-left hover:bg-slate-50 dark:bg-slate-900"
+          className="flex min-w-0 flex-1 items-start gap-3 text-left"
         >
-          <span
-            aria-hidden
-            className={`mt-1 inline-block h-2.5 w-2.5 shrink-0 rounded-full ${style.dot}`}
-          />
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-baseline gap-2">
+              {/*
+                C11 — dropped `uppercase tracking-wide` from the type chip.
+                The bordered pill + icon + label already differentiates it
+                from prose; uppercase added shout-volume that competed with
+                the severity badges elsewhere in the app.
+              */}
               <span
-                className={`inline-flex items-center gap-1 rounded border px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide ${style.chip}`}
+                className={`inline-flex items-center gap-1 rounded border px-1.5 py-0.5 text-[10px] font-medium ${style.chip}`}
               >
                 <style.Icon aria-hidden className="h-3 w-3" />
                 {el.type}
@@ -622,14 +657,6 @@ function ElementRow({
               {el.role && (
                 <span className="text-xs text-slate-500">
                   role: <span className="font-mono">{el.role}</span>
-                </span>
-              )}
-              {computed && (
-                <span
-                  className="rounded bg-emerald-50 px-1.5 py-0.5 text-[10px] font-medium text-emerald-700 ring-1 ring-emerald-200"
-                  data-enriched
-                >
-                  +{Object.keys(computed).length} CSS
                 </span>
               )}
             </div>
@@ -662,41 +689,59 @@ function ElementRow({
             →
           </span>
         </button>
+
+        {/*
+          C9 — Styles toggle is a SIBLING of the jump button, not a nested
+          interactive surface inside it. Two click areas, two intents, both
+          unambiguous. The chevron flips to communicate state without
+          needing extra ink.
+        */}
+        {hasStyleDetails && (
+          <button
+            type="button"
+            onClick={() => setExpanded((v) => !v)}
+            aria-expanded={expanded}
+            aria-controls={`row-styles-${el.id}`}
+            data-testid="row-styles-toggle"
+            title={stylesTitle}
+            className={[
+              'inline-flex shrink-0 items-center gap-1 self-start rounded-full px-2 py-0.5 text-[11px] font-medium transition',
+              expanded
+                ? 'bg-emerald-100 text-emerald-800 ring-1 ring-emerald-200 dark:bg-emerald-900/40 dark:text-emerald-100'
+                : computedCount > 0
+                  ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200 hover:bg-emerald-100'
+                  : 'bg-amber-50 text-amber-800 ring-1 ring-amber-200 hover:bg-amber-100',
+            ].join(' ')}
+          >
+            {stylesLabel}
+            <ChevronDown
+              aria-hidden
+              className={`h-3 w-3 transition-transform ${expanded ? 'rotate-180' : ''}`}
+            />
+          </button>
+        )}
       </div>
-      {hasStyleDetails && (
-        <details className="border-t border-slate-100 bg-slate-50/50 px-3 py-1 dark:border-slate-800">
-          <summary className="cursor-pointer text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100">
-            Styles{' '}
-            <span className="text-slate-400 dark:text-slate-500">
-              {/* Split CSS vs inline so the count matches what the expanded
-                  view actually shows (two separate tables). */}
-              {[
-                computed && Object.keys(computed).length > 0
-                  ? `${Object.keys(computed).length} CSS`
-                  : null,
-                inline && Object.keys(inline).length > 0
-                  ? `${Object.keys(inline).length} inline`
-                  : null,
-              ]
-                .filter(Boolean)
-                .join(' · ')}
-            </span>
-          </summary>
-          {inline && Object.keys(inline).length > 0 && (
+      {hasStyleDetails && expanded && (
+        <div
+          id={`row-styles-${el.id}`}
+          className="border-t border-slate-100 bg-slate-50/60 px-3 py-2 dark:border-slate-800 dark:bg-slate-900/40"
+          data-testid="row-styles-panel"
+        >
+          {inline && inlineCount > 0 && (
             <StyleTable
               title="inline"
               styles={inline}
               tone="bg-amber-100 text-amber-800"
             />
           )}
-          {computed && Object.keys(computed).length > 0 && (
+          {computed && computedCount > 0 && (
             <StyleTable
-              title="computed from CSS"
+              title="resolved from CSS"
               styles={computed}
               tone="bg-emerald-100 text-emerald-800"
             />
           )}
-        </details>
+        </div>
       )}
     </li>
   );
