@@ -1,6 +1,15 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Brain, ChevronDown, Hand, Maximize, Palette, Type } from 'lucide-react';
+import {
+  Brain,
+  Check,
+  ChevronDown,
+  Clipboard,
+  Hand,
+  Maximize,
+  Palette,
+  Type,
+} from 'lucide-react';
 import { useAuditReport } from '../../services/AuditCache';
 import {
   UI_TYPES,
@@ -28,6 +37,26 @@ const VALID_TYPES = new Set<string>(UI_TYPES);
 function parseTypeParam(raw: string | null): UIElementType | 'all' {
   if (raw && VALID_TYPES.has(raw)) return raw as UIElementType;
   return 'all';
+}
+
+/**
+ * Sort modes for the flat result list. `detection` preserves source order
+ * (what the user sees if they read top-to-bottom in their files); the
+ * other three give them re-orderings useful for spot-checking large
+ * inventories. Stored in the URL (?sort=) so a sort is shareable like
+ * the other filter state.
+ */
+type SortMode = 'detection' | 'file' | 'type' | 'text';
+const SORT_OPTIONS: { value: SortMode; label: string }[] = [
+  { value: 'detection', label: 'Detected order' },
+  { value: 'file', label: 'File' },
+  { value: 'type', label: 'Type' },
+  { value: 'text', label: 'Text' },
+];
+
+function parseSortParam(raw: string | null): SortMode {
+  if (raw === 'file' || raw === 'type' || raw === 'text') return raw;
+  return 'detection';
 }
 
 /**
@@ -71,6 +100,7 @@ export function ComponentInventoryPanel({ onJump, onSwitchMode }: Props) {
       : groupParam === 'flat'
         ? false
         : getPreferences().inventoryGroupByFile;
+  const sortMode = parseSortParam(searchParams.get('sort'));
 
   // Helper that mutates one param while preserving the others. `null` clears.
   const updateParam = useCallback(
@@ -96,6 +126,9 @@ export function ComponentInventoryPanel({ onJump, onSwitchMode }: Props) {
   // next render.
   const setGroupByFile = (on: boolean) =>
     updateParam('group', on ? 'file' : 'flat');
+  // Drop the param entirely when reset to the default so URLs stay clean.
+  const setSortMode = (s: SortMode) =>
+    updateParam('sort', s === 'detection' ? null : s);
 
   /**
    * Per-type counts *after the search filter has been applied* (regardless
@@ -177,12 +210,49 @@ export function ComponentInventoryPanel({ onJump, onSwitchMode }: Props) {
     );
   };
 
+  /**
+   * Apply the user-chosen sort to the visible pool. `detection` returns the
+   * pool untouched so the original order survives. File / type / text sorts
+   * always fall back to (file, line) on ties so identical labels still
+   * stack predictably in source order.
+   */
+  const sortedVisible = useMemo(() => {
+    if (sortMode === 'detection') return visible;
+    const arr = [...visible];
+    switch (sortMode) {
+      case 'file':
+        arr.sort(
+          (a, b) => a.file.localeCompare(b.file) || a.line - b.line,
+        );
+        break;
+      case 'type':
+        arr.sort(
+          (a, b) =>
+            a.type.localeCompare(b.type) ||
+            a.file.localeCompare(b.file) ||
+            a.line - b.line,
+        );
+        break;
+      case 'text':
+        arr.sort(
+          (a, b) =>
+            a.text.localeCompare(b.text) ||
+            a.file.localeCompare(b.file) ||
+            a.line - b.line,
+        );
+        break;
+    }
+    return arr;
+  }, [visible, sortMode]);
+
   // Bucket elements by file. Sorted by descending count so files with the
   // most components surface first; ties broken alphabetically for stability.
+  // Items WITHIN each file inherit `sortedVisible`'s order, so the user's
+  // chosen sort applies inside groups too.
   const groupedByFile = useMemo(() => {
     if (!groupByFile) return null;
     const map = new Map<string, UIElement[]>();
-    for (const el of visible) {
+    for (const el of sortedVisible) {
       const arr = map.get(el.file);
       if (arr) arr.push(el);
       else map.set(el.file, [el]);
@@ -192,7 +262,7 @@ export function ComponentInventoryPanel({ onJump, onSwitchMode }: Props) {
       if (diff !== 0) return diff;
       return a[0].localeCompare(b[0]);
     });
-  }, [visible, groupByFile]);
+  }, [sortedVisible, groupByFile]);
 
   if (!report) {
     return (
@@ -319,6 +389,7 @@ export function ComponentInventoryPanel({ onJump, onSwitchMode }: Props) {
               </button>
             )}
           </div>
+          <SortSelect value={sortMode} onChange={setSortMode} />
           <SegmentedGroupToggle
             on={groupByFile}
             onChange={setGroupByFile}
@@ -381,13 +452,46 @@ export function ComponentInventoryPanel({ onJump, onSwitchMode }: Props) {
           </ul>
         ) : (
           <ul className="divide-y divide-slate-100" data-testid="inventory-list">
-            {visible.map((el) => (
+            {sortedVisible.map((el) => (
               <ElementRow key={el.id} el={el} onJump={onJump} />
             ))}
           </ul>
         )}
       </div>
     </div>
+  );
+}
+
+/**
+ * Native <select> styled to match the toolbar. We use a real <select>
+ * rather than a custom popover because (a) the option count is small and
+ * fixed, (b) the native control hands us keyboard + screen-reader support
+ * for free, and (c) on mobile the OS picker is genuinely nicer than any
+ * custom dropdown we'd ship for a corner-case feature.
+ */
+function SortSelect({
+  value,
+  onChange,
+}: {
+  value: SortMode;
+  onChange: (next: SortMode) => void;
+}) {
+  return (
+    <label className="inline-flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400">
+      <span className="select-none">Sort</span>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value as SortMode)}
+        data-testid="inventory-sort-select"
+        className="rounded-md border border-slate-300 bg-white px-2 py-1.5 text-xs font-medium text-slate-700 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"
+      >
+        {SORT_OPTIONS.map((o) => (
+          <option key={o.value} value={o.value}>
+            {o.label}
+          </option>
+        ))}
+      </select>
+    </label>
   );
 }
 
@@ -691,6 +795,14 @@ function ElementRow({
         </button>
 
         {/*
+          C12 — copy "path:line" for pasting into an editor. Quiet by
+          default (slate ghost), flips to a green check for ~1.5s on
+          success. We deliberately don't fire the toast system here so
+          a power user spamming this on many rows doesn't stack toasts.
+        */}
+        <CopyFileLineButton path={el.file} line={el.line} />
+
+        {/*
           C9 — Styles toggle is a SIBLING of the jump button, not a nested
           interactive surface inside it. Two click areas, two intents, both
           unambiguous. The chevron flips to communicate state without
@@ -747,6 +859,44 @@ function ElementRow({
   );
 }
 
+/**
+ * Small ghost button that copies "path:line" to the clipboard. Reverts
+ * to the clipboard glyph after a short success window so the user gets
+ * non-toast feedback the action landed. Silently no-ops if the Clipboard
+ * API isn't available (older browsers / insecure context) — the failure
+ * mode is "the icon doesn't flip" which is acceptable for a power-user
+ * convenience.
+ */
+function CopyFileLineButton({ path, line }: { path: string; line: number }) {
+  const [copied, setCopied] = useState(false);
+  const target = `${path}:${line}`;
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(target);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1500);
+    } catch {
+      // Intentionally swallow — see component docstring.
+    }
+  };
+  return (
+    <button
+      type="button"
+      onClick={handleCopy}
+      aria-label={copied ? `Copied ${target}` : `Copy ${target}`}
+      title={copied ? 'Copied!' : `Copy ${target}`}
+      data-testid="row-copy-path"
+      className="shrink-0 self-start rounded p-1 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 dark:text-slate-500 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+    >
+      {copied ? (
+        <Check aria-hidden className="h-3.5 w-3.5 text-emerald-600" />
+      ) : (
+        <Clipboard aria-hidden className="h-3.5 w-3.5" />
+      )}
+    </button>
+  );
+}
+
 function StyleTable({
   title,
   styles,
@@ -756,6 +906,19 @@ function StyleTable({
   styles: Record<string, string>;
   tone: string;
 }) {
+  // C10 — track which value cells the user has chosen to expand. Used to
+  // be hover-only via `title=` (invisible on touch, vanishes on mouse-off),
+  // so a wide `box-shadow` value was effectively unreadable. Now each cell
+  // is a button that toggles full-width wrapping in place.
+  const [expandedKeys, setExpandedKeys] = useState<Set<string>>(() => new Set());
+  const toggleKey = (k: string) => {
+    setExpandedKeys((prev) => {
+      const next = new Set(prev);
+      if (next.has(k)) next.delete(k);
+      else next.add(k);
+      return next;
+    });
+  };
   return (
     <div className="mt-1">
       <div className="mb-1 flex items-center gap-1.5">
@@ -766,14 +929,33 @@ function StyleTable({
         </span>
       </div>
       <dl className="grid grid-cols-1 gap-x-4 gap-y-0.5 font-mono text-xs sm:grid-cols-2">
-        {Object.entries(styles).map(([k, v]) => (
-          <div key={k} className="flex gap-2">
-            <dt className="text-slate-500">{k}:</dt>
-            <dd className="truncate text-slate-800 dark:text-slate-200" title={v}>
-              {v}
-            </dd>
-          </div>
-        ))}
+        {Object.entries(styles).map(([k, v]) => {
+          const isExpanded = expandedKeys.has(k);
+          return (
+            <div key={k} className="flex min-w-0 gap-2">
+              <dt className="shrink-0 text-slate-500">{k}:</dt>
+              <dd className="min-w-0 flex-1">
+                <button
+                  type="button"
+                  onClick={() => toggleKey(k)}
+                  // Keep the native tooltip as a secondary affordance for
+                  // mouse users who hover without clicking.
+                  title={isExpanded ? 'Click to collapse' : v}
+                  aria-expanded={isExpanded}
+                  data-testid="style-value"
+                  className={[
+                    'block w-full cursor-pointer rounded text-left text-slate-800 transition hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800',
+                    isExpanded
+                      ? 'whitespace-pre-wrap break-words'
+                      : 'truncate',
+                  ].join(' ')}
+                >
+                  {v}
+                </button>
+              </dd>
+            </div>
+          );
+        })}
       </dl>
     </div>
   );
