@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuditReport } from '../../services/AuditCache';
 import { useUserPreferences } from '../../services/UserPreferences';
+import { Glossary } from '../Glossary';
 import {
   BAND_LABEL,
   BAND_THRESHOLDS,
@@ -187,8 +188,11 @@ function OverallCard({
           {BAND_LABEL[band]}
         </span>
       )}
-      <p className="mt-1 max-w-[22ch] text-xs text-slate-500">
-        Overall WCAG 2.2 + mobile + parity composite.
+      <p className="mt-1 max-w-[24ch] text-xs text-slate-500">
+        Composite of{' '}
+        <Glossary term="WCAG22">WCAG 2.2</Glossary>, mobile usability,
+        and{' '}
+        <Glossary term="parity">parity</Glossary>.
       </p>
       <div className="mt-3 flex flex-wrap items-center justify-center gap-x-1.5 gap-y-1 text-xs">
         <SeverityTally

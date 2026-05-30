@@ -17,13 +17,13 @@ export default function Reports() {
         title="Reports"
         section={
           {
-            inspector: 'Violation inspector',
+            inspector: 'Browse by rule',
             playbook: 'Remediation playbook',
             assistant: 'Assistant',
-            refactor: 'Refactor suggestions',
+            refactor: 'Code fixes',
           }[mode] ?? mode
         }
-        description="Export the audit, inspect every rule violation, and generate a copy-paste-ready remediation playbook for engineering."
+        description="Export the audit, browse every rule that fired, and generate a copy-paste-ready remediation playbook for engineering."
       />
       <div className="space-y-6">
         <ReportExportPanel />
@@ -34,16 +34,16 @@ export default function Reports() {
           className="inline-flex rounded-lg bg-slate-100 p-1 dark:bg-slate-800"
         >
           <TabButton active={mode === 'inspector'} onClick={() => setMode('inspector')} dataKey="inspector" Icon={Search}>
-            Inspector
+            Browse by rule
           </TabButton>
           <TabButton active={mode === 'playbook'} onClick={() => setMode('playbook')} dataKey="playbook" Icon={Wrench}>
-            Remediation playbook
+            Playbook
           </TabButton>
           <TabButton active={mode === 'assistant'} onClick={() => setMode('assistant')} dataKey="assistant" Icon={Bot}>
-            Assistant
+            Ask assistant
           </TabButton>
           <TabButton active={mode === 'refactor'} onClick={() => setMode('refactor')} dataKey="refactor" Icon={Scissors}>
-            Refactor
+            Code fixes
           </TabButton>
         </div>
 

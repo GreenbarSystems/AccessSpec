@@ -54,7 +54,7 @@ export const parityRules: Rule[] = [
       // Component names ending in Button (e.g. IconButton) get a pass.
       if (/button$/i.test(el.tagName)) return null;
       return {
-        message: `<${el.tagName}> styled as a button — use native button / Pressable`,
+        message: `<${el.tagName}> is acting as a button — switch to <button> so focus, haptics, and keyboard work.`,
         context: { tagName: el.tagName },
       };
     },
@@ -83,7 +83,7 @@ export const parityRules: Rule[] = [
         return null;
       }
       return {
-        message: `<${el.tagName}> acting as an input — use native input or TextInput`,
+        message: `<${el.tagName}> is acting as a text input — switch to <input> so autofill and the native keyboard work.`,
       };
     },
   },
@@ -109,7 +109,10 @@ export const parityRules: Rule[] = [
       const role = (el.attrs.role ?? '').toLowerCase();
       if (role !== 'tab' && !/tab$/i.test(el.tagName)) return null;
       if ('aria-selected' in el.attrs) return null;
-      return { message: 'Tab is missing aria-selected' };
+      return {
+        message:
+          "Tab doesn't say whether it's currently active — VoiceOver and TalkBack won't read the right state.",
+      };
     },
   },
   {
@@ -137,7 +140,10 @@ export const parityRules: Rule[] = [
       if (typeAttr === 'hidden' || typeAttr === 'submit' || typeAttr === 'button') return null;
       if (tag !== 'input' && tag !== 'textinput') return null;
       if (el.attrs.autocomplete || el.attrs.autoComplete) return null;
-      return { message: 'Input lacks autocomplete hint (no platform autofill)' };
+      return {
+        message:
+          'Input has no `autocomplete` attribute — iOS and Android autofill can\'t pre-fill it.',
+      };
     },
   },
   {
@@ -167,7 +173,10 @@ export const parityRules: Rule[] = [
         /^(nav(igation)?|sidebar|topbar|tabbar)$/i.test(el.tagName);
       if (!isLandmark) return null;
       if (accessibleName(el).length > 0) return null;
-      return { message: 'Navigation has no aria-label' };
+      return {
+        message:
+          "Nav has no label — if your page has more than one nav, screen-reader users hear them all as 'navigation'.",
+      };
     },
   },
   {
@@ -189,7 +198,9 @@ export const parityRules: Rule[] = [
     check: (el) => {
       if (el.type !== 'dialog' && el.type !== 'modal') return null;
       if ('aria-modal' in el.attrs) return null;
-      return { message: `${el.type} is missing aria-modal` };
+      return {
+        message: `${el.type} doesn't say aria-modal — assistive tech may let users tab outside it.`,
+      };
     },
   },
 ];

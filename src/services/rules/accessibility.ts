@@ -38,7 +38,7 @@ export const accessibilityRules: Rule[] = [
       if (el.attrs.type === 'hidden') return null;
       if (accessibleName(el).length > 0) return null;
       return {
-        message: `${el.type} has no accessible name`,
+        message: `This ${el.type} has no label — screen readers can't tell users what it does.`,
         context: { tagName: el.tagName },
       };
     },
@@ -63,7 +63,9 @@ export const accessibilityRules: Rule[] = [
       if (el.type !== 'link') return null;
       const label = accessibleName(el);
       if (!label || !GENERIC_LINK_TEXT.test(label)) return null;
-      return { message: `Generic link text "${label}" — describe the destination` };
+      return {
+        message: `Link reads as just "${label}" — describe where it goes so people who tab through links know what to expect.`,
+      };
     },
   },
   {
@@ -91,7 +93,9 @@ export const accessibilityRules: Rule[] = [
         accessibleName(el).length > 0
       )
         return null;
-      return { message: `${el.type} has no aria-label / aria-labelledby` };
+      return {
+        message: `This ${el.type} isn't named — screen readers won't announce what just opened.`,
+      };
     },
   },
   {
@@ -114,7 +118,10 @@ export const accessibilityRules: Rule[] = [
       if (el.tagName.toLowerCase() !== 'input') return null;
       if ((el.attrs.type ?? '').toLowerCase() !== 'image') return null;
       if (el.attrs.alt && el.attrs.alt.trim().length > 0) return null;
-      return { message: 'Image input button has no alt text' };
+      return {
+        message:
+          'Image-only button has no alt text — screen-reader users hear nothing about what it does.',
+      };
     },
   },
   {
@@ -137,7 +144,10 @@ export const accessibilityRules: Rule[] = [
     check: (el) => {
       if (el.type !== 'table') return null;
       if (accessibleName(el).length > 0) return null;
-      return { message: 'Table has no accessible name' };
+      return {
+        message:
+          "Table has no caption or label — screen readers will announce it as just 'table'.",
+      };
     },
   },
   {
@@ -158,7 +168,10 @@ export const accessibilityRules: Rule[] = [
     check: (el) => {
       if (el.type !== 'form') return null;
       if (accessibleName(el).length > 0) return null;
-      return { message: 'Form has no aria-label' };
+      return {
+        message:
+          'Form has no label — when there are several on a page, screen readers can\'t distinguish them.',
+      };
     },
   },
 ];

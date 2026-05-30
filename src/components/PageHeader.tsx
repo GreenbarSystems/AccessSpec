@@ -2,7 +2,8 @@ import type { ReactNode } from 'react';
 
 type PageHeaderProps = {
   title: string;
-  description?: string;
+  /** ReactNode so callers can embed inline Glossary wrappers or links. */
+  description?: ReactNode;
   actions?: ReactNode;
   /**
    * Active section / tab label (e.g. "Components", "Parity report").

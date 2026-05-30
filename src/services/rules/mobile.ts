@@ -54,7 +54,7 @@ export const mobileRules: Rule[] = [
       const failingW = w !== null && w < TARGET_MIN_PX;
       if (!failingH && !failingW) return null;
       return {
-        message: `Touch target ${w ?? '?'}×${h ?? '?'}px is below 24×24 minimum`,
+        message: `Tap target is only ${w ?? '?'}×${h ?? '?'}px — fingers need at least 24×24 to hit it reliably.`,
         context: { height: h ?? '?', width: w ?? '?' },
       };
     },
@@ -87,7 +87,7 @@ export const mobileRules: Rule[] = [
         return null;
       }
       return {
-        message: `Touch target ${w ?? '?'}×${h ?? '?'}px is below 44×44 comfort threshold`,
+        message: `Tap target is ${w ?? '?'}×${h ?? '?'}px — bump to 44×44 for comfortable thumb taps (Apple HIG) or 48×48 (Material).`,
         context: { height: h ?? '?', width: w ?? '?' },
       };
     },
@@ -112,7 +112,7 @@ export const mobileRules: Rule[] = [
       if (fs === null) return null;
       if (fs >= FONT_CRITICAL_PX) return null;
       return {
-        message: `font-size ${fs}px is unreadably small`,
+        message: `Text is ${fs}px — too small to read on a phone. Aim for at least 14px.`,
         context: { fontSize: fs },
       };
     },
@@ -137,7 +137,7 @@ export const mobileRules: Rule[] = [
       if (fs === null) return null;
       if (fs >= FONT_MIN_PX || fs < FONT_CRITICAL_PX) return null;
       return {
-        message: `font-size ${fs}px is below ${FONT_MIN_PX}px mobile minimum`,
+        message: `Body text is ${fs}px — readers on phones tend to struggle below ${FONT_MIN_PX}px.`,
         context: { fontSize: fs },
       };
     },
@@ -162,7 +162,9 @@ export const mobileRules: Rule[] = [
       const raw = cssProp(el, 'font-size');
       if (!raw) return null;
       if (!/px\s*$/.test(raw.trim())) return null;
-      return { message: `font-size: ${raw} is not user-scalable` };
+      return {
+        message: `Text uses ${raw} so the user's font-size setting won't apply — switch to rem or em.`,
+      };
     },
   },
 ];

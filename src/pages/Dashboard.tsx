@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BarChart3, Sparkles, Smartphone, Wrench, type LucideIcon } from 'lucide-react';
 import { PageHeader } from '../components/PageHeader';
+import { Glossary } from '../components/Glossary';
 import { sourceRepository } from '../services/SourceRepository';
 import { useToast } from '../components/toast/ToastHost';
 import { UploadPanel } from '../components/upload/UploadPanel';
@@ -72,7 +73,13 @@ function EmptyState() {
     <>
       <PageHeader
         title="Dashboard"
-        description="Audit a mobile app for WCAG 2.2 compliance — paste a snippet, drop files, upload a zip, or import a public repo."
+        description={
+          <>
+            Audit a mobile app for{' '}
+            <Glossary term="WCAG22">WCAG 2.2</Glossary> compliance — paste a
+            snippet, drop files, upload a zip, or import a public repo.
+          </>
+        }
       />
       <div className="mx-auto max-w-3xl space-y-6">
         {/* New-user shortcut: skip upload and load the bundled sample so the
@@ -202,7 +209,12 @@ function PopulatedState({
     <>
       <PageHeader
         title="Dashboard"
-        description="Review the mobile accessibility posture against WCAG 2.2."
+        description={
+          <>
+            Review the mobile accessibility posture against{' '}
+            <Glossary term="WCAG22">WCAG 2.2</Glossary>.
+          </>
+        }
         actions={
           <>
             <button
